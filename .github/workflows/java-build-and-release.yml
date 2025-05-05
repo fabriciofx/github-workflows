@@ -1,0 +1,81 @@
+# The MIT License (MIT)
+#
+# Copyright (C) 2023-2024 Fabrício Barros Cabral
+#
+# Permission is hereby granted, free of charge, to any person obtaining a copy
+# of this software and associated documentation files (the "Software"), to deal
+# in the Software without restriction, including without limitation the rights
+# to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+# copies of the Software, and to permit persons to whom the Software is
+# furnished to do so, subject to the following conditions:
+#
+# The above copyright notice and this permission notice shall be included
+# in all copies or substantial portions of the Software.
+#
+# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+# IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+# FITNESS FOR A PARTICULAR PURPOSE AND NON-INFRINGEMENT. IN NO EVENT SHALL THE
+# AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+# LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+# OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+# SOFTWARE.
+---
+name: java-build-and-release
+'on':
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+jobs:
+  java-build-and-release:
+    runs-on: ubuntu-24.04
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      - name: Install maven in Linux
+        if: runner.os == 'Linux'
+        run: |
+          sudo apt update
+          sudo apt install -y maven
+      - name: Install maven in Windows
+        if: runner.os == 'Windows'
+        run: |
+          choco install maven -y
+      - name: Setup Java SDK
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: 11
+      - name: Configure maven cache
+        uses: actions/cache@v4
+        with:
+          path: ~/.m2/repository
+          # yamllint disable-line rule:line-length
+          key: ${{ runner.os }}-jdk-${{ matrix.java }}-maven-${{ hashFiles('**/pom.xml') }}
+          restore-keys: |
+            ${{ runner.os }}-jdk-${{ matrix.java }}-maven-
+      - name: Check java version
+        run: java -version
+      - name: Check maven version
+        run: mvn -version
+      - name: Build project
+        run: mvn --errors --batch-mode clean install -Pqulice
+      - name: Rename JAR with tag version
+        id: rename_jar
+        run: |
+          TAG_NAME=${GITHUB_REF##*/}
+          ORIG_JAR=$(find target -type f -name "*.jar" | head -n 1)
+          NEW_JAR="meuapp-${TAG_NAME}.jar"
+          cp "$ORIG_JAR" "$NEW_JAR"
+          echo "FINAL_JAR=$NEW_JAR" >> "$GITHUB_ENV"
+          echo "::set-output name=jar_path::$NEW_JAR"
+      - name: Criar release no GitHub
+        uses: softprops/action-gh-release@v2
+        with:
+          name: Release ${{ github.ref_name }}
+          tag_name: ${{ github.ref_name }}
+          files: ${{ env.FINAL_JAR }}
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
