@@ -20,31 +20,32 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 ---
-name: latex-build-and-release
-permissions: write-all
+name: latex-release
+env:
+  DOCUMENT: document
 'on':
   push:
     tags:
       - '*'
 jobs:
-  build:
-    name: latex-build-and-release
+  latex-release:
     runs-on: ubuntu-24.04
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
-      - name: Compile LaTeX files
+      - name: Compile LaTeX
         uses: xu-cheng/latex-action@v3
         with:
-          root_file: document.tex
-          post_compile: "mv document.pdf document-${{ github.ref_name }}.pdf"
-      - name: Upload PDF file
+          root_file: ${{ env.DOCUMENT }}.tex
+          # yamllint disable-line rule:line-length
+          post_compile: "mv ${{ env.DOCUMENT }}.pdf ${{ env.DOCUMENT }}-${{ github.ref_name }}.pdf"
+      - name: Upload PDF
         uses: actions/upload-artifact@v4
         with:
-          name: document-${{ github.ref_name }}
-          path: document-${{ github.ref_name }}.pdf
-      - name: Make release
+          name: ${{ env.DOCUMENT }}-${{ github.ref_name }}
+          path: ${{ env.DOCUMENT }}-${{ github.ref_name }}.pdf
+      - name: Release PDF
         uses: softprops/action-gh-release@v2
         with:
-          files: document-${{ github.ref_name }}.pdf
+          files: ${{ env.DOCUMENT }}-${{ github.ref_name }}.pdf
           generate_release_notes: true
