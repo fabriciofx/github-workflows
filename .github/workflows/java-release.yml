@@ -20,17 +20,20 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 ---
-name: java-build-and-release
+name: java-release
+env:
+  ARTIFACTID: project-name
 'on':
   push:
-    branches:
-      - main
-  pull_request:
-    branches:
-      - main
+    tags:
+      - '*'
 jobs:
-  java-build-and-release:
-    runs-on: ubuntu-24.04
+  java-release:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ubuntu-24.04]
+        java: [11]
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -39,43 +42,56 @@ jobs:
         run: |
           sudo apt update
           sudo apt install -y maven
+          sudo gem install xcop
       - name: Install maven in Windows
         if: runner.os == 'Windows'
         run: |
           choco install maven -y
+          choco install gnupg -y
       - name: Setup Java SDK
         uses: actions/setup-java@v4
         with:
           distribution: 'temurin'
           java-version: 11
+          gpg-private-key: ${{ secrets.GPG_PRIVATE_KEY }}
+          gpg-passphrase: ${{ secrets.GPG_PASSPHRASE }}
+          server-id: oss.sonatype.org
+          server-username: ${{ secrets.OSSRH_USERNAME }}
+          server-password: ${{ secrets.OSSRH_PASSWORD }}
       - name: Configure maven cache
         uses: actions/cache@v4
         with:
           path: ~/.m2/repository
           # yamllint disable-line rule:line-length
           key: ${{ runner.os }}-jdk-${{ matrix.java }}-maven-${{ hashFiles('**/pom.xml') }}
-          restore-keys: |
-            ${{ runner.os }}-jdk-${{ matrix.java }}-maven-
-      - name: Check java version
-        run: java -version
-      - name: Check maven version
-        run: mvn -version
-      - name: Build project
-        run: mvn --errors --batch-mode clean install -Pqulice
-      - name: Rename JAR with tag version
-        id: rename_jar
+          restore-keys: ${{ runner.os }}-jdk-${{ matrix.java }}-maven-
+      - name: Setup maven settings.xml
         run: |
-          TAG_NAME=${GITHUB_REF##*/}
-          ORIG_JAR=$(find target -type f -name "*.jar" | head -n 1)
-          NEW_JAR="meuapp-${TAG_NAME}.jar"
-          cp "$ORIG_JAR" "$NEW_JAR"
-          echo "FINAL_JAR=$NEW_JAR" >> "$GITHUB_ENV"
-          echo "::set-output name=jar_path::$NEW_JAR"
-      - name: Criar release no GitHub
-        uses: softprops/action-gh-release@v2
-        with:
-          name: Release ${{ github.ref_name }}
-          tag_name: ${{ github.ref_name }}
-          files: ${{ env.FINAL_JAR }}
+          mkdir -p ~/.m2
+          cat > ~/.m2/settings.xml <<EOF
+          <settings>
+            <profiles>
+              <profile>
+                <id>${{ env.ARTIFACTID }}</id>
+                <properties>
+                  <gpg.keyname>${{ secrets.GPG_KEYNAME }}</gpg.keyname>
+                  <gpg.passphrase>${{ secrets.GPG_PASSPHRASE }}</gpg.passphrase>
+                </properties>
+              </profile>
+            </profiles>
+            <servers>
+              <server>
+                <id>oss.sonatype.org</id>
+                <username>${{ secrets.OSSRH_USERNAME }}</username>
+                <password>${{ secrets.OSSRH_PASSWORD }}</password>
+              </server>
+            </servers>
+          </settings>
+          EOF
+      - name: Release to Sonatype (Maven Central)
+        # yamllint disable-line rule:line-length
+        run: mvn clean deploy -Pqulice -Psonatype -P${{ env.ARTIFACTID }} -DskipTests=true --errors --batch-mode
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GPG_TTY: $(tty)
+          # yamllint disable-line rule:line-length
+          JDK_JAVA_OPTIONS: "--add-opens java.base/java.lang=ALL-UNNAMED --add-opens java.base/java.io=ALL-UNNAMED --add-opens java.base/java.util=ALL-UNNAMED --add-opens java.base/java.util.concurrent=ALL-UNNAMED"
