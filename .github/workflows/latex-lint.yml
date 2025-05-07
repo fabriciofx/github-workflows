@@ -29,8 +29,7 @@ name: latex-lint
     branches:
       - main
 jobs:
-  latexlint:
-    name: latex-lint
+  latex-lint:
     runs-on: ubuntu-24.04
     steps:
       - name: Checkout code
