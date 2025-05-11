@@ -34,7 +34,7 @@ jobs:
     strategy:
       matrix:
         os: [ubuntu-24.04, windows-2022]
-        java: [11, 17, 23]
+        java: [11, 17, 21]
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -43,10 +43,6 @@ jobs:
         run: |
           sudo apt update
           sudo apt install -y maven
-      - name: Install maven in Windows
-        if: runner.os == 'Windows'
-        run: |
-          choco install maven -y
       - name: Setup Java SDK
         uses: actions/setup-java@v4
         with:
@@ -58,11 +54,41 @@ jobs:
           path: ~/.m2/repository
           # yamllint disable-line rule:line-length
           key: ${{ runner.os }}-jdk-${{ matrix.java }}-maven-${{ hashFiles('**/pom.xml') }}
-          restore-keys: |
-            ${{ runner.os }}-jdk-${{ matrix.java }}-maven-
+          restore-keys: ${{ runner.os }}-jdk-${{ matrix.java }}-maven-
       - name: Check java version
         run: java -version
       - name: Check maven version
         run: mvn -version
-      - name: Build project
-        run: mvn --errors --batch-mode clean install -Pqulice
+      - name: Build project in Unix/macOS
+        if: runner.os != 'Windows'
+        run: |
+          mvn=$(which mvn)
+          if [[ -x "mvnw" ]]; then
+            mvn="./mvnw"
+          fi
+          qulice=$($mvn help:all-profiles | grep qulice)
+          if [[ -n "$qulice" ]]; then
+            $mvn --errors --batch-mode clean install -Pqulice
+          else
+            $mvn --errors --batch-mode clean install
+          fi
+      - name: Build project in Windows
+        if: runner.os == 'Windows'
+        # yamllint disable rule:line-length
+        run: |
+          for /f "delims=" %%i in ('findstr "<id>qulice</id>" pom.xml') do set qulice=1
+          if exist "mvnw.cmd" (
+            if defined qulice (
+              mvnw.cmd --errors --batch-mode clean install -Pqulice
+            ) else (
+              mvnw.cmd --errors --batch-mode clean install
+            )
+          ) else (
+            if defined qulice (
+              mvn --errors --batch-mode clean install -Pqulice
+            ) else (
+              mvn --errors --batch-mode clean install
+            )
+          )
+        # yamllint enable rule:line-length
+        shell: cmd
