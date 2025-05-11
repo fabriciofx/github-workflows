@@ -37,7 +37,7 @@ For more information, see
 
 ### Markdown Lint
 
-`markdown-lint` checks Markdown files (`*.md`) using
+`markdown-lint` checks Markdown files (`*.md`, `*.markdown`) using
 [markdownlint-cli2](https://github.com/DavidAnson/markdownlint-cli2).
 For more information, see
 [markdownlint-cli2-action](https://github.com/DavidAnson/markdownlint-cli2-action).
@@ -50,7 +50,7 @@ For more information, see [xcop-action](https://github.com/g4s8/xcop-action).
 
 ### YAML Lint
 
-`yaml-lint` checks YAML files (*.yml, *.yaml) using
+`yaml-lint` checks YAML files (`*.yml`, `*.yaml`) using
 [yamllint](https://github.com/adrienverge/yamllint). To more information, see
 [action-yamllint](https://github.com/ibiqlik/action-yamllint).
 
@@ -66,13 +66,13 @@ on multiple environments: Linux, Windows, and Java Temurin versions 11, 17, and
 [maven](https://maven.apache.org/) in the Linux and Java Temurin 11 and deploys
 it in Maven Central. To deploy into Maven Central you need:
 
-1. Create a GPG public and private keys
+- Create a GPG public and private keys
 
 ```bash
 gpg --full-generate-key
 ```
 
-2. List your public key
+- List your public key
 
 ```bash
 gpg --list-secret-keys --keyid-format LONG
@@ -83,13 +83,13 @@ sec   rsa4096/0123456789ABDEF0 2025-05-06 [SC]
 uid                 [ultimate] Your Name <your.email@example.com>
 ssb   rsa4096/FEDCBA9876543210 2025-05-06 [E]
 
-3. Publish your public key
+- Publish your public key
 
 ```bash
 gpg --keyserver keyserver.ubuntu.com --recv-keys 0123456789ABDEF0
 ```
 
-4. Add these following secrets to you GitHub secrets in your repository
+- Add these following secrets to you GitHub secrets in your repository
 
 `GPG_KEYNAME`: 0123456789ABDEF0
 `GPG_PASSPHRASE`: Your GPG password
