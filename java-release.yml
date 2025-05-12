@@ -21,8 +21,6 @@
 # SOFTWARE.
 ---
 name: java-release
-env:
-  ARTIFACTID: project-name
 'on':
   push:
     tags:
@@ -62,7 +60,7 @@ jobs:
           <settings>
             <profiles>
               <profile>
-                <id>${{ env.ARTIFACTID }}</id>
+                <id>app</id>
                 <properties>
                   <gpg.keyname>${{ secrets.GPG_KEYNAME }}</gpg.keyname>
                   <gpg.passphrase>${{ secrets.GPG_PASSPHRASE }}</gpg.passphrase>
@@ -80,8 +78,8 @@ jobs:
           EOF
       - name: Release to Sonatype (Maven Central)
         run: |
-          mvn clean deploy -Pqulice -Psonatype -P${{ env.ARTIFACTID }} \
-            -DskipTests=true --errors --batch-mode
+          mvn clean deploy -Pqulice -Psonatype -Papp -DskipTests=true \
+            --errors --batch-mode
         env:
           GPG_TTY: $(tty)
           JDK_JAVA_OPTIONS: >
