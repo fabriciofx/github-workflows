@@ -142,3 +142,12 @@ add `PYPI_API_TOKEN` into your GitHub repository secrets.
 `reuse` checks copyright and license compliance. To more information, see
 [reuse-action](https://github.com/fsfe/reuse-action),
 [REUSE](https://reuse.software).
+
+### F# Build
+
+`fsharp-build` builds an F# application at the terminal on multiple
+environments: Linux, Windows, and Mac. Notice that you can specify the .NET
+versions that must be available at the build environment (if your project
+targets multiple versions). To change any configuration, edit the
+`fsharp-build.yml` file. This configuration is inspired in what we have at
+[Giraffe](https://github.com/giraffe-fsharp/Giraffe/blob/master/.github/workflows/build-and-test.yml).
