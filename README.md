@@ -136,3 +136,9 @@ add `PYPI_API_TOKEN` into your GitHub repository secrets.
 
 `typos` checks the spelling in the source code. To more information, see
 [typos](https://github.com/crate-ci/typos).
+
+### Reuse
+
+`reuse` checks copyright and license compliance. To more information, see
+[reuse-action](https://github.com/fsfe/reuse-action),
+[REUSE](https://reuse.software).
