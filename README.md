@@ -131,3 +131,8 @@ project. To more information, see `pytest` documentation.
 `python-release` builds a Python package and deploys it at
 [PyPI](https://pypi.org/). To do it you will need create a PyPI account and
 add `PYPI_API_TOKEN` into your GitHub repository secrets.
+
+### Typos
+
+`typos` checks the spelling in the source code. To more information, see
+[typos](https://github.com/crate-ci/typos).
