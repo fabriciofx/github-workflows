@@ -41,6 +41,8 @@ jobs:
           distribution: 'temurin'
           java-version: 17
       - name: Download Simian
-        run: wget --quiet http://public.yegor256.com/simian.jar -O /tmp/simian.jar
+        run: |
+          wget --quiet http://public.yegor256.com/simian.jar -O /tmp/simian.jar
       - name: Check Java code duplication
-        run: java -jar /tmp/simian.jar -threshold=16 "-excludes=**/it" "**/*.java"
+        run: |
+          java -jar /tmp/simian.jar -threshold=16 "-excludes=**/it" "**/*.java"
