@@ -137,8 +137,18 @@ add `PYPI_API_TOKEN` into your GitHub repository secrets.
 `typos` checks the spelling in the source code. To more information, see
 [typos](https://github.com/crate-ci/typos).
 
-### Reuse
+### REUSE
 
 `reuse` checks copyright and license compliance. To more information, see
 [reuse-action](https://github.com/fsfe/reuse-action),
 [REUSE](https://reuse.software).
+
+### Bash Lint
+
+`bash-lint` checks bash scripts for bugs, bad practices and portability
+problems. To more information, see [shellcheck](https://www.shellcheck.net/).
+
+### Bash Format
+
+`bash-format` checks bash scripts for bad practices in code style. To more
+information, see [bashate](https://github.com/openstack/bashate).
