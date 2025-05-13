@@ -193,7 +193,7 @@ information, see [GHA-LoC-Badge](https://github.com/shadowmoose/GHA-LoC-Badge).
 `hoc-badge` build a hits of code (HOC) badge for your project. To more
 information, see
 [hits-of-code-badge](https://github.com/MikhailEpatko/hoc-badge-action).
-****
+
 ## XML
 
 ### XML Lint
@@ -208,9 +208,9 @@ For more information, see [xcop-action](https://github.com/g4s8/xcop-action).
 [Simian](https://simian.quandarypeak.com/). To more information, see Simian
 site.
 
-## F#
+## FSharp
 
-### F# Build
+### FSharp Build
 
 `fsharp-build` builds an F# application at the terminal on multiple
 environments: Linux, Windows, and Mac. Notice that you can specify the .NET
