@@ -20,7 +20,7 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 ---
-name: reuse
+name: license-reuse
 'on':
   push:
     branches:
@@ -29,7 +29,7 @@ name: reuse
     branches:
       - main
 jobs:
-  reuse:
+  license-reuse:
     timeout-minutes: 15
     runs-on: ubuntu-24.04
     steps:

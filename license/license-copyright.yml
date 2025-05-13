@@ -20,7 +20,7 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 ---
-name: copyrights
+name: license-copyright
 'on':
   push:
     branches:
@@ -29,7 +29,7 @@ name: copyrights
     branches:
       - main
 jobs:
-  copyrights:
+  license-copyright:
     runs-on: ubuntu-24.04
     steps:
       - name: Checkout code
