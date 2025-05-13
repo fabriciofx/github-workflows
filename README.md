@@ -19,10 +19,37 @@ parameters.
 
 List of available GitHub workflows:
 
+## All
+
 ### Action Lint
 
 `action-lint` checks workflow files for issues.
 For more information, see [actionlint](https://github.com/rhysd/actionlint).
+
+### Markdown Lint
+
+`markdown-lint` checks Markdown files (`*.md`, `*.markdown`) using
+[markdownlint-cli2](https://github.com/DavidAnson/markdownlint-cli2).
+For more information, see
+[markdownlint-cli2-action](https://github.com/DavidAnson/markdownlint-cli2-action).
+
+### YAML Lint
+
+`yaml-lint` checks YAML files (`*.yml`, `*.yaml`) using
+[yamllint](https://github.com/adrienverge/yamllint). To more information, see
+[action-yamllint](https://github.com/ibiqlik/action-yamllint).
+
+### Typos
+
+`typos` checks the spelling in the source code. To more information, see
+[typos](https://github.com/crate-ci/typos).
+
+### Codecov
+
+`codecov` checks code coverage using [Codecov](https://codecov.io). To more
+information, see Codecov site.
+
+## License
 
 ### Copyrights
 
@@ -35,24 +62,13 @@ For more information, see [actionlint](https://github.com/rhysd/actionlint).
 For more information, see
 [copyrights](https://github.com/yegor256/copyrights-action).
 
-### Markdown Lint
+### REUSE
 
-`markdown-lint` checks Markdown files (`*.md`, `*.markdown`) using
-[markdownlint-cli2](https://github.com/DavidAnson/markdownlint-cli2).
-For more information, see
-[markdownlint-cli2-action](https://github.com/DavidAnson/markdownlint-cli2-action).
+`reuse` checks copyright and license compliance. To more information, see
+[reuse-action](https://github.com/fsfe/reuse-action),
+[REUSE](https://reuse.software).
 
-### XML Lint
-
-`xml-lint` checks XML files (`*.xml`, `*.xsl`, `*.xsd`, `*.xhtml`) using
-[xcop](https://github.com/yegor256/xcop).
-For more information, see [xcop-action](https://github.com/g4s8/xcop-action).
-
-### YAML Lint
-
-`yaml-lint` checks YAML files (`*.yml`, `*.yaml`) using
-[yamllint](https://github.com/adrienverge/yamllint). To more information, see
-[action-yamllint](https://github.com/ibiqlik/action-yamllint).
+## Java
 
 ### Java Build
 
@@ -96,6 +112,19 @@ gpg --keyserver keyserver.ubuntu.com --recv-keys 0123456789ABDEF0
 `OSSRH_USERNAME`: Your Maven Central username token
 `OSSRH_PASSWORD`: Your Maven Central password token
 
+### Java Infer Analysis
+
+`java-infer-analysis` checks Java code using [Infer](https://fbinfer.com/). To
+more information, see Infer site.
+
+### Java Duplication
+
+`java-duplication` checks Java code using
+[Simian](https://simian.quandarypeak.com/) for code duplication. To more
+information, see Simian site.
+
+## Latex
+
 ### Latex Lint
 
 `latex-lint` checks LaTeX files using [lacheck](https://ctan.org/pkg/lacheck).
@@ -108,6 +137,8 @@ To more information, see
 releases. To do it, edit the `latex-release.yml` file and change `DOCUMENT`
 variable to the name of root LaTeX document. It will use git tag as document
 version.
+
+## Python
 
 ### Python Format
 
@@ -132,16 +163,13 @@ project. To more information, see `pytest` documentation.
 [PyPI](https://pypi.org/). To do it you will need create a PyPI account and
 add `PYPI_API_TOKEN` into your GitHub repository secrets.
 
-### Typos
+### Python Duplication
 
-`typos` checks the spelling in the source code. To more information, see
-[typos](https://github.com/crate-ci/typos).
+`python-duplication` checks Python code using
+[Simian](https://simian.quandarypeak.com/) for code duplication. To more
+information, see Simian site.
 
-### REUSE
-
-`reuse` checks copyright and license compliance. To more information, see
-[reuse-action](https://github.com/fsfe/reuse-action),
-[REUSE](https://reuse.software).
+## Bash
 
 ### Bash Lint
 
@@ -153,6 +181,8 @@ problems. To more information, see [shellcheck](https://www.shellcheck.net/).
 `bash-format` checks bash scripts for bad practices in code style. To more
 information, see [bashate](https://github.com/openstack/bashate).
 
+## Badge
+
 ### LOC Badge
 
 `loc-badge` builds a lines of code (LOC) badge for your project. To more
@@ -163,33 +193,14 @@ information, see [GHA-LoC-Badge](https://github.com/shadowmoose/GHA-LoC-Badge).
 `hoc-badge` build a hits of code (HOC) badge for your project. To more
 information, see
 [hits-of-code-badge](https://github.com/MikhailEpatko/hoc-badge-action).
+****
+## XML
 
-### Java Coverage
+### XML Lint
 
-`java-coverage` checks java code coverage using
-[JaCoCo](https://www.eclemma.org/jacoco/). To more information, see JaCoCo site.
-
-### Codecov
-
-`codecov` checks code coverage using [Codecov](https://codecov.io). To more
-information, see Codecov site.
-
-### Java Infer Analysis
-
-`java-infer-analysis` checks Java code using [Infer](https://fbinfer.com/). To
-more information, see Infer site.
-
-### Java Duplication
-
-`java-duplication` checks Java code using
-[Simian](https://simian.quandarypeak.com/) for code duplication. To more
-information, see Simian site.
-
-### Python Duplication
-
-`python-duplication` checks Python code using
-[Simian](https://simian.quandarypeak.com/) for code duplication. To more
-information, see Simian site.
+`xml-lint` checks XML files (`*.xml`, `*.xsl`, `*.xsd`, `*.xhtml`) using
+[xcop](https://github.com/yegor256/xcop).
+For more information, see [xcop-action](https://github.com/g4s8/xcop-action).
 
 ### XML Duplication
 
