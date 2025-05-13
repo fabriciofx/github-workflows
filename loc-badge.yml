@@ -35,7 +35,7 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
-      - name: Build LOC badge
+      - name: Build a LOC badge
         uses: shadowmoose/GHA-LoC-Badge@1.0.0
         with:
           debug: true
