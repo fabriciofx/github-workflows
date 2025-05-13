@@ -169,3 +169,8 @@ information, see
 `java-coverage` checks java code coverage using
 [JaCoCo](https://www.eclemma.org/jacoco/). To more information, follow JaCoCo
 link.
+
+### Codecov
+
+`codecov` checks code coverage using [codecov](https://codecov.io). To more
+information, follow see codecov site.
