@@ -152,3 +152,8 @@ problems. To more information, see [shellcheck](https://www.shellcheck.net/).
 
 `bash-format` checks bash scripts for bad practices in code style. To more
 information, see [bashate](https://github.com/openstack/bashate).
+
+### LOC Badge
+
+`loc-badge` builds a lines of code (LOC) badge for your project. To more
+information, see [GHA-LoC-Badge](https://github.com/shadowmoose/GHA-LoC-Badge).
