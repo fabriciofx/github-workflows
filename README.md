@@ -167,10 +167,14 @@ information, see
 ### Java Coverage
 
 `java-coverage` checks java code coverage using
-[JaCoCo](https://www.eclemma.org/jacoco/). To more information, follow JaCoCo
-link.
+[JaCoCo](https://www.eclemma.org/jacoco/). To more information, see JaCoCo site.
 
 ### Codecov
 
-`codecov` checks code coverage using [codecov](https://codecov.io). To more
-information, follow see codecov site.
+`codecov` checks code coverage using [Codecov](https://codecov.io). To more
+information, see Codecov site.
+
+### Java Infer Analysis
+
+`java-infer-analysis` checks Java code using [Infer](https://fbinfer.com/). To
+more information, see Infer site.
