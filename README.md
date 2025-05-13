@@ -184,3 +184,9 @@ more information, see Infer site.
 `java-duplication` checks Java code using
 [Simian](https://simian.quandarypeak.com/) for code duplication. To more
 information, see Simian site.
+
+### Python Duplication
+
+`python-duplication` checks Python code using
+[Simian](https://simian.quandarypeak.com/) for code duplication. To more
+information, see Simian site.
