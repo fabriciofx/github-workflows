@@ -207,3 +207,14 @@ For more information, see [xcop-action](https://github.com/g4s8/xcop-action).
 `xml-duplication` checks for code duplication using
 [Simian](https://simian.quandarypeak.com/). To more information, see Simian
 site.
+
+## F#
+
+### F# Build
+
+`fsharp-build` builds an F# application at the terminal on multiple
+environments: Linux, Windows, and Mac. Notice that you can specify the .NET
+versions that must be available at the build environment (if your project
+targets multiple versions). To change any configuration, edit the
+`fsharp-build.yml` file. This configuration is inspired in what we have at
+[Giraffe](https://github.com/giraffe-fsharp/Giraffe/blob/master/.github/workflows/build-and-test.yml).
