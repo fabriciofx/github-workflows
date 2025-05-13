@@ -178,3 +178,9 @@ information, see Codecov site.
 
 `java-infer-analysis` checks Java code using [Infer](https://fbinfer.com/). To
 more information, see Infer site.
+
+### Java Duplication
+
+`java-duplication` checks Java code using
+[Simian](https://simian.quandarypeak.com/) for code duplication. To more
+information, see Simian site.
