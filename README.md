@@ -190,3 +190,9 @@ information, see Simian site.
 `python-duplication` checks Python code using
 [Simian](https://simian.quandarypeak.com/) for code duplication. To more
 information, see Simian site.
+
+### XML Duplication
+
+`xml-duplication` checks for code duplication using
+[Simian](https://simian.quandarypeak.com/). To more information, see Simian
+site.
