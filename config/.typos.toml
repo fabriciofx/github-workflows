@@ -1,0 +1,20 @@
+[files]
+extend-exclude = [
+  ".venv/**",
+  "venv/**",
+  ".git/**",
+  "__pycache__/**",
+  "*.pyc",
+  "dist/**",
+  "build/**",
+  "target/**",
+  "*.svg",
+]
+
+[default.extend-words]
+cliente = "cliente"
+clientes = "clientes"
+comando = "comando"
+ser = "ser"
+gere = "gere"
+utiliza = "utiliza"
