@@ -1,3 +1,7 @@
+<!--
+SPDX-FileCopyrightText: Copyright (c) 2025 Fabrício Barros Cabral
+SPDX-License-Identifier: MIT
+-->
 # GitHub Workflows
 
 Collection of scripts to perform GitHub workflows.
