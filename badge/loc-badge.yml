@@ -20,26 +20,31 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 ---
-# yamllint disable rule:line-length
-name: markdown-lint
+name: loc-badge
 'on':
   push:
     branches:
       - main
-  pull_request:
-    branches:
-      - main
 concurrency:
-  group: markdown-lint-${{ github.ref }}
+  group: loc-badge-${{ github.ref }}
   cancel-in-progress: true
 jobs:
-  markdown-lint:
+  loc-badge:
     timeout-minutes: 15
     runs-on: ubuntu-24.04
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
-      - name: Lint Markdown files
-        uses: DavidAnson/markdownlint-cli2-action@v19
+      - name: Build a LOC badge
+        uses: shadowmoose/GHA-LoC-Badge@1.0.0
         with:
-          globs: '**/*.md'
+          debug: true
+          directory: .
+          badge: target/loc-badge.svg
+      - name: Release it into gh-pages
+        uses: JamesIves/github-pages-deploy-action@v4.7.3
+        with:
+          branch: gh-pages
+          folder: target
+          clean: false
+        if: github.ref == 'refs/heads/main'
