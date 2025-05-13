@@ -158,8 +158,14 @@ information, see [bashate](https://github.com/openstack/bashate).
 `loc-badge` builds a lines of code (LOC) badge for your project. To more
 information, see [GHA-LoC-Badge](https://github.com/shadowmoose/GHA-LoC-Badge).
 
-## HOC Badge
+### HOC Badge
 
 `hoc-badge` build a hits of code (HOC) badge for your project. To more
 information, see
 [hits-of-code-badge](https://github.com/MikhailEpatko/hoc-badge-action).
+
+### Java Coverage
+
+`java-coverage` checks java code coverage using
+[JaCoCo](https://www.eclemma.org/jacoco/). To more information, follow JaCoCo
+link.
