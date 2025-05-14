@@ -1,13 +1,13 @@
 # SPDX-FileCopyrightText: Copyright (C) 2025 Fabrício Barros Cabral
 # SPDX-License-Identifier: MIT
 ---
-name: codecov
+name: java-codecov
 'on':
   push:
     branches:
       - main
 jobs:
-  codecov:
+  java-codecov:
     timeout-minutes: 15
     runs-on: ubuntu-24.04
     steps:
@@ -24,6 +24,8 @@ jobs:
           path: ~/.m2/repository
           key: ubuntu-jdk-21-maven-${{ hashFiles('**/pom.xml') }}
           restore-keys: ubuntu-jdk-21-maven-
+      - name: Run tests
+        run: mvn install -Pjacoco
       - name: Checks code coverage
         uses: codecov/codecov-action@v5
         with:
