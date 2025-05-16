@@ -127,7 +127,7 @@ more information, see Infer site.
 [Simian](https://simian.quandarypeak.com/) for code duplication. To more
 information, see Simian site.
 
-# Java Sonar
+### Java Sonar
 
 `java-sonar` checks your code using
 [Sonar](https://www.sonarsource.com/products/sonarqube/). To do it, you need set
