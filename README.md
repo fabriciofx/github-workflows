@@ -127,6 +127,13 @@ more information, see Infer site.
 [Simian](https://simian.quandarypeak.com/) for code duplication. To more
 information, see Simian site.
 
+# Java Sonar
+
+`java-sonar` checks your code using
+[Sonar](https://www.sonarsource.com/products/sonarqube/). To do it, you need set
+the `secrets.GITHUB_TOKEN` and `secrets.SONAR_TOKEN`. To more information, see
+Sonar site.
+
 ## Latex
 
 ### Latex Lint
