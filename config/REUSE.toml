@@ -4,8 +4,6 @@ version = 1
 [[annotations]]
 path = [
     ".DS_Store",
-    ".gitattributes",
-    ".gitignore",
     ".pdd",
     ".gitmodules",
     ".latexmkrc",
@@ -38,11 +36,11 @@ path = [
     "**/*.puml",
     "**/aspell.en.pws",
     "**/DEPENDS.txt",
+    "**/*.properties",
     "aspell.en.pws",
     "**/CNAME",
     "DEPENDS.txt",
     "CNAME",
-    "README.md",
     "renovate.json",
     "rc",
 ]
