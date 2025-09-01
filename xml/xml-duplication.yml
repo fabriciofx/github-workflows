@@ -6,9 +6,11 @@ name: xml-duplication
   push:
     branches:
       - main
+      - master
   pull_request:
     branches:
       - main
+      - master
 jobs:
   xml-duplication:
     timeout-minutes: 15

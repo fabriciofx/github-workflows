@@ -6,9 +6,11 @@ name: action-lint
   push:
     branches:
       - main
+      - master
   pull_request:
     branches:
       - main
+      - master
 jobs:
   action-lint:
     runs-on: ubuntu-24.04

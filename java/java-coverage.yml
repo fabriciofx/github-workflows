@@ -6,6 +6,7 @@ name: java-coverage
   push:
     branches:
       - main
+      - master
 jobs:
   java-coverage:
     timeout-minutes: 15

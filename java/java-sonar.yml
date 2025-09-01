@@ -6,6 +6,7 @@ name: java-sonar
   push:
     branches:
       - main
+      - master
 jobs:
   java-sonar:
     timeout-minutes: 15

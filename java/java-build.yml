@@ -6,9 +6,11 @@ name: java-build
   push:
     branches:
       - main
+      - master
   pull_request:
     branches:
       - main
+      - master
 jobs:
   java-build:
     runs-on: ${{ matrix.os }}

@@ -6,9 +6,11 @@ name: typos
   push:
     branches:
       - main
+      - master
   pull_request:
     branches:
       - main
+      - master
 jobs:
   typos:
     timeout-minutes: 15

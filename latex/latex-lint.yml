@@ -6,9 +6,11 @@ name: latex-lint
   push:
     branches:
       - main
+      - master
   pull_request:
     branches:
       - main
+      - master
 jobs:
   latex-lint:
     runs-on: ubuntu-24.04

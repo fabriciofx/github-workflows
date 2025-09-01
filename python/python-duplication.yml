@@ -6,9 +6,11 @@ name: python-duplication
   push:
     branches:
       - main
+      - master
   pull_request:
     branches:
       - main
+      - master
 jobs:
   python-duplication:
     timeout-minutes: 15

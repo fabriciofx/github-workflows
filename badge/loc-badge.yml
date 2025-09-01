@@ -6,6 +6,7 @@ name: loc-badge
   push:
     branches:
       - main
+      - master
 concurrency:
   group: loc-badge-${{ github.ref }}
   cancel-in-progress: true

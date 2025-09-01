@@ -6,9 +6,11 @@ name: bash-format
   push:
     branches:
       - main
+      - master
   pull_request:
     branches:
       - main
+      - master
 jobs:
   bash-format:
     timeout-minutes: 15
