@@ -6,9 +6,11 @@ name: python-format
   push:
     branches:
       - main
+      - master
   pull_request:
     branches:
       - main
+      - master
 jobs:
   python-format:
     name: python-format

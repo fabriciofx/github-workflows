@@ -8,6 +8,7 @@ name: fsharp-build
   push:
     branches:
       - main
+      - master
 env:
   # Stop wasting time caching packages
   DOTNET_SKIP_FIRST_TIME_EXPERIENCE: true

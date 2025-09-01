@@ -6,9 +6,11 @@ name: license-reuse
   push:
     branches:
       - main
+      - master
   pull_request:
     branches:
       - main
+      - master
 jobs:
   license-reuse:
     timeout-minutes: 15

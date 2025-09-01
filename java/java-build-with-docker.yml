@@ -6,9 +6,11 @@ name: java-build-with-docker
   push:
     branches:
       - main
+      - master
   pull_request:
     branches:
       - main
+      - master
 jobs:
   java-build-with-docker:
     runs-on: ${{ matrix.os }}

@@ -6,9 +6,11 @@ name: python-tests
   push:
     branches:
       - main
+      - master
   pull_request:
     branches:
       - main
+      - master
 jobs:
   python-tests:
     name: python-tests

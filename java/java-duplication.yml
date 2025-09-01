@@ -6,9 +6,11 @@ name: java-duplication
   push:
     branches:
       - main
+      - master
   pull_request:
     branches:
       - main
+      - master
 jobs:
   java-duplication:
     timeout-minutes: 15

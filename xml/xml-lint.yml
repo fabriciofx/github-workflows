@@ -6,9 +6,11 @@ name: xml-lint
   push:
     branches:
       - main
+      - master
   pull_request:
     branches:
       - main
+      - master
 jobs:
   xml-lint:
     runs-on: ubuntu-24.04

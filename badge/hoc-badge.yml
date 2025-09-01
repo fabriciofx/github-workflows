@@ -6,6 +6,7 @@ name: hoc-badge
   push:
     branches:
       - main
+      - master
 concurrency:
   group: hoc-badge-${{ github.ref }}
   cancel-in-progress: true

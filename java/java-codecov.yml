@@ -6,6 +6,7 @@ name: java-codecov
   push:
     branches:
       - main
+      - master
 jobs:
   java-codecov:
     timeout-minutes: 15

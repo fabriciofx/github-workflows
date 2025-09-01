@@ -6,6 +6,7 @@ name: java-infer-analysis
   push:
     branches:
       - main
+      - master
 jobs:
   java-infer-analysis:
     timeout-minutes: 15
