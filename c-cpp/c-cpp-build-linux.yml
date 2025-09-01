@@ -1,0 +1,50 @@
+# SPDX-FileCopyrightText: Copyright (C) 2025 Fabrício Barros Cabral
+# SPDX-License-Identifier: MIT
+---
+name: c-cpp-build-linux
+'on':
+  push:
+    branches:
+      - main
+      - master
+  pull_request:
+    branches:
+      - main
+      - master
+jobs:
+  c-cpp-build-linux:
+    runs-on: ubuntu-24.04
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v5
+      - name: Install dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y build-essential autoconf automake libtool \
+            pkg-config
+      - name: Configure and build
+        run: |
+          [ -x ./autogen.sh ] && ./autogen.sh
+          ./configure
+          make
+      - name: Get properties from configure.ac
+        id: props
+        shell: bash
+        run: |
+          name=$(sed -n 's/AC_INIT(\[\([^]]*\)\],.*/\1/p' configure.ac)
+          echo "name=$name" >> $GITHUB_OUTPUT
+          version=$(sed -n 's/AC_INIT(\[[^]]*\], \[\([^]]*\)\], \[[^]]*\])/\1/p' configure.ac)
+          echo "version=$version" >> $GITHUB_OUTPUT
+      - name: Create source package
+        run: |
+          make dist
+      - name: Create Linux binary package
+        run: |
+          make binary-dist
+      - name: Prepare packages to distribution
+        run: |
+          mkdir -p dist
+          mv "${{ steps.props.outputs.name }}-${{ steps.props.outputs.version }}.tar.gz" \
+            "dist/${{ steps.props.outputs.name }}-${{ steps.props.outputs.version }}.tar.gz"
+          mv "${{ steps.props.outputs.name }}-${{ steps.props.outputs.version }}-bin.tar.gz" \
+            "dist/${{ steps.props.outputs.name }}-${{ steps.props.outputs.version }}-linux.tar.gz"
