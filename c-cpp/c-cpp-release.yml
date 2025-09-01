@@ -25,11 +25,13 @@ jobs:
       - name: Get properties from configure.ac
         id: props
         shell: bash
+        # yamllint disable rule:line-length
         run: |
           name=$(sed -n 's/AC_INIT(\[\([^]]*\)\],.*/\1/p' configure.ac)
           echo "name=$name" >> $GITHUB_OUTPUT
           version=$(sed -n 's/AC_INIT(\[[^]]*\], \[\([^]]*\)\], \[[^]]*\])/\1/p' configure.ac)
           echo "version=$version" >> $GITHUB_OUTPUT
+        # yamllint enable rule:line-length
       - name: Create source package
         run: |
           make dist
@@ -37,12 +39,14 @@ jobs:
         run: |
           make binary-dist
       - name: Prepare packages to distribution
+        # yamllint disable rule:line-length
         run: |
           mkdir -p dist
           mv "${{ steps.props.outputs.name }}-${{ steps.props.outputs.version }}.tar.gz" \
             "dist/${{ steps.props.outputs.name }}-${{ steps.props.outputs.version }}.tar.gz"
           mv "${{ steps.props.outputs.name }}-${{ steps.props.outputs.version }}-bin.tar.gz" \
             "dist/${{ steps.props.outputs.name }}-${{ steps.props.outputs.version }}-linux.tar.gz"
+        # yamllint enable rule:line-length
       - name: Upload Linux artifacts
         uses: actions/upload-artifact@v4
         with:
@@ -66,19 +70,23 @@ jobs:
       - name: Get properties from configure.ac
         id: props
         shell: bash
+        # yamllint disable rule:line-length
         run: |
           name=$(sed -n 's/AC_INIT(\[\([^]]*\)\],.*/\1/p' configure.ac)
           echo "name=$name" >> $GITHUB_OUTPUT
           version=$(sed -n 's/AC_INIT(\[[^]]*\], \[\([^]]*\)\], \[[^]]*\])/\1/p' configure.ac)
           echo "version=$version" >> $GITHUB_OUTPUT
+        # yamllint enable rule:line-length
       - name: Create macOS binary package
         run: |
           make binary-dist
       - name: Prepare package to distribution
+        # yamllint disable rule:line-length
         run: |
           mkdir -p dist
           mv "${{ steps.props.outputs.name }}-${{ steps.props.outputs.version }}-bin.tar.gz" \
             "dist/${{ steps.props.outputs.name }}-${{ steps.props.outputs.version }}-macos.tar.gz"
+        # yamllint enable rule:line-length
       - name: Upload macOS artifacts
         uses: actions/upload-artifact@v4
         with:
