@@ -11,12 +11,16 @@ name: c-cpp-build-windows
     branches:
       - main
       - master
+permissions:
+  contents: read
 jobs:
   c-cpp-build-windows:
     runs-on: windows-2022
     steps:
       - name: Checkout code
         uses: actions/checkout@v5
+        with:
+          persist-credentials: false
       - name: Install dependencies
         run: |
           choco update
@@ -43,12 +47,12 @@ jobs:
         run: |
           make binary-dist
       - name: Prepare packages to distribution
-        # yamllint disable rule:line-length
+        env:
+          NAME: ${{ steps.props.outputs.name }}
+          VERSION: ${{ steps.props.outputs.version }}
         run: |
-          mkdir -p dist
-          mv "${{ steps.props.outputs.name }}-${{ steps.props.outputs.version }}-bin.tar.gz" \
-            "dist/${{ steps.props.outputs.name }}-${{ steps.props.outputs.version }}-windows.tar.gz"
-        # yamllint enable rule:line-length
+          md dist
+          move "${NAME}-${VERSION}-bin.zip" "dist/${NAME}-${VERZION}-windows.zip"
       - name: Upload Windows artifacts
         uses: actions/upload-artifact@v4
         with:

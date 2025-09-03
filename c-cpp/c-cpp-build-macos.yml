@@ -11,12 +11,16 @@ name: c-cpp-build-macos
     branches:
       - main
       - master
+permissions:
+  contents: read
 jobs:
   c-cpp-build-macos:
     runs-on: macos-15
     steps:
       - name: Checkout code
         uses: actions/checkout@v5
+        with:
+          persist-credentials: false
       - name: Install dependencies
         run: |
           brew update
@@ -41,9 +45,25 @@ jobs:
         run: |
           make binary-dist
       - name: Prepare package to distribution
-        # yamllint disable rule:line-length
+        env:
+          NAME: ${{ steps.props.outputs.name }}
+          VERSION: ${{ steps.props.outputs.version }}
         run: |
+          # Secure shell command execution
+          set -euo pipefail
+
+          # Sanitize variables for security purposes
+          safe_name=$(echo "${NAME}" | tr -cd '[:alnum:]._-' )
+          safe_version=$(echo "${VERSION}" | tr -cd '[:alnum:]._-' )
+
+          # Check if variables are empty
+          [ -z "$safe_name" ] && { echo "Invalid name"; exit 1; }
+          [ -z "$safe_version" ] && { echo "Invalid version"; exit 1; }
+
+          # Check if file exist
+          bin="${safe_name}-${safe_version}.tar.gz-bin.tar.gz"
+          [ -f "$bin" ] || { echo "File '${bin}' not found"; exit 1; }
+
+          # Move file
           mkdir -p dist
-          mv "${{ steps.props.outputs.name }}-${{ steps.props.outputs.version }}-bin.tar.gz" \
-            "dist/${{ steps.props.outputs.name }}-${{ steps.props.outputs.version }}-macos.tar.gz"
-        # yamllint enable rule:line-length
+          mv "${bin}" dist/"${safe_name}-${safe_version}-macos.tar.gz"

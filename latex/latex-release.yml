@@ -7,26 +7,33 @@ env:
 'on':
   push:
     tags:
-      - '*'
+      - '[0-9]*.[0-9]*.[0-9]*'
+permissions:
+  contents: read
 jobs:
-  latex-release:
+  latex-build:
     runs-on: ubuntu-24.04
     steps:
       - name: Checkout code
         uses: actions/checkout@v5
+        with:
+          persist-credentials: false
       - name: Compile LaTeX
-        uses: xu-cheng/latex-action@v3
+        uses: xu-cheng/latex-action@25080975331dc4fc8e6f1af55788e00f84f51fff
         with:
           root_file: ${{ env.DOCUMENT }}.tex
           # yamllint disable-line rule:line-length
           post_compile: "mv ${{ env.DOCUMENT }}.pdf ${{ env.DOCUMENT }}-${{ github.ref_name }}.pdf"
+  latex-release:
+    runs-on: ubuntu-24.04
+    steps:
       - name: Upload PDF
         uses: actions/upload-artifact@v4
         with:
           name: ${{ env.DOCUMENT }}-${{ github.ref_name }}
           path: ${{ env.DOCUMENT }}-${{ github.ref_name }}.pdf
       - name: Release PDF
-        uses: softprops/action-gh-release@v2
+        uses: softprops/action-gh-release@72f2c25fcb47643c292f7107632f7a47c1df5cd8
         with:
           files: ${{ env.DOCUMENT }}-${{ github.ref_name }}.pdf
           generate_release_notes: true

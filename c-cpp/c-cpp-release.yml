@@ -5,13 +5,17 @@ name: c-cpp-release
 'on':
   push:
     tags:
-      - '*'
+      - '[0-9]*.[0-9]*.[0-9]*'
+permissions:
+  contents: read
 jobs:
   c-cpp-build-linux:
     runs-on: ubuntu-24.04
     steps:
       - name: Checkout code
         uses: actions/checkout@v5
+        with:
+          persist-credentials: false
       - name: Install dependencies
         run: |
           sudo apt-get update
@@ -39,14 +43,31 @@ jobs:
         run: |
           make binary-dist
       - name: Prepare packages to distribution
-        # yamllint disable rule:line-length
+        env:
+          NAME: ${{ steps.props.outputs.name }}
+          VERSION: ${{ steps.props.outputs.version }}
         run: |
+          # Secure shell command execution
+          set -euo pipefail
+
+          # Sanitize variables for security purposes
+          safe_name=$(echo "${NAME}" | tr -cd '[:alnum:]._-' )
+          safe_version=$(echo "${VERSION}" | tr -cd '[:alnum:]._-' )
+
+          # Check if variables are empty
+          [ -z "$safe_name" ] && { echo "Invalid name"; exit 1; }
+          [ -z "$safe_version" ] && { echo "Invalid version"; exit 1; }
+
+          # Check if files exists
+          src="${safe_name}-${safe_version}.tar.gz"
+          bin="${safe_name}-${safe_version}.tar.gz-bin.tar.gz"
+          [ -f "$src" ] || { echo "File '${src}' not found"; exit 1; }
+          [ -f "$bin" ] || { echo "File '${bin}' not found"; exit 1; }
+
+          # Move files
           mkdir -p dist
-          mv "${{ steps.props.outputs.name }}-${{ steps.props.outputs.version }}.tar.gz" \
-            "dist/${{ steps.props.outputs.name }}-${{ steps.props.outputs.version }}.tar.gz"
-          mv "${{ steps.props.outputs.name }}-${{ steps.props.outputs.version }}-bin.tar.gz" \
-            "dist/${{ steps.props.outputs.name }}-${{ steps.props.outputs.version }}-linux.tar.gz"
-        # yamllint enable rule:line-length
+          mv "${src}" "dist/"
+          mv "${bin}" "dist/${safe_name}-${safe_version}-linux.tar.gz"
       - name: Upload Linux artifacts
         uses: actions/upload-artifact@v4
         with:
@@ -57,6 +78,8 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v5
+        with:
+          persist-credentials: false
       - name: Install dependencies
         run: |
           brew update
@@ -81,12 +104,28 @@ jobs:
         run: |
           make binary-dist
       - name: Prepare package to distribution
-        # yamllint disable rule:line-length
+        env:
+          NAME: ${{ steps.props.outputs.name }}
+          VERSION: ${{ steps.props.outputs.version }}
         run: |
+          # Secure shell command execution
+          set -euo pipefail
+
+          # Sanitize variables for security purposes
+          safe_name=$(echo "${NAME}" | tr -cd '[:alnum:]._-' )
+          safe_version=$(echo "${VERSION}" | tr -cd '[:alnum:]._-' )
+
+          # Check if variables are empty
+          [ -z "$safe_name" ] && { echo "Invalid name"; exit 1; }
+          [ -z "$safe_version" ] && { echo "Invalid version"; exit 1; }
+
+          # Check if file exist
+          bin="${safe_name}-${safe_version}.tar.gz-bin.tar.gz"
+          [ -f "$bin" ] || { echo "File '${bin}' not found"; exit 1; }
+
+          # Move file
           mkdir -p dist
-          mv "${{ steps.props.outputs.name }}-${{ steps.props.outputs.version }}-bin.tar.gz" \
-            "dist/${{ steps.props.outputs.name }}-${{ steps.props.outputs.version }}-macos.tar.gz"
-        # yamllint enable rule:line-length
+          mv "${bin}" dist/"${safe_name}-${safe_version}-macos.tar.gz"
       - name: Upload macOS artifacts
         uses: actions/upload-artifact@v4
         with:
@@ -95,6 +134,8 @@ jobs:
   c-cpp-release:
     runs-on: ubuntu-24.04
     needs: [c-cpp-build-linux, c-cpp-build-macos]
+    permissions:
+      contents: write
     steps:
       - name: Download Linux artifacts
         uses: actions/download-artifact@v4
@@ -112,7 +153,7 @@ jobs:
           # Detects which tag triggered the build
           echo "tag=${GITHUB_REF##*/}" >> $GITHUB_OUTPUT
       - name: Release artifacts
-        uses: softprops/action-gh-release@v2
+        uses: softprops/action-gh-release@72f2c25fcb47643c292f7107632f7a47c1df5cd8
         with:
           tag_name: ${{ steps.tag.outputs.tag }}
           files: dist/*.tar.gz

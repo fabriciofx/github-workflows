@@ -7,6 +7,8 @@ name: hoc-badge
     branches:
       - main
       - master
+permissions:
+  contents: read
 concurrency:
   group: hoc-badge-${{ github.ref }}
   cancel-in-progress: true
@@ -17,13 +19,15 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v5
+        with:
+          persist-credentials: false
       - name: Build a HOC badge
-        uses: MikhailEpatko/hits-of-code-badge@main
+        uses: MikhailEpatko/hits-of-code-badge@da9d30c03970a5af529f69a1eaa3e35f3a65bd78
         with:
           output_dir: gh-pages
           filename: hoc-badge.svg
       - name: Release it into gh-pages
-        uses: JamesIves/github-pages-deploy-action@v4.7.3
+        uses: JamesIves/github-pages-deploy-action@6c2d9db40f9296374acc17b90404b6e8864128c8
         with:
           branch: gh-pages
           folder: gh-pages
