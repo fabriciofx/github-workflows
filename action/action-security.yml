@@ -12,8 +12,11 @@ name: action-security
       - main
       - master
 jobs:
-  action-lint:
+  action-security:
     runs-on: ubuntu-24.04
+    permissions:
+      contents: read
+      actions: read
     steps:
       - name: Checkout code
         uses: actions/checkout@v5
@@ -23,6 +26,6 @@ jobs:
             | tar xz
       - name: Check workflow files
         env:
-            GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          ZIZMOR_GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           ./zizmor .github/workflows | tee zizmor.log
