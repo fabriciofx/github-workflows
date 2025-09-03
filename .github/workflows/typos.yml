@@ -6,9 +6,13 @@ name: typos
   push:
     branches:
       - main
+      - master
   pull_request:
     branches:
       - main
+      - master
+permissions:
+  contents: read
 jobs:
   typos:
     timeout-minutes: 15
@@ -16,5 +20,7 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v5
+        with:
+          persist-credentials: false
       - name: Check files for typos
-        uses: crate-ci/typos@v1.36.0
+        uses: crate-ci/typos@b6297a6a5072df106aa9d94197f5d0533a9730bc
