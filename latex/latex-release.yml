@@ -19,6 +19,7 @@ jobs:
         with:
           persist-credentials: false
       - name: Compile LaTeX
+        # yamllint disable-line rule:line-length
         uses: xu-cheng/latex-action@25080975331dc4fc8e6f1af55788e00f84f51fff
         with:
           root_file: ${{ env.DOCUMENT }}.tex
@@ -33,6 +34,7 @@ jobs:
           name: ${{ env.DOCUMENT }}-${{ github.ref_name }}
           path: ${{ env.DOCUMENT }}-${{ github.ref_name }}.pdf
       - name: Release PDF
+        # yamllint disable-line rule:line-length
         uses: softprops/action-gh-release@72f2c25fcb47643c292f7107632f7a47c1df5cd8
         with:
           files: ${{ env.DOCUMENT }}-${{ github.ref_name }}.pdf

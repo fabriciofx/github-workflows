@@ -50,9 +50,11 @@ jobs:
         env:
           NAME: ${{ steps.props.outputs.name }}
           VERSION: ${{ steps.props.outputs.version }}
+        # yamllint disable rule:line-length
         run: |
           md dist
           move "${NAME}-${VERSION}-bin.zip" "dist/${NAME}-${VERZION}-windows.zip"
+        # yamllint enable rule:line-length
       - name: Upload Windows artifacts
         uses: actions/upload-artifact@v4
         with:

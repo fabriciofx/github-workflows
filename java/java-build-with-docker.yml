@@ -46,6 +46,7 @@ jobs:
           key: ${{ runner.os }}-jdk-${{ matrix.java }}-maven-${{ hashFiles('**/pom.xml') }}
           restore-keys: ${{ runner.os }}-jdk-${{ matrix.java }}-maven-
       - name: Build project
+        # yamllint disable rule:line-length
         run: |
           # Secure shell command execution
           set -euo pipefail
@@ -56,3 +57,4 @@ jobs:
           # If exist qulice profile, execute using it
           PROFILE=$(grep -q "<id>qulice</id>" pom.xml && echo "-Pqulice" || echo "")
           $MVN --errors --batch-mode clean install $PROFILE
+        # yamllint enable rule:line-length

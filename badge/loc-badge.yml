@@ -28,6 +28,7 @@ jobs:
           directory: .
           badge: target/loc-badge.svg
       - name: Release it into gh-pages
+        # yamllint disable-line rule:line-length
         uses: JamesIves/github-pages-deploy-action@6c2d9db40f9296374acc17b90404b6e8864128c8
         with:
           branch: gh-pages

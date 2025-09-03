@@ -22,11 +22,13 @@ jobs:
         with:
           persist-credentials: false
       - name: Build a HOC badge
+        # yamllint disable-line rule:line-length
         uses: MikhailEpatko/hits-of-code-badge@da9d30c03970a5af529f69a1eaa3e35f3a65bd78
         with:
           output_dir: gh-pages
           filename: hoc-badge.svg
       - name: Release it into gh-pages
+        # yamllint disable-line rule:line-length
         uses: JamesIves/github-pages-deploy-action@6c2d9db40f9296374acc17b90404b6e8864128c8
         with:
           branch: gh-pages
