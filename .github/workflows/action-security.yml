@@ -15,6 +15,7 @@ jobs:
   action-security:
     runs-on: ubuntu-24.04
     permissions:
+      security-events: write
       contents: read
       actions: read
     steps:
@@ -26,8 +27,13 @@ jobs:
             | tar xz
       - name: Check workflow files
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          echo "Token presente? ${GITHUB_TOKEN:+SIM}"
-          echo "Primeiros 4 caracteres do token: ${GITHUB_TOKEN:0:4}"
-          ./zizmor .github/workflows | tee zizmor.log
+          ./zizmor .github/workflows
+      - name: Stop pipeline if issues are found
+        run: |
+          if grep -q "error" zizmor.log; then
+            echo "Security issues has been found by zizmor"
+            cat zizmor.log
+            exit 1
+          fi
