@@ -26,6 +26,8 @@ jobs:
             | tar xz
       - name: Check workflow files
         env:
-          ZIZMOR_GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
+          echo "Token presente? ${GITHUB_TOKEN:+SIM}"
+          echo "Primeiros 4 caracteres do token: ${GITHUB_TOKEN:0:4}"
           ./zizmor .github/workflows | tee zizmor.log
