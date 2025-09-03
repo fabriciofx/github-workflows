@@ -1,7 +1,7 @@
 # SPDX-FileCopyrightText: Copyright (C) 2025 Fabrício Barros Cabral
 # SPDX-License-Identifier: MIT
 ---
-name: typos
+name: spell-lint
 'on':
   push:
     branches:
@@ -14,7 +14,7 @@ name: typos
 permissions:
   contents: read
 jobs:
-  typos:
+  spell-lint:
     timeout-minutes: 15
     runs-on: ubuntu-24.04
     steps:
@@ -22,5 +22,5 @@ jobs:
         uses: actions/checkout@v5
         with:
           persist-credentials: false
-      - name: Check files for typos
+      - name: Check files for typos (spell checker)
         uses: crate-ci/typos@b6297a6a5072df106aa9d94197f5d0533a9730bc
