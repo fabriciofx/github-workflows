@@ -1,7 +1,7 @@
 # SPDX-FileCopyrightText: Copyright (C) 2025 Fabrício Barros Cabral
 # SPDX-License-Identifier: MIT
 ---
-name: action-audit
+name: action-security
 'on':
   push:
     branches:
@@ -22,5 +22,7 @@ jobs:
           curl -L https://github.com/zizmorcore/zizmor/releases/latest/download/zizmor-x86_64-unknown-linux-gnu.tar.gz \
             | tar xz
       - name: Check workflow files
+        env:
+            GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           ./zizmor .github/workflows | tee zizmor.log
