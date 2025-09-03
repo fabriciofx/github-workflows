@@ -11,6 +11,8 @@ name: license-reuse
     branches:
       - main
       - master
+permissions:
+  contents: read
 jobs:
   license-reuse:
     timeout-minutes: 15
@@ -18,5 +20,7 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v5
+        with:
+          persist-credentials: false
       - name: REUSE Compliance check
-        uses: fsfe/reuse-action@v5
+        uses: fsfe/reuse-action@bb774aa972c2a89ff34781233d275075cbddf542

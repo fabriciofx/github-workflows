@@ -11,6 +11,8 @@ name: java-build-with-docker
     branches:
       - main
       - master
+permissions:
+  contents: read
 jobs:
   java-build-with-docker:
     runs-on: ${{ matrix.os }}
@@ -25,6 +27,8 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v5
+        with:
+          persist-credentials: false
       - name: Install Maven
         run: |
           sudo apt update
@@ -43,13 +47,12 @@ jobs:
           restore-keys: ${{ runner.os }}-jdk-${{ matrix.java }}-maven-
       - name: Build project
         run: |
-          if [ -x "mvnw" ]; then
-            MVN="./mvnw"
-          else
-            MVN=mvn
-          fi
-          if grep -q "<id>qulice</id>" pom.xml; then
-            $MVN --errors --batch-mode clean install -Pqulice
-          else
-            $MVN --errors --batch-mode clean install
-          fi
+          # Secure shell command execution
+          set -euo pipefail
+
+          # Choose maven embedded or system
+          [ -x "mvnw" ] && MVN="./mvnw" || MVN="mvn"
+
+          # If exist qulice profile, execute using it
+          PROFILE=$(grep -q "<id>qulice</id>" pom.xml && echo "-Pqulice" || echo "")
+          $MVN --errors --batch-mode clean install $PROFILE

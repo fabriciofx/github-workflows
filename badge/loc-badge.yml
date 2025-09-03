@@ -7,6 +7,8 @@ name: loc-badge
     branches:
       - main
       - master
+permissions:
+  contents: read
 concurrency:
   group: loc-badge-${{ github.ref }}
   cancel-in-progress: true
@@ -17,14 +19,16 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v5
+        with:
+          persist-credentials: false
       - name: Build a LOC badge
-        uses: shadowmoose/GHA-LoC-Badge@1.0.0
+        uses: shadowmoose/GHA-LoC-Badge@8c8191e02ebe2e4b4764f4711228bddcaeb88f19
         with:
           debug: true
           directory: .
           badge: target/loc-badge.svg
       - name: Release it into gh-pages
-        uses: JamesIves/github-pages-deploy-action@v4.7.3
+        uses: JamesIves/github-pages-deploy-action@6c2d9db40f9296374acc17b90404b6e8864128c8
         with:
           branch: gh-pages
           folder: target

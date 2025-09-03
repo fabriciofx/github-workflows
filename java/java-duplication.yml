@@ -11,6 +11,8 @@ name: java-duplication
     branches:
       - main
       - master
+permissions:
+  contents: read
 jobs:
   java-duplication:
     timeout-minutes: 15
@@ -18,6 +20,8 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v5
+        with:
+          persist-credentials: false
       - name: Setup Java SDK
         uses: actions/setup-java@v5
         with:

@@ -11,11 +11,15 @@ name: xml-lint
     branches:
       - main
       - master
+permissions:
+  contents: read
 jobs:
   xml-lint:
     runs-on: ubuntu-24.04
     steps:
       - name: Checkout code
         uses: actions/checkout@v5
+        with:
+          persist-credentials: false
       - name: Lint XML files
-        uses: g4s8/xcop-action@master
+        uses: g4s8/xcop-action@4e93f123cab886ca8e481a737ee586bc9f02d228

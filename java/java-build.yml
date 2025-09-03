@@ -11,6 +11,8 @@ name: java-build
     branches:
       - main
       - master
+permissions:
+  contents: read
 jobs:
   java-build:
     runs-on: ${{ matrix.os }}
@@ -21,6 +23,8 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v5
+        with:
+          persist-credentials: false
       - name: Install Maven in Linux
         if: runner.os == 'Linux'
         run: |
@@ -41,33 +45,20 @@ jobs:
       - name: Build project in Unix/macOS
         if: runner.os != 'Windows'
         run: |
-          if [ -x "mvnw" ]; then
-            MVN="./mvnw"
-          else
-            MVN=mvn
-          fi
-          if grep -q "<id>qulice</id>" pom.xml; then
-            $MVN --errors --batch-mode clean install -Pqulice
-          else
-            $MVN --errors --batch-mode clean install
-          fi
+          # Secure shell command execution
+          set -euo pipefail
+
+          # Choose maven embedded or system
+          [ -x "mvnw" ] && MVN="./mvnw" || MVN="mvn"
+
+          # If exist qulice profile, execute using it
+          PROFILE=$(grep -q "<id>qulice</id>" pom.xml && echo "-Pqulice" || echo "")
+          $MVN --errors --batch-mode clean install $PROFILE
       - name: Build project in Windows
         if: runner.os == 'Windows'
-        # yamllint disable rule:line-length
         run: |
-          for /f "delims=" %%i in ('findstr "<id>qulice</id>" pom.xml') do set qulice=1
-          if exist "mvnw.cmd" (
-            if defined qulice (
-              mvnw.cmd --errors --batch-mode clean install -Pqulice
-            ) else (
-              mvnw.cmd --errors --batch-mode clean install
-            )
-          ) else (
-            if defined qulice (
-              mvn --errors --batch-mode clean install -Pqulice
-            ) else (
-              mvn --errors --batch-mode clean install
-            )
-          )
-        # yamllint enable rule:line-length
+          @echo off
+          for /f "delims=" %%i in ('findstr "<id>qulice</id>" pom.xml') do set "Q=1"
+          if exist "mvnw.cmd" (set "M=mvnw.cmd") else (set "M=mvn")
+          %M% --errors --batch-mode clean install %Q:~-2,-1%-Pqulice
         shell: cmd

@@ -11,14 +11,18 @@ name: latex-lint
     branches:
       - main
       - master
+permissions:
+  contents: read
 jobs:
   latex-lint:
     runs-on: ubuntu-24.04
     steps:
       - name: Checkout code
         uses: actions/checkout@v5
+        with:
+          persist-credentials: false
       - name: Lint LaTeX files
-        uses: xu-cheng/texlive-action@v2
+        uses: xu-cheng/texlive-action@475ab07999e9709e524c3708488c8c170d3a6611
         with:
           scheme: full
           run: lacheck *.tex
