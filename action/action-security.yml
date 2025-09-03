@@ -21,10 +21,14 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v5
+        with:
+          persist-credentials: false
       - name: Download and installs zizmor
+        # yamllint disable rule:line-length
         run: |
-          curl -L https://github.com/zizmorcore/zizmor/releases/latest/download/zizmor-x86_64-unknown-linux-gnu.tar.gz \
-            | tar xz
+          curl -L -O --retry 3 https://github.com/zizmorcore/zizmor/releases/latest/download/zizmor-x86_64-unknown-linux-gnu.tar.gz
+          tar xfz zizmor-x86_64-unknown-linux-gnu.tar.gz
+        # yamllint enable rule:line-length
       - name: Check security in workflow files
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
