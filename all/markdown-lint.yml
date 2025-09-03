@@ -27,6 +27,6 @@ jobs:
           persist-credentials: false
       - name: Lint Markdown files
         # yamllint disable-line rule:line-length
-        uses: DavidAnson/markdownlint-cli2-action@992badcdf24e3b8eb7e87ff9287fe931bcb00c6e
+        uses: DavidAnson/markdownlint-cli2-action@f1996f2bdb2b7de7867c6b72e3b27a73cb9e1b3c
         with:
           globs: '**/*.md'
