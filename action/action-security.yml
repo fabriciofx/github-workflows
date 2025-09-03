@@ -29,7 +29,7 @@ jobs:
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          ./zizmor .github/workflows
+          ./zizmor .github/workflows --config .github/zizmor.yml
       - name: Stop pipeline if issues are found
         run: |
           if grep -q "error" zizmor.log; then
