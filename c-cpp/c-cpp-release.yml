@@ -6,6 +6,9 @@ name: c-cpp-release
   push:
     tags:
       - '[0-9]*.[0-9]*.[0-9]*'
+defaults:
+  run:
+    shell: bash -xeuo pipefail {0}
 permissions:
   contents: read
 jobs:
@@ -28,7 +31,6 @@ jobs:
           make
       - name: Get properties from configure.ac
         id: props
-        shell: bash
         # yamllint disable rule:line-length
         run: |
           name=$(sed -n 's/AC_INIT(\[\([^]]*\)\],.*/\1/p' configure.ac)
@@ -47,9 +49,6 @@ jobs:
           NAME: ${{ steps.props.outputs.name }}
           VERSION: ${{ steps.props.outputs.version }}
         run: |
-          # Secure shell command execution
-          set -euo pipefail
-
           # Sanitize variables for security purposes
           safe_name=$(echo "${NAME}" | tr -cd '[:alnum:]._-' )
           safe_version=$(echo "${VERSION}" | tr -cd '[:alnum:]._-' )
@@ -92,7 +91,6 @@ jobs:
           make
       - name: Get properties from configure.ac
         id: props
-        shell: bash
         # yamllint disable rule:line-length
         run: |
           name=$(sed -n 's/AC_INIT(\[\([^]]*\)\],.*/\1/p' configure.ac)
@@ -108,9 +106,6 @@ jobs:
           NAME: ${{ steps.props.outputs.name }}
           VERSION: ${{ steps.props.outputs.version }}
         run: |
-          # Secure shell command execution
-          set -euo pipefail
-
           # Sanitize variables for security purposes
           safe_name=$(echo "${NAME}" | tr -cd '[:alnum:]._-' )
           safe_version=$(echo "${VERSION}" | tr -cd '[:alnum:]._-' )
