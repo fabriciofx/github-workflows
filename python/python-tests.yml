@@ -11,6 +11,9 @@ name: python-tests
     branches:
       - main
       - master
+defaults:
+  run:
+    shell: bash -xeuo pipefail {0}
 permissions:
   contents: read
 jobs:
@@ -41,6 +44,5 @@ jobs:
             echo "${{ secrets.SSL_CA_CRT }}" | base64 --decode > certificates/ca.crt
           fi
         # yamllint enable rule:line-length
-        shell: bash
       - name: Run tests
         run: . ./.venv/bin/activate && pytest
