@@ -130,7 +130,6 @@ jobs:
           persist-credentials: false
       - name: Install dependencies
         run: |
-          choco upgrade all -y
           choco install -y make gcc pkg-config
       - name: Configure and build
         run: |
