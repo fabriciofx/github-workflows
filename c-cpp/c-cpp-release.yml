@@ -59,7 +59,7 @@ jobs:
 
           # Check if files exists
           src="${safe_name}-${safe_version}.tar.gz"
-          bin="${safe_name}-${safe_version}.tar.gz-bin.tar.gz"
+          bin="${safe_name}-${safe_version}-bin.tar.gz"
           [ -f "$src" ] || { echo "File '${src}' not found"; exit 1; }
           [ -f "$bin" ] || { echo "File '${bin}' not found"; exit 1; }
 
@@ -110,7 +110,7 @@ jobs:
           [ -z "$safe_version" ] && { echo "Invalid version"; exit 1; }
 
           # Check if file exist
-          bin="${safe_name}-${safe_version}.tar.gz-bin.tar.gz"
+          bin="${safe_name}-${safe_version}-bin.tar.gz"
           [ -f "$bin" ] || { echo "File '${bin}' not found"; exit 1; }
 
           # Move file
