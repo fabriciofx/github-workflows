@@ -28,8 +28,10 @@ jobs:
       - name: Install dependencies
         run: |
           sudo apt-get update
-          [ -f apt-packages.txt ] && xargs -a apt-packages.txt \
-            sudo apt-get install -y --no-install-recommends
+          if [ -s apt-packages.txt ]; then
+            xargs -a apt-packages.txt sudo apt-get install \
+              -y --no-install-recommends
+          fi
       - name: Configure and build
         run: |
           [ -x ./autogen.sh ] && ./autogen.sh
