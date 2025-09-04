@@ -38,9 +38,9 @@ jobs:
         id: props
         # yamllint disable rule:line-length
         run: |
-          name=$(sed -n 's/AC_INIT(\[\([^]]*\)\],.*/\1/p' configure.ac)
+          name="$(sed -n 's/AC_INIT(\[\([^]]*\)\],.*/\1/p' configure.ac)"
           echo "name=$name" >> $GITHUB_OUTPUT
-          version=$(sed -n 's/AC_INIT(\[[^]]*\], \[\([^]]*\)\], \[[^]]*\])/\1/p' configure.ac)
+          version="$(sed -n 's/AC_INIT(\[[^]]*\], \[\([^]]*\)\], \[[^]]*\])/\1/p' configure.ac)"
           echo "version=$version" >> $GITHUB_OUTPUT
         # yamllint enable rule:line-length
       - name: Create source package
@@ -55,8 +55,8 @@ jobs:
           VERSION: ${{ steps.props.outputs.version }}
         run: |
           # Sanitize variables for security purposes
-          safe_name=$(echo "${NAME}" | tr -cd '[:alnum:]._-' )
-          safe_version=$(echo "${VERSION}" | tr -cd '[:alnum:]._-' )
+          safe_name="$(echo "${NAME}" | tr -cd '[:alnum:]._-' )"
+          safe_version="$(echo "${VERSION}" | tr -cd '[:alnum:]._-' )"
 
           # Check if variables are empty
           [ -z "$safe_name" ] && { echo "Invalid name"; exit 1; }
@@ -93,9 +93,9 @@ jobs:
         id: props
         # yamllint disable rule:line-length
         run: |
-          name=$(sed -n 's/AC_INIT(\[\([^]]*\)\],.*/\1/p' configure.ac)
+          name="$(sed -n 's/AC_INIT(\[\([^]]*\)\],.*/\1/p' configure.ac)"
           echo "name=$name" >> $GITHUB_OUTPUT
-          version=$(sed -n 's/AC_INIT(\[[^]]*\], \[\([^]]*\)\], \[[^]]*\])/\1/p' configure.ac)
+          version="$(sed -n 's/AC_INIT(\[[^]]*\], \[\([^]]*\)\], \[[^]]*\])/\1/p' configure.ac)"
           echo "version=$version" >> $GITHUB_OUTPUT
         # yamllint enable rule:line-length
       - name: Create macOS binary package
@@ -107,8 +107,8 @@ jobs:
           VERSION: ${{ steps.props.outputs.version }}
         run: |
           # Sanitize variables for security purposes
-          safe_name=$(echo "${NAME}" | tr -cd '[:alnum:]._-' )
-          safe_version=$(echo "${VERSION}" | tr -cd '[:alnum:]._-' )
+          safe_name="$(echo "${NAME}" | tr -cd '[:alnum:]._-' )"
+          safe_version="$(echo "${VERSION}" | tr -cd '[:alnum:]._-' )"
 
           # Check if variables are empty
           [ -z "$safe_name" ] && { echo "Invalid name"; exit 1; }
@@ -141,9 +141,9 @@ jobs:
         id: props
         # yamllint disable rule:line-length
         run: |
-          name=$(sed -n 's/AC_INIT(\[\([^]]*\)\],.*/\1/p' configure.ac)
+          name="$(sed -n 's/AC_INIT(\[\([^]]*\)\],.*/\1/p' configure.ac)"
           echo "name=$name" >> $GITHUB_OUTPUT
-          version=$(sed -n 's/AC_INIT(\[[^]]*\], \[\([^]]*\)\], \[[^]]*\])/\1/p' configure.ac)
+          version="$(sed -n 's/AC_INIT(\[[^]]*\], \[\([^]]*\)\], \[[^]]*\])/\1/p' configure.ac)"
           echo "version=$version" >> $GITHUB_OUTPUT
         # yamllint enable rule:line-length
       - name: Create source package
