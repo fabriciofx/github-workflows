@@ -141,13 +141,13 @@ jobs:
         run: |
           @echo off
           for /f "usebackq delims=" %%P in ("choco-packages.txt") do (
-            choco install %%P -y --ignore-checksums
+            choco install %%P -y --no-progress
           )
         shell: cmd
       - name: Configure and build
         run: |
-          autogen.sh
-          configure
+          ./autogen.sh
+          ./configure
           make
       - name: Get properties from configure.ac
         id: props
