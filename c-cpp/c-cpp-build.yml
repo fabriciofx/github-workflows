@@ -39,9 +39,9 @@ jobs:
         # yamllint disable rule:line-length
         run: |
           name="$(sed -n 's/AC_INIT(\[\([^]]*\)\],.*/\1/p' configure.ac)"
-          echo "name=$name" >> $GITHUB_OUTPUT
+          echo "name=${name}" >> "${GITHUB_OUTPUT}"
           version="$(sed -n 's/AC_INIT(\[[^]]*\], \[\([^]]*\)\], \[[^]]*\])/\1/p' configure.ac)"
-          echo "version=$version" >> $GITHUB_OUTPUT
+          echo "version=${version}" >> "${GITHUB_OUTPUT}"
         # yamllint enable rule:line-length
       - name: Create source package
         run: |
@@ -70,7 +70,7 @@ jobs:
 
           # Move files
           mkdir -p dist
-          mv "${src}" "dist/"
+          mv "${src}" dist/
           mv "${bin}" "dist/${safe_name}-${safe_version}-linux.tar.gz"
   c-cpp-macos-build:
     runs-on: macos-15
@@ -94,9 +94,9 @@ jobs:
         # yamllint disable rule:line-length
         run: |
           name="$(sed -n 's/AC_INIT(\[\([^]]*\)\],.*/\1/p' configure.ac)"
-          echo "name=$name" >> $GITHUB_OUTPUT
+          echo "name=${name}" >> "${GITHUB_OUTPUT}"
           version="$(sed -n 's/AC_INIT(\[[^]]*\], \[\([^]]*\)\], \[[^]]*\])/\1/p' configure.ac)"
-          echo "version=$version" >> $GITHUB_OUTPUT
+          echo "version=${version}" >> "${GITHUB_OUTPUT}"
         # yamllint enable rule:line-length
       - name: Create macOS binary package
         run: |
@@ -142,9 +142,9 @@ jobs:
         # yamllint disable rule:line-length
         run: |
           name="$(sed -n 's/AC_INIT(\[\([^]]*\)\],.*/\1/p' configure.ac)"
-          echo "name=$name" >> $GITHUB_OUTPUT
+          echo "name=${name}" >> "${GITHUB_OUTPUT}"
           version="$(sed -n 's/AC_INIT(\[[^]]*\], \[\([^]]*\)\], \[[^]]*\])/\1/p' configure.ac)"
-          echo "version=$version" >> $GITHUB_OUTPUT
+          echo "version=${version}" >> "${GITHUB_OUTPUT}"
         # yamllint enable rule:line-length
       - name: Create source package
         run: |
