@@ -2,8 +2,6 @@
 # SPDX-License-Identifier: MIT
 ---
 name: latex-release
-env:
-  DOCUMENT: document
 'on':
   push:
     tags:
@@ -13,6 +11,8 @@ defaults:
     shell: bash -xeuo pipefail {0}
 permissions:
   contents: read
+env:
+  DOCUMENT: document
 jobs:
   latex-build:
     runs-on: ubuntu-24.04
@@ -22,12 +22,17 @@ jobs:
         with:
           persist-credentials: false
       - name: Compile LaTeX
-        # yamllint disable-line rule:line-length
         uses: xu-cheng/latex-action@25080975331dc4fc8e6f1af55788e00f84f51fff
         with:
+          extra_system_packages: "inkscape plantuml"
           root_file: ${{ env.DOCUMENT }}.tex
-          # yamllint disable-line rule:line-length
-          post_compile: "mv ${{ env.DOCUMENT }}.pdf ${{ env.DOCUMENT }}-${{ github.ref_name }}.pdf"
+          pre_compile: |
+            tlmgr update --self
+            tlmgr update --all
+          # yamllint disable rule:line-length
+          post_compile: |
+            mv ${{ env.DOCUMENT }}.pdf ${{ env.DOCUMENT }}-${{ github.ref_name }}.pdf
+          # yamllint enable rule:line-length
   latex-release:
     runs-on: ubuntu-24.04
     steps:
