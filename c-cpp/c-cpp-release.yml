@@ -86,7 +86,9 @@ jobs:
         run: |
           brew update
           brew upgrade
-          brew install autoconf automake libtool
+          if [ -s brew-packages.txt ]; then
+            xargs -a brew-packages.txt brew install
+          fi
       - name: Configure and build
         run: |
           [ -x ./autogen.sh ] && ./autogen.sh
