@@ -146,7 +146,7 @@ jobs:
         shell: cmd
       - name: Configure and build
         run: |
-          autogen.cmd
+          autogen.sh
           configure
           make
       - name: Get properties from configure.ac
