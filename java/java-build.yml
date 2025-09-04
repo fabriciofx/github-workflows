@@ -105,7 +105,6 @@ jobs:
           persist-credentials: false
       - name: Install maven
         run: |
-          choco upgrade
           choco install -y maven
       - name: Setup Java SDK
         uses: actions/setup-java@v5
