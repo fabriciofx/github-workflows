@@ -25,7 +25,7 @@ jobs:
         with:
           persist-credentials: false
       - name: Lint LaTeX files
-        uses: xu-cheng/texlive-action@475ab07999e9709e524c3708488c8c170d3a6611
+        uses: xu-cheng/texlive-action@8268537fedf1198f3ed7000c544bfdbddcbae3b7
         with:
           scheme: full
           run: lacheck *.tex
