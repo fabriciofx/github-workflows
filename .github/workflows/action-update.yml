@@ -6,6 +6,9 @@ name: action-update
   schedule:
     - cron: '0 2 * * *'
   workflow_dispatch:
+defaults:
+  run:
+    shell: bash -xeuo pipefail {0}
 permissions:
   contents: read
 jobs:
