@@ -11,6 +11,9 @@ name: action-security
     branches:
       - main
       - master
+defaults:
+  run:
+    shell: bash -xeuo pipefail {0}
 jobs:
   action-security:
     runs-on: ubuntu-24.04
