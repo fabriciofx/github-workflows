@@ -12,7 +12,7 @@ defaults:
 permissions:
   contents: read
 jobs:
-  c-cpp-build-linux:
+  c-cpp-linux-build:
     runs-on: ubuntu-24.04
     steps:
       - name: Checkout code
@@ -34,9 +34,9 @@ jobs:
         # yamllint disable rule:line-length
         run: |
           name="$(sed -n 's/AC_INIT(\[\([^]]*\)\],.*/\1/p' configure.ac)"
-          echo "name=$name" >> $GITHUB_OUTPUT
+          echo "name=${name}" >> "${GITHUB_OUTPUT}"
           version="$(sed -n 's/AC_INIT(\[[^]]*\], \[\([^]]*\)\], \[[^]]*\])/\1/p' configure.ac)"
-          echo "version=$version" >> $GITHUB_OUTPUT
+          echo "version=${version}" >> "${GITHUB_OUTPUT}"
         # yamllint enable rule:line-length
       - name: Create source package
         run: |
@@ -65,14 +65,9 @@ jobs:
 
           # Move files
           mkdir -p dist
-          mv "${src}" "dist/"
+          mv "${src}" dist/
           mv "${bin}" "dist/${safe_name}-${safe_version}-linux.tar.gz"
-      - name: Upload Linux artifacts
-        uses: actions/upload-artifact@v4
-        with:
-          name: linux-dist
-          path: dist/*.tar.gz
-  c-cpp-build-macos:
+  c-cpp-macos-build:
     runs-on: macos-15
     steps:
       - name: Checkout code
@@ -94,9 +89,9 @@ jobs:
         # yamllint disable rule:line-length
         run: |
           name="$(sed -n 's/AC_INIT(\[\([^]]*\)\],.*/\1/p' configure.ac)"
-          echo "name=$name" >> $GITHUB_OUTPUT
+          echo "name=${name}" >> "${GITHUB_OUTPUT}"
           version="$(sed -n 's/AC_INIT(\[[^]]*\], \[\([^]]*\)\], \[[^]]*\])/\1/p' configure.ac)"
-          echo "version=$version" >> $GITHUB_OUTPUT
+          echo "version=${version}" >> "${GITHUB_OUTPUT}"
         # yamllint enable rule:line-length
       - name: Create macOS binary package
         run: |
@@ -119,16 +114,11 @@ jobs:
           [ -f "$bin" ] || { echo "File '${bin}' not found"; exit 1; }
 
           # Move file
-          mkdir -p dist
+          mkdir -p "dist"
           mv "${bin}" dist/"${safe_name}-${safe_version}-macos.tar.gz"
-      - name: Upload macOS artifacts
-        uses: actions/upload-artifact@v4
-        with:
-          name: macos-dist
-          path: dist/*.tar.gz
   c-cpp-release:
     runs-on: ubuntu-24.04
-    needs: [c-cpp-build-linux, c-cpp-build-macos]
+    needs: [c-cpp-linux-build, c-cpp-macos-build]
     permissions:
       contents: write
     steps:
@@ -146,7 +136,7 @@ jobs:
         id: tag
         run: |
           # Detects which tag triggered the build
-          echo "tag=${GITHUB_REF##*/}" >> $GITHUB_OUTPUT
+          echo "tag=${GITHUB_REF##*/}" >> "${GITHUB_OUTPUT}"
       - name: Release artifacts
         # yamllint disable-line rule:line-length
         uses: softprops/action-gh-release@72f2c25fcb47643c292f7107632f7a47c1df5cd8
