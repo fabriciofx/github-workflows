@@ -153,6 +153,7 @@ jobs:
           for /f "usebackq delims=" %%P in ("choco-packages.txt") do (
             choco install %%P -y --no-progress
           )
+          refreshenv
           pacman -S autoconf automake libtool m4
         shell: cmd
       - name: Configure and build
