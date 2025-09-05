@@ -40,7 +40,7 @@ jobs:
       - name: Stop pipeline if issues are found
         run: |
           if grep -q "error" zizmor.log; then
-            echo "Security issues has been found by zizmor"
+            echo "Zizmor found some security issues:"
             cat zizmor.log
             exit 1
           fi
