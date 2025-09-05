@@ -29,7 +29,7 @@ jobs:
         run: |
           curl -sS -L --retry 3 -o /tmp/download-actionlint.bash \
             https://raw.githubusercontent.com/rhysd/actionlint/main/scripts/download-actionlint.bash
-          bash /tmp/download-actionlint.bash
+          bash /tmp/download-actionlint.bash latest /tmp
         # yamllint enable rule:line-length
       - name: Check workflow files
         run: /tmp/actionlint -color
