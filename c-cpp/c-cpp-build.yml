@@ -154,7 +154,7 @@ jobs:
             choco install %%P -y --no-progress
           )
           refreshenv
-          pacman -S autoconf automake libtool m4
+          pacman -S base-devel
         shell: cmd
       - name: Configure and build
         run: |
