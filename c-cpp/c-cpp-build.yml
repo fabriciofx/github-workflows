@@ -155,7 +155,9 @@ jobs:
             choco install %%P -y --no-progress
           )
           set MSYS2=C:\tools\msys64
-          set PATH=%MSYS2%\usr\bin;%MSYS2%\mingw64\bin;%PATH%
+          set MINGW64=%MSYS2%\mingw64
+          set PATH=%MSYS2%;%MSYS2%\usr\bin;%MINGW64%\bin;%PATH%
+          mingw64
           pacman --version
           pacman -Syu
           pacman -S base-devel
