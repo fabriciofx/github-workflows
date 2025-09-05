@@ -154,8 +154,8 @@ jobs:
           for /f "usebackq delims=" %%P in ("choco-packages.txt") do (
             choco install %%P -y --no-progress
           )
-          set MSYS2="C:\tools\msys64"
-          set PATH=%MSYS2%\user\bin;%MSYS2%\mingw64\bin;%PATH%
+          set MSYS2=C:\tools\msys64
+          set PATH=%MSYS2%\usr\bin;%MSYS2%\mingw64\bin;%PATH%
           pacman --version
           pacman -Syu
           pacman -S base-devel
