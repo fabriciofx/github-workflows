@@ -30,10 +30,12 @@ jobs:
         run: |
           [ -x ./autogen.sh ] && ./autogen.sh
           [ -x ./configure ] && ./configure
-          [ -s Makefile ] && make || {
+          [ -s Makefile ] || {
             echo "I couldn't find an autogen.sh, configure, or Makefile."
             echo "Please check your files."
+            exit 1
           }
+          make
       - name: Get properties from configure.ac
         id: props
         # yamllint disable rule:line-length
@@ -89,10 +91,12 @@ jobs:
         run: |
           [ -x ./autogen.sh ] && ./autogen.sh
           [ -x ./configure ] && ./configure
-          [ -s Makefile ] && make || {
+          [ -s Makefile ] || {
             echo "I couldn't find an autogen.sh, configure, or Makefile."
             echo "Please check your files."
+            exit 1
           }
+          make
       - name: Get properties from configure.ac
         id: props
         # yamllint disable rule:line-length
