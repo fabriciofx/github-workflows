@@ -26,14 +26,12 @@ jobs:
         with:
           persist-credentials: false
       - name: Install venv and requirements
-        # yamllint disable rule:line-length
         run: |
-          if [ -f Makefile ]; then
-            make install
-          else
-            python -m venv .venv && . ./.venv/bin/activate && pip install -r requirements.txt
-          fi
-        # yamllint enable rule:line-length
+          [ -s Makefile ] && make install || {
+            python -m venv .venv
+            . ./.venv/bin/activate
+            pip install -r requirements.txt
+          }
       - name: Install ruff
         run: pip install ruff
       - name: Lint Python files

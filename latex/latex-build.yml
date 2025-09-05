@@ -39,4 +39,6 @@ jobs:
           fi
       - name: Compile LaTeX document
         run: |
-          [ -f Makefile ] && make clean all
+          [ -s Makefile ] && make || {
+            echo "Makefile not found. Please, check your files."
+          }
