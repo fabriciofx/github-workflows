@@ -87,7 +87,6 @@ jobs:
           fi
       - name: Configure and build
         run: |
-        run: |
           [ -x ./autogen.sh ] && ./autogen.sh
           [ -x ./configure ] && ./configure
           [ -s Makefile ] && make || {
