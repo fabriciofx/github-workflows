@@ -148,14 +148,19 @@ jobs:
         with:
           persist-credentials: false
       - name: Install dependencies
+        # yamllint disable rule:line-length
         run: |
           @echo off
           for /f "usebackq delims=" %%P in ("choco-packages.txt") do (
             choco install %%P -y --no-progress
           )
           refreshenv
+          pacman --version
+          pacman -Syu
           pacman -S base-devel
+          pacman -S mingw-w64-x86_64-autoconf mingw-w64-x86_64-automake mingw-w64-x86_64-toolchain
         shell: cmd
+        # yamllint enable rule:line-length
       - name: Configure and build
         run: |
           [ -x ./autogen.sh ] && ./autogen.sh
