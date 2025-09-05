@@ -148,32 +148,42 @@ jobs:
         with:
           persist-credentials: false
       - name: Install dependencies
-        # yamllint disable rule:line-length
+        shell: cmd
         run: |
           @echo off
           for /f "usebackq delims=" %%P in ("choco-packages.txt") do (
             choco install %%P -y --no-progress
           )
-          set MSYS2=C:\tools\msys64
-          set MINGW64=%MSYS2%\mingw64
-          set PATH=%MSYS2%;%MSYS2%\usr\bin;%MINGW64%\bin;%PATH%
-          mingw64
-          pacman --version
-          pacman -Syu
-          pacman -S base-devel
-          pacman -S mingw-w64-x86_64-autoconf mingw-w64-x86_64-automake mingw-w64-x86_64-toolchain
+      - name: Update MSYS2 and install packages
         shell: cmd
-        # yamllint enable rule:line-length
+        run: |
+          C:\tools\msys64\usr\bin\msys2_shell.cmd -mingw64 -c "
+            pacman -Syu --noconfirm --needed && \
+            pacman -S --noconfirm --needed base-devel && \
+            pacman -S --noconfirm --needed mingw-w64-x86_64-autoconf \
+              mingw-w64-x86_64-automake mingw-w64-x86_64-toolchain
+          "
+      - name: Verify installations
+        shell: cmd
+        run: |
+          C:\tools\msys64\usr\bin\msys2_shell.cmd -mingw64 -c "
+            pacman --version; \
+            autoconf --version; \
+            autoheader --version; \
+            gcc --version
+          "
       - name: Configure and build
         run: |
-          [ -x ./autogen.sh ] && ./autogen.sh
-          [ -x ./configure ] && ./configure
-          [ -s Makefile ] || {
-            echo "I couldn't find an autogen.sh, configure, or Makefile."
-            echo "Please check your files."
-            exit 1
-          }
-          make
+          C:\tools\msys64\usr\bin\msys2_shell.cmd -mingw64 -c "
+            [ -x ./autogen.sh ] && ./autogen.sh
+            [ -x ./configure ] && ./configure
+            [ -s Makefile ] || {
+              echo "I couldn't find an autogen.sh, configure, or Makefile."
+              echo "Please check your files."
+              exit 1
+            }
+            make
+          "
       - name: Get properties from configure.ac
         id: props
         # yamllint disable rule:line-length
