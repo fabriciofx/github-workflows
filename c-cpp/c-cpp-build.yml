@@ -154,24 +154,17 @@ jobs:
           for /f "usebackq delims=" %%P in ("choco-packages.txt") do (
             choco install %%P -y --no-progress
           )
+      - name: Search for msys2_shell.cmd
+        shell: cmd
+        run: dir /s /b C:\ | findstr msys2_shell.cmd
       - name: Update MSYS2 and install packages
         shell: cmd
         run: |
-          C:\tools\msys64\usr\bin\msys2_shell.cmd -mingw64 -c "
-            pacman -Syu --noconfirm --needed && \
-            pacman -S --noconfirm --needed base-devel && \
-            pacman -S --noconfirm --needed mingw-w64-x86_64-autoconf \
-              mingw-w64-x86_64-automake mingw-w64-x86_64-toolchain
-          "
+          C:\tools\msys64\usr\bin\msys2_shell.cmd -mingw64 -c "pacman -Syu --noconfirm --needed && pacman -S --noconfirm --needed base-devel mingw-w64-x86_64-autoconf mingw-w64-x86_64-automake mingw-w64-x86_64-toolchain"
       - name: Verify installations
         shell: cmd
         run: |
-          C:\tools\msys64\usr\bin\msys2_shell.cmd -mingw64 -c "
-            pacman --version; \
-            autoconf --version; \
-            autoheader --version; \
-            gcc --version
-          "
+          C:\tools\msys64\usr\bin\msys2_shell.cmd -mingw64 -c "pacman --version; autoconf --version; autoheader --version; gcc --version"
       - name: Configure and build
         run: |
           C:\tools\msys64\usr\bin\msys2_shell.cmd -mingw64 -c "
