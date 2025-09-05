@@ -32,7 +32,7 @@ jobs:
           java-version: 17
       - name: Download Simian
         run: |
-          curl -sS -L -O --retry 3 -o /tmp/simian.jar \
+          curl -sS -L --retry 3 -o /tmp/simian.jar \
             http://public.yegor256.com/simian.jar
       - name: Check Java code duplication
         run: |
