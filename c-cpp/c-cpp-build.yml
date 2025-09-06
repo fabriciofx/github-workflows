@@ -154,9 +154,12 @@ jobs:
           update: true
           install: >-
             base-devel
+            autoconf
+            automake
+            libtool
             mingw-w64-x86_64-toolchain
             mingw-w64-x86_64-make
-            mingw-w64-x86_64-pkg-config
+            mingw-w64-x86_64-pkgconf
             mingw-w64-x86_64-libpcap
             mingw-w64-x86_64-tcl
       - name: Configure and build
