@@ -34,8 +34,9 @@ jobs:
           fi
       - name: Compile LaTeX document
         run: |
-          [ -s Makefile ] && make || {
-            echo "Makefile not found. Please, check your files."
+          [ -s Makefile ] || {
+            echo "Makefile not found. Please, check your files.";
+            exit 1;
           }
       - name: Upload PDF
         uses: actions/upload-artifact@v4
@@ -57,7 +58,7 @@ jobs:
         id: tag
         run: |
           # Detects which tag triggered the build
-          echo "tag=${GITHUB_REF##*/}" >> $GITHUB_OUTPUT
+          echo "tag=${GITHUB_REF##*/}" >> "${GITHUB_OUTPUT}"
       - name: Release document
         # yamllint disable-line rule:line-length
         uses: softprops/action-gh-release@6cbd405e2c4e67a21c47fa9e383d020e4e28b836

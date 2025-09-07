@@ -24,59 +24,37 @@ concurrency:
   group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
   cancel-in-progress: true
 jobs:
-  fsharp-linux-macos-build:
-    runs-on: ${{ matrix.os }}
-    strategy:
-      matrix:
-        os: [ubuntu-24.04, macos-14, macos-15]
+  checkcode:
+    runs-on: ubuntu-24.04
+    outputs:
+      proceed: ${{ steps.check.outputs.proceed }}
     steps:
       - name: Checkout code
         uses: actions/checkout@v5
-        with:
-          persist-credentials: false
-      - name: Proceed workflow only if any code exist
+      - name: Check for code
+        id: check
+        # yamllint disable rule:line-length
         run: |
           found=$(find . -maxdepth 1 -name "*.csproj" -o -name "*.sln")
-          [ -z "${found}" ] && {
-            echo "No code to proceed this workflow.";
-            exit 0;
-          }
-      - name: Setup .NET Core
-        uses: actions/setup-dotnet@v5
-        with:
-          dotnet-version: |
-            6.x
-            7.x
-            8.x
-            9.x
-      - name: Restore
-        run: dotnet restore
-      - name: Build
-        run: dotnet build -c Release --no-restore
-  fsharp-windows-build:
-    runs-on: windows-2025
+          if [ -z "${found}" ]; then
+            echo "No code found to proceed. Stopping execution of the other jobs."
+            echo "proceed=false" >> "${GITHUB_OUTPUT}"
+          else
+            echo "proceed=true" >> "${GITHUB_OUTPUT}"
+          fi
+        # yamllint enable rule:line-length
+  fsharp-build:
+    runs-on: ${{ matrix.os }}
+    needs: checkcode
+    if: needs.checkcode.outputs.proceed == 'true'
+    strategy:
+      matrix:
+        os: [ubuntu-24.04, macos-14, macos-15, windows-2025]
     steps:
       - name: Checkout code
         uses: actions/checkout@v5
         with:
           persist-credentials: false
-      - name: Proceed workflow only if any code exist
-        run: |
-          @echo off
-          set found=false
-          for /R %%d in (.) do (
-              pushd %%d
-              if exist *.csproj (
-                  set found=true
-              ) else if exist *.sln (
-                  set found=true
-              )
-              popd
-          )
-          if "%found%"=="false" (
-              echo No code found to proceed. Exiting workflow.
-              exit /b 0
-          )
       - name: Setup .NET Core
         uses: actions/setup-dotnet@v5
         with:
@@ -86,8 +64,6 @@ jobs:
             8.x
             9.x
       - name: Restore
-        shell: cmd
         run: dotnet restore
       - name: Build
-        shell: cmd
         run: dotnet build -c Release --no-restore
