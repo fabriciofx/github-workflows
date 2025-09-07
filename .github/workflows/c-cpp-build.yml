@@ -113,7 +113,7 @@ jobs:
   c-cpp-macos-build:
     runs-on: macos-15
     needs: checkcode
-    if: needs.checkcode.outputs.proceed == "true"
+    if: needs.checkcode.outputs.proceed == 'true'
     steps:
       - name: Checkout code
         uses: actions/checkout@v5
@@ -176,7 +176,7 @@ jobs:
   c-cpp-windows-build:
     runs-on: windows-2025
     needs: checkcode
-    if: needs.checkcode.outputs.proceed == "true"
+    if: needs.checkcode.outputs.proceed == 'true'
     steps:
       - name: Checkout code
         uses: actions/checkout@v5
