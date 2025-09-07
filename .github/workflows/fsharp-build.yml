@@ -1,1 +1,48 @@
-../../fsharp/fsharp-build.yml
+# SPDX-FileCopyrightText: Copyright (C) 2025 Fabrício Barros Cabral
+# SPDX-License-Identifier: MIT
+---
+name: fsharp-build
+'on':
+  workflow_dispatch:
+  pull_request:
+  push:
+    branches:
+      - main
+      - master
+defaults:
+  run:
+    shell: bash -xeuo pipefail {0}
+permissions:
+  contents: read
+env:
+  # Stop wasting time caching packages
+  DOTNET_SKIP_FIRST_TIME_EXPERIENCE: true
+  # Disable sending usage data to Microsoft
+  DOTNET_CLI_TELEMETRY_OPTOUT: true
+concurrency:
+  # yamllint disable-line rule:line-length
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+jobs:
+  fsharp-build:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ubuntu-24.04, windows-2022, macos-14]
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v5
+        with:
+          persist-credentials: false
+      - name: Setup .NET Core
+        uses: actions/setup-dotnet@v5
+        with:
+          dotnet-version: |
+            6.x
+            7.x
+            8.x
+            9.x
+      - name: Restore
+        run: dotnet restore
+      - name: Build
+        run: dotnet build -c Release --no-restore

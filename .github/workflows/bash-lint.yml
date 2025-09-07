@@ -1,1 +1,29 @@
-../../bash/bash-lint.yml
+# SPDX-FileCopyrightText: Copyright (C) 2025 Fabrício Barros Cabral
+# SPDX-License-Identifier: MIT
+---
+name: bash-lint
+'on':
+  push:
+    branches:
+      - main
+      - master
+  pull_request:
+    branches:
+      - main
+      - master
+defaults:
+  run:
+    shell: bash -xeuo pipefail {0}
+permissions:
+  contents: read
+jobs:
+  bash-lint:
+    timeout-minutes: 15
+    runs-on: ubuntu-24.04
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v5
+        with:
+          persist-credentials: false
+      - name: Shell script (bash) check
+        uses: ludeeus/action-shellcheck@00b27aa7cb85167568cb48a3838b75f4265f2bca
