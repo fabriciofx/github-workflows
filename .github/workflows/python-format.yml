@@ -1,1 +1,38 @@
-../../python/python-format.yml
+# SPDX-FileCopyrightText: Copyright (C) 2025 Fabrício Barros Cabral
+# SPDX-License-Identifier: MIT
+---
+name: python-format
+'on':
+  push:
+    branches:
+      - main
+      - master
+  pull_request:
+    branches:
+      - main
+      - master
+defaults:
+  run:
+    shell: bash -xeuo pipefail {0}
+permissions:
+  contents: read
+jobs:
+  python-format:
+    name: python-format
+    runs-on: ubuntu-24.04
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v5
+        with:
+          persist-credentials: false
+      - name: Install venv and requirements
+        run: |
+          [ -s Makefile ] && make install || {
+            python -m venv .venv
+            . ./.venv/bin/activate
+            pip install -r requirements.txt
+          }
+      - name: Download and install ruff
+        run: pip install ruff
+      - name: Check format
+        run: ruff format --check
