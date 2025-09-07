@@ -37,7 +37,7 @@ jobs:
   c-cpp-linux-build:
     runs-on: ubuntu-24.04
     needs: checkcode
-    if: needs.checkcode.outputs.proceed == "true"
+    if: needs.checkcode.outputs.proceed == 'true'
     steps:
       - name: Checkout code
         uses: actions/checkout@v5
