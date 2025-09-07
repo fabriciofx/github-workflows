@@ -13,9 +13,32 @@ defaults:
 permissions:
   contents: read
 jobs:
+  checkcode:
+    runs-on: ubuntu-24.04
+    outputs:
+      proceed: ${{ steps.check.outputs.proceed }}
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v5
+        with:
+          persist-credentials: false
+      - name: Check for code
+        id: check
+        # yamllint disable rule:line-length
+        run: |
+          found=$(find . -maxdepth 1 -name "pom.xml" -o -name "*.gradle" -o -name "*.gradle.kts")
+          if [ -z "${found}" ]; then
+            echo "No code found to proceed. Stopping execution of the other jobs."
+            echo "proceed=false" >> "${GITHUB_OUTPUT}"
+          else
+            echo "proceed=true" >> "${GITHUB_OUTPUT}"
+          fi
+        # yamllint enable rule:line-length
   java-infer-analysis:
     timeout-minutes: 15
     runs-on: ubuntu-24.04
+    needs: checkcode
+    if: needs.checkcode.outputs.proceed == 'true'
     steps:
       - name: Checkout code
         uses: actions/checkout@v5
