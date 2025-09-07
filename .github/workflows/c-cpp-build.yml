@@ -17,8 +17,27 @@ defaults:
 permissions:
   contents: read
 jobs:
+  checkcode:
+    runs-on: ubuntu-24.04
+    outputs:
+      proceed: ${{ steps.check.outputs.proceed }}
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v5
+      - name: Check for code
+        id: check
+        run: |
+          found=$(find . -maxdepth 1 -name "pom.xml" -o -name "*.gradle" -o -name "*.gradle.kts")
+          if [ -z "${found}" ]; then
+            echo "No code found to proceed. Exiting workflow."
+            echo "proceed=false" >> "${GITHUB_OUTPUT}"
+          else
+            echo "proceed=true" >> "${GITHUB_OUTPUT}"
+          fi
   c-cpp-linux-build:
     runs-on: ubuntu-24.04
+    needs: checkcode
+    if: needs.checkcode.outputs.proceed == "true"
     steps:
       - name: Checkout code
         uses: actions/checkout@v5
@@ -93,6 +112,8 @@ jobs:
           mv "${bin}" "dist/${safe_name}-${safe_version}-linux.tar.gz"
   c-cpp-macos-build:
     runs-on: macos-15
+    needs: checkcode
+    if: needs.checkcode.outputs.proceed == "true"
     steps:
       - name: Checkout code
         uses: actions/checkout@v5
@@ -154,6 +175,8 @@ jobs:
           mv "${bin}" dist/"${safe_name}-${safe_version}-macos.tar.gz"
   c-cpp-windows-build:
     runs-on: windows-2025
+    needs: checkcode
+    if: needs.checkcode.outputs.proceed == "true"
     steps:
       - name: Checkout code
         uses: actions/checkout@v5
