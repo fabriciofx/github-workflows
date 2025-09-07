@@ -34,6 +34,12 @@ jobs:
         uses: actions/checkout@v5
         with:
           persist-credentials: false
+      - name: Proceed workflow only if any code exist
+        # yamllint disable rule:line-length
+        run: |
+          found=$(find . -maxdepth 1 -name "*.csproj" -o -name "*.sln" | grep -q .)
+          [ -z "${found}" ] && { echo "No code to proceed this workflow."; exit 0 }
+        # yamllint enable rule:line-length
       - name: Setup .NET Core
         uses: actions/setup-dotnet@v5
         with:
@@ -43,17 +49,9 @@ jobs:
             8.x
             9.x
       - name: Restore
-        # yamllint disable rule:line-length
-        run: |
-          found=$(find . -maxdepth 1 -name "*.csproj" -o -name "*.sln" | grep -q .)
-          [ -n "${FOUND}" ] && dotnet restore
-        # yamllint enable rule:line-length
+        run: dotnet restore
       - name: Build
-        # yamllint disable rule:line-length
-        run: |
-          found=$(find . -maxdepth 1 -name "*.csproj" -o -name "*.sln" | grep -q .)
-          [ -n "${FOUND}" ] && dotnet build -c Release --no-restore
-        # yamllint enable rule:line-length
+        run: dotnet build -c Release --no-restore
   fsharp-windows-build:
     runs-on: windows-2025
     steps:
@@ -61,6 +59,23 @@ jobs:
         uses: actions/checkout@v5
         with:
           persist-credentials: false
+      - name: Proceed workflow only if any code exist
+        run: |
+          @echo off
+          set found=false
+          for /R %%d in (.) do (
+              pushd %%d
+              if exist *.csproj (
+                  set found=true
+              ) else if exist *.sln (
+                  set found=true
+              )
+              popd
+          )
+          if "%found%"=="false" (
+              echo No code to proceed this workflow.
+              exit /b 0
+          )
       - name: Setup .NET Core
         uses: actions/setup-dotnet@v5
         with:
@@ -71,31 +86,7 @@ jobs:
             9.x
       - name: Restore
         shell: cmd
-        run: |
-          @echo off
-          for /R %%d in (.) do (
-            pushd %%d
-            if exist *.csproj (
-                echo Restoring projects in %%d
-                dotnet restore
-            ) else if exist *.sln (
-                echo Restoring solution in %%d
-                dotnet restore
-            )
-            popd
-          )
+        run: dotnet restore
       - name: Build
         shell: cmd
-        run: |
-          @echo off
-          for /R %%d in (.) do (
-            pushd %%d
-            if exist *.csproj (
-                echo Building project in %%d
-                dotnet build -c Release --no-restore
-            ) else if exist *.sln (
-                echo Building solution in %%d
-                dotnet build -c Release --no-restore
-            )
-            popd
-          )
+        run: dotnet build -c Release --no-restore
