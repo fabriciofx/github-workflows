@@ -31,7 +31,7 @@ jobs:
       - name: Proceed workflow only if any code exist
         # yamllint disable rule:line-length
         run: |
-          found=$(find . -maxdepth 1 -name "pom.xml" -o -name "*.gradle" -o -name "*.gradle.kts" | grep -q .)
+          found=$(find . -maxdepth 1 -name "pom.xml" -o -name "*.gradle" -o -name "*.gradle.kts")
           [ -z "${found}" ] && { echo "No code to proceed this workflow."; exit 0; }
         # yamllint enable rule:line-length
       - name: Configure apt cache
@@ -83,7 +83,7 @@ jobs:
       - name: Proceed workflow only if any code exist
         # yamllint disable rule:line-length
         run: |
-          found=$(find . -maxdepth 1 -name "pom.xml" -o -name "*.gradle" -o -name "*.gradle.kts" | grep -q .)
+          found=$(find . -maxdepth 1 -name "pom.xml" -o -name "*.gradle" -o -name "*.gradle.kts")
           [ -z "${found}" ] && { echo "No code to proceed this workflow."; exit 0; }
         # yamllint enable rule:line-length
       - name: Install dependencies
