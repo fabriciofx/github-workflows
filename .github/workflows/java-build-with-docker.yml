@@ -17,12 +17,35 @@ defaults:
 permissions:
   contents: read
 jobs:
+  checkcode:
+    runs-on: ubuntu-24.04
+    outputs:
+      proceed: ${{ steps.check.outputs.proceed }}
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v5
+        with:
+          persist-credentials: false
+      - name: Check for code
+        id: check
+        # yamllint disable rule:line-length
+        run: |
+          found=$(find . -maxdepth 1 -name "pom.xml" -o -name "*.gradle" -o -name "*.gradle.kts")
+          if [ -z "${found}" ]; then
+            echo "No code found to proceed. Stopping execution of the other jobs."
+            echo "proceed=false" >> "${GITHUB_OUTPUT}"
+          else
+            echo "proceed=true" >> "${GITHUB_OUTPUT}"
+          fi
+        # yamllint enable rule:line-length
   java-build-with-docker:
     services:
       docker:
         image: docker:28.4.0
         options: --privileged
     runs-on: ${{ matrix.os }}
+    needs: checkcode
+    if: needs.checkcode.outputs.proceed == 'true'
     strategy:
       matrix:
         os: [ubuntu-24.04]
@@ -60,10 +83,7 @@ jobs:
       - name: Build project
         # yamllint disable rule:line-length
         run: |
-          # Choose maven embedded or system
-          [ -x "mvnw" ] && MVN="./mvnw" || MVN="mvn"
-
-          # If exist qulice profile, execute using it
-          PROFILE=$(grep -q "<id>qulice</id>" pom.xml && echo "-Pqulice" || echo "")
-          $MVN --errors --batch-mode clean install "${PROFILE}"
+          [ -x "mvnw" ] && mvn="./mvnw" || mvn="mvn"
+          profile=$(grep -q "<id>qulice</id>" pom.xml && echo "-Pqulice" || echo "")
+          ${mvn} --errors --batch-mode install "${profile}"
         # yamllint enable rule:line-length
