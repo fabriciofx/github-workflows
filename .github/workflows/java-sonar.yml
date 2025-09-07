@@ -24,8 +24,8 @@ jobs:
       - name: Setup Java SDK
         uses: actions/setup-java@v5
         with:
-          java-version: 11
           distribution: 'temurin'
+          java-version: 11
       - name: Configure Maven cache
         uses: actions/cache@v4
         with:
@@ -42,7 +42,12 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+        # yamllint disable rule:line-length
         run: |
-          mvn --batch-mode verify -Pjacoco -Dinvoker.skip \
-          && mvn --batch-mode verify -Psonar -Dinvoker.skip \
-              -Dsonar.qualitygate.wait=true
+          [ -x "mvnw" ] && MVN="./mvnw" || MVN="mvn"
+          PROFILE=$(grep -q "<id>jacoco</id>" pom.xml && echo "-Pjacoco" || echo "")
+          ${MVN} --batch-mode verify "${PROFILE}" -Dinvoker.skip
+          PROFILE=$(grep -q "<id>sonar</id>" pom.xml && echo "-Psonar" || echo "")
+          ${MVN} --batch-mode verify "${PROFILE}" -Dinvoker.skip \
+            -Dsonar.qualitygate.wait=true
+        # yamllint enable rule:line-length
