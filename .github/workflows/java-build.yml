@@ -61,7 +61,7 @@ jobs:
 
           # If exist qulice profile, execute using it
           PROFILE=$(grep -q "<id>qulice</id>" pom.xml && echo "-Pqulice" || echo "")
-          $MVN --errors --batch-mode clean install "${PROFILE}"
+          $MVN --errors --batch-mode install "${PROFILE}"
         # yamllint enable rule:line-length
   java-macos-build:
     runs-on: ${{ matrix.os }}
@@ -100,7 +100,7 @@ jobs:
 
           # If exist qulice profile, execute using it
           PROFILE=$(grep -q "<id>qulice</id>" pom.xml && echo "-Pqulice" || echo "")
-          $MVN --errors --batch-mode clean install "${PROFILE}"
+          ${MVN} --errors --batch-mode install "${PROFILE}"
         # yamllint enable rule:line-length
   java-windows-build:
     runs-on: ${{ matrix.os }}
@@ -141,6 +141,6 @@ jobs:
           @echo off
           for /f "delims=" %%i in ('findstr "<id>qulice</id>" pom.xml') do set "Q=1"
           if exist "mvnw.cmd" (set "M=mvnw.cmd") else (set "M=mvn")
-          %M% --errors --batch-mode clean install %Q:~-2,-1%-Pqulice
+          %M% --errors --batch-mode install %Q:~-2,-1%-Pqulice
         # yamllint enable rule:line-length
         shell: cmd
