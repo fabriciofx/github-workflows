@@ -24,11 +24,11 @@ concurrency:
   group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
   cancel-in-progress: true
 jobs:
-  fsharp-build:
+  fsharp-linux-macos-build:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        os: [ubuntu-24.04, windows-2022, macos-14]
+        os: [ubuntu-24.04, macos-14, macos-15]
     steps:
       - name: Checkout code
         uses: actions/checkout@v5
@@ -43,6 +43,59 @@ jobs:
             8.x
             9.x
       - name: Restore
-        run: dotnet restore
+        # yamllint disable rule:line-length
+        run: |
+          found=$(find . -maxdepth 1 -name "*.csproj" -o -name "*.sln" | grep -q .)
+          [ -n "${FOUND}" ] && dotnet restore
+        # yamllint enable rule:line-length
       - name: Build
-        run: dotnet build -c Release --no-restore
+        # yamllint disable rule:line-length
+        run: |
+          found=$(find . -maxdepth 1 -name "*.csproj" -o -name "*.sln" | grep -q .)
+          [ -n "${FOUND}" ] && dotnet build -c Release --no-restore
+        # yamllint enable rule:line-length
+  fsharp-windows-build:
+    runs-on: windows-2025
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v5
+        with:
+          persist-credentials: false
+      - name: Setup .NET Core
+        uses: actions/setup-dotnet@v5
+        with:
+          dotnet-version: |
+            6.x
+            7.x
+            8.x
+            9.x
+      - name: Restore
+        shell: cmd
+        run: |
+          @echo off
+          for /R %%d in (.) do (
+            pushd %%d
+            if exist *.csproj (
+                echo Restoring projects in %%d
+                dotnet restore
+            ) else if exist *.sln (
+                echo Restoring solution in %%d
+                dotnet restore
+            )
+            popd
+          )
+      - name: Build
+        shell: cmd
+        run: |
+          @echo off
+          for /R %%d in (.) do (
+            pushd %%d
+            if exist *.csproj (
+                echo Building project in %%d
+                dotnet build -c Release --no-restore
+            ) else if exist *.sln (
+                echo Building solution in %%d
+                dotnet build -c Release --no-restore
+            )
+            popd
+          )
