@@ -38,7 +38,7 @@ jobs:
         # yamllint disable rule:line-length
         run: |
           found=$(find . -maxdepth 1 -name "*.csproj" -o -name "*.sln" | grep -q .)
-          [ -z "${found}" ] && { echo "No code to proceed this workflow."; exit 0 }
+          [ -z "${found}" ] && { echo "No code to proceed this workflow."; exit 0; }
         # yamllint enable rule:line-length
       - name: Setup .NET Core
         uses: actions/setup-dotnet@v5
@@ -73,7 +73,7 @@ jobs:
               popd
           )
           if "%found%"=="false" (
-              echo No code to proceed this workflow.
+              echo No code found to proceed. Exiting workflow.
               exit /b 0
           )
       - name: Setup .NET Core
