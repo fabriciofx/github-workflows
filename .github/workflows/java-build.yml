@@ -28,6 +28,12 @@ jobs:
         uses: actions/checkout@v5
         with:
           persist-credentials: false
+      - name: Proceed workflow only if any code exist
+        # yamllint disable rule:line-length
+        run: |
+          found=$(find . -maxdepth 1 -name "pom.xml" -o -name "*.gradle" -o -name "*.gradle.kts" | grep -q .)
+          [ -z "${found}" ] && { echo "No code to proceed this workflow."; exit 0; }
+        # yamllint enable rule:line-length
       - name: Configure apt cache
         uses: actions/cache@v4
         with:
@@ -74,6 +80,12 @@ jobs:
         uses: actions/checkout@v5
         with:
           persist-credentials: false
+      - name: Proceed workflow only if any code exist
+        # yamllint disable rule:line-length
+        run: |
+          found=$(find . -maxdepth 1 -name "pom.xml" -o -name "*.gradle" -o -name "*.gradle.kts" | grep -q .)
+          [ -z "${found}" ] && { echo "No code to proceed this workflow."; exit 0; }
+        # yamllint enable rule:line-length
       - name: Install dependencies
         run: |
           brew update
@@ -113,6 +125,25 @@ jobs:
         uses: actions/checkout@v5
         with:
           persist-credentials: false
+      - name: Proceed workflow only if any code exist
+        run: |
+          @echo off
+          set found=false
+          for /R %%d in (.) do (
+              pushd %%d
+              if exist pom.xml (
+                  set found=true
+              ) else if exist *.gradle (
+                  set found=true
+              ) else if exist *.gradle.kts (
+                  set found=true
+              )
+              popd
+          )
+          if "%found%"=="false" (
+              echo No code found to proceed. Exiting workflow.
+              exit /b 0
+          )
       - name: Install dependencies
         run: |
           @echo off
