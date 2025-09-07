@@ -82,7 +82,7 @@ jobs:
   java-macos-build:
     runs-on: ${{ matrix.os }}
     needs: checkcode
-    if: needs.checkcode.outputs.proceed == "true"
+    if: needs.checkcode.outputs.proceed == 'true'
     strategy:
       matrix:
         os: [macos-14, macos-15]
@@ -120,7 +120,7 @@ jobs:
   java-windows-build:
     runs-on: ${{ matrix.os }}
     needs: checkcode
-    if: needs.checkcode.outputs.proceed == "true"
+    if: needs.checkcode.outputs.proceed == 'true'
     strategy:
       matrix:
         os: [windows-2025]
