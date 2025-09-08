@@ -7,68 +7,10 @@ name: java-sonar
     branches:
       - main
       - master
-defaults:
-  run:
-    shell: bash -xeuo pipefail {0}
-permissions:
-  contents: read
 jobs:
-  checkcode:
-    runs-on: ubuntu-24.04
-    outputs:
-      proceed: ${{ steps.check.outputs.proceed }}
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v5
-        with:
-          persist-credentials: false
-      - name: Check for code
-        id: check
-        run: |
-          found=$(find . -maxdepth 1 -name "pom.xml")
-          if [ -z "${found}" ]; then
-            echo "Code not found. Stopping execution of the other jobs."
-            echo "proceed=false" >> "${GITHUB_OUTPUT}"
-          else
-            echo "proceed=true" >> "${GITHUB_OUTPUT}"
-          fi
   java-sonar:
-    timeout-minutes: 15
-    runs-on: ubuntu-24.04
-    needs: checkcode
-    if: needs.checkcode.outputs.proceed == 'true'
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v5
-        with:
-          persist-credentials: false
-      - name: Setup Java SDK
-        uses: actions/setup-java@v5
-        with:
-          distribution: 'temurin'
-          java-version: '11'
-      - name: Configure Maven cache
-        uses: actions/cache@v4
-        with:
-          path: ~/.m2/repository
-          key: ubuntu-jdk-11-maven-${{ hashFiles('**/pom.xml') }}
-          restore-keys: ubuntu-jdk-11-maven-
-      - name: Configure Sonar cache
-        uses: actions/cache@v4
-        with:
-          path: ~/.sonar/cache
-          key: ${{ runner.os }}-sonar
-          restore-keys: ${{ runner.os }}-sonar
-      - name: Run sonar
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-        # yamllint disable rule:line-length
-        run: |
-          [ -x "mvnw" ] && mvn="./mvnw" || mvn="mvn"
-          profile=$(grep -q "<id>jacoco</id>" pom.xml && echo "-Pjacoco" || echo "")
-          ${mvn} --batch-mode verify "${profile}" -Dinvoker.skip
-          profile=$(grep -q "<id>sonar</id>" pom.xml && echo "-Psonar" || echo "")
-          ${mvn} --batch-mode verify "${profile}" -Dinvoker.skip \
-            -Dsonar.qualitygate.wait=true
-        # yamllint enable rule:line-length
+    # yamllint disable-line rule:line-length
+    uses: fabriciofx/github-workflows/.github/workflows/java-sonar-template.yml@main
+    with:
+      GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      SN_TOKEN: ${{ secrets.SONAR_TOKEN }}

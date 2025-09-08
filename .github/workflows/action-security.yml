@@ -11,6 +11,9 @@ name: action-security
     branches:
       - main
       - master
+permissions:
+  actions: read
+  security-events: write
 jobs:
   action-security:
     # yamllint disable-line rule:line-length
