@@ -1,7 +1,7 @@
 # SPDX-FileCopyrightText: Copyright (C) 2025 Fabrício Barros Cabral
 # SPDX-License-Identifier: MIT
 ---
-name: loc-badge
+name: badge-hoc
 'on':
   push:
     branches:
@@ -13,10 +13,10 @@ defaults:
 permissions:
   contents: read
 concurrency:
-  group: loc-badge-${{ github.ref }}
+  group: badge-hoc-${{ github.ref }}
   cancel-in-progress: true
 jobs:
-  loc-badge:
+  hoc-badge:
     timeout-minutes: 15
     runs-on: ubuntu-24.04
     permissions:
@@ -26,17 +26,17 @@ jobs:
         uses: actions/checkout@v5
         with:
           persist-credentials: false
-      - name: Build a LOC badge
-        uses: shadowmoose/GHA-LoC-Badge@8c8191e02ebe2e4b4764f4711228bddcaeb88f19
+      - name: Build a HOC badge
+        # yamllint disable-line rule:line-length
+        uses: MikhailEpatko/hits-of-code-badge@da9d30c03970a5af529f69a1eaa3e35f3a65bd78
         with:
-          debug: true
-          directory: .
-          badge: target/loc-badge.svg
+          output_dir: gh-pages
+          filename: hoc-badge.svg
       - name: Release it into gh-pages
         # yamllint disable-line rule:line-length
         uses: JamesIves/github-pages-deploy-action@6c2d9db40f9296374acc17b90404b6e8864128c8
         with:
           branch: gh-pages
-          folder: target
+          folder: gh-pages
           clean: false
         if: github.ref == 'refs/heads/main'
