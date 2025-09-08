@@ -34,7 +34,7 @@ jobs:
           filename: hoc-badge.svg
       - name: Release it into gh-pages
         # yamllint disable-line rule:line-length
-        uses: JamesIves/github-pages-deploy-action@5faf170fee96090bac488007f5181f76944ed188
+        uses: JamesIves/github-pages-deploy-action@6c2d9db40f9296374acc17b90404b6e8864128c8
         with:
           branch: gh-pages
           folder: gh-pages
