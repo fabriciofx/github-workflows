@@ -21,16 +21,14 @@ jobs:
           persist-credentials: false
       - name: Check for code
         id: check
-        # yamllint disable rule:line-length
         run: |
-          found=$(find . -maxdepth 1 -name "pom.xml" -o -name "*.gradle" -o -name "*.gradle.kts")
-          if [ -z "${found}" ]; then
+          found=$(find . -maxdepth 1 -name "pom.xml")
+          if [[ -n "${found}" ]]; then
+            echo "proceed=true" >> "${GITHUB_OUTPUT}"
+          else
             echo "Code not found. Stopping execution of the other jobs."
             echo "proceed=false" >> "${GITHUB_OUTPUT}"
-          else
-            echo "proceed=true" >> "${GITHUB_OUTPUT}"
           fi
-        # yamllint enable rule:line-length
   java-linux-build-template:
     runs-on: ${{ matrix.os }}
     needs: checkcode
