@@ -44,4 +44,4 @@ jobs:
         run: |
           [[ -x "mvnw" ]] && mvn="./mvnw" || mvn="mvn"
           infer --version
-          infer run --fail-on-issue --no-progress-bar -- ${mvn} test
+          infer run --fail-on-issue --no-progress-bar -- "${mvn}" test
