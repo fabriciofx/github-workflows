@@ -11,6 +11,8 @@ name: c-cpp-build
     branches:
       - main
       - master
+permissions:
+  contents: read
 jobs:
   c-cpp-build:
     # yamllint disable-line rule:line-length

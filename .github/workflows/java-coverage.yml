@@ -7,6 +7,8 @@ name: java-coverage
     branches:
       - main
       - master
+permissions:
+  contents: read
 jobs:
   java-coverage:
     # yamllint disable-line rule:line-length

@@ -11,6 +11,8 @@ name: java-duplication
     branches:
       - main
       - master
+permissions:
+  contents: read
 jobs:
   java-duplication:
     # yamllint disable-line rule:line-length

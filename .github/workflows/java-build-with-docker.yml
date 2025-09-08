@@ -11,6 +11,8 @@ name: java-build-with-docker
     branches:
       - main
       - master
+permissions:
+  contents: read
 jobs:
   java-build-with-docker:
     # yamllint disable-line rule:line-length

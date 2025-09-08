@@ -7,6 +7,8 @@ name: java-codecov
     branches:
       - main
       - master
+permissions:
+  contents: read
 jobs:
   java-codecov:
     # yamllint disable-line rule:line-length

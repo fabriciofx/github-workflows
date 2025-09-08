@@ -7,6 +7,8 @@ name: badge-loc
     branches:
       - main
       - master
+permissions:
+  contents: read
 jobs:
   badge-loc:
     # yamllint disable-line rule:line-length

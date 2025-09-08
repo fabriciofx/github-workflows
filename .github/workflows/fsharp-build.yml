@@ -11,6 +11,8 @@ name: fsharp-build
     branches:
       - main
       - master
+permissions:
+  contents: read
 jobs:
   fsharp-build:
     # yamllint disable-line rule:line-length

@@ -11,6 +11,8 @@ name: action-lint
     branches:
       - main
       - master
+permissions:
+  contents: read
 jobs:
   action-lint:
     # yamllint disable-line rule:line-length
