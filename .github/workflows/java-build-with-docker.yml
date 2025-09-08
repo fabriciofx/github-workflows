@@ -28,16 +28,14 @@ jobs:
           persist-credentials: false
       - name: Check for code
         id: check
-        # yamllint disable rule:line-length
         run: |
-          found=$(find . -maxdepth 1 -name "pom.xml" -o -name "*.gradle" -o -name "*.gradle.kts")
+          found=$(find . -maxdepth 1 -name "pom.xml"")
           if [ -z "${found}" ]; then
-            echo "No code found to proceed. Stopping execution of the other jobs."
+            echo "Code not found. Stopping execution of the other jobs."
             echo "proceed=false" >> "${GITHUB_OUTPUT}"
           else
             echo "proceed=true" >> "${GITHUB_OUTPUT}"
           fi
-        # yamllint enable rule:line-length
   java-build-with-docker:
     services:
       docker:
