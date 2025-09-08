@@ -1,0 +1,67 @@
+# SPDX-FileCopyrightText: Copyright (C) 2025 Fabrício Barros Cabral
+# SPDX-License-Identifier: MIT
+---
+name: latex-build
+'on':
+  push:
+    branches:
+      - main
+      - master
+  pull_request:
+    branches:
+      - main
+      - master
+defaults:
+  run:
+    shell: bash -xeuo pipefail {0}
+permissions:
+  contents: read
+jobs:
+  checkcode:
+    runs-on: ubuntu-24.04
+    outputs:
+      proceed: ${{ steps.check.outputs.proceed }}
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v5
+        with:
+          persist-credentials: false
+      - name: Check for code
+        id: check
+        run: |
+          found=$(find . -maxdepth 1 -name "*.tex")
+          if [ -z "${found}" ]; then
+            echo "No code found. Stopping execution of the other jobs."
+            echo "proceed=false" >> "${GITHUB_OUTPUT}"
+          else
+            echo "proceed=true" >> "${GITHUB_OUTPUT}"
+          fi
+  latex-build:
+    runs-on: ubuntu-24.04
+    needs: checkcode
+    if: needs.checkcode.outputs.proceed == 'true'
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v5
+        with:
+          persist-credentials: false
+      - name: Configure apt cache
+        uses: actions/cache@v4
+        with:
+          path: /var/cache/apt/archives
+          key: ${{ runner.os }}-apt-${{ hashFiles('**/apt-packages.txt') }}
+          restore-keys: ${{ runner.os }}-apt-
+      - name: Install dependencies
+        run: |
+          sudo apt-get update
+          if [ -s apt-packages.txt ]; then
+            xargs -a apt-packages.txt sudo apt-get install \
+              -y --no-install-recommends
+          fi
+      - name: Compile LaTeX document
+        run: |
+          [ -s Makefile ] || {
+            echo "Makefile file not found. Please, check your project.";
+            exit 1;
+          }
+          make

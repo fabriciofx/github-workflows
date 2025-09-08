@@ -1,0 +1,64 @@
+# SPDX-FileCopyrightText: Copyright (C) 2025 Fabrício Barros Cabral
+# SPDX-License-Identifier: MIT
+---
+name: badge-loc-template
+'on':
+  workflow_call:
+    inputs:
+     debug:
+        description: 'Debug'
+        required: true
+        type: boolean
+     directory:
+        description: 'directory'
+        required: true
+        type: string
+     badge:
+        description: 'Badge filename'
+        required: true
+        type: string
+     branch:
+        description: 'Branch name'
+        required: true
+        type: string
+     folder:
+        description: 'Folder name'
+        required: true
+        type: string
+     clean:
+        description: 'Clean'
+        required: true
+        type: boolean
+defaults:
+  run:
+    shell: bash -xeuo pipefail {0}
+permissions:
+  contents: read
+concurrency:
+  group: badge-loc-${{ github.ref }}
+  cancel-in-progress: true
+jobs:
+  badge-loc-template:
+    timeout-minutes: 15
+    runs-on: ubuntu-24.04
+    permissions:
+      contents: write
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v5
+        with:
+          persist-credentials: false
+      - name: Build a LOC badge
+        uses: shadowmoose/GHA-LoC-Badge@8c8191e02ebe2e4b4764f4711228bddcaeb88f19
+        with:
+          debug: ${{ inputs.debug }}
+          directory: ${{ inputs.directory }}
+          badge: ${{ inputs.badge }}
+      - name: Release it into gh-pages
+        # yamllint disable-line rule:line-length
+        uses: JamesIves/github-pages-deploy-action@6c2d9db40f9296374acc17b90404b6e8864128c8
+        with:
+          branch: ${{ inputs.branch }}
+          folder: ${{ inputs.folder }}
+          clean: false
+        if: github.ref == 'refs/heads/main'

@@ -7,36 +7,14 @@ name: badge-loc
     branches:
       - main
       - master
-defaults:
-  run:
-    shell: bash -xeuo pipefail {0}
-permissions:
-  contents: read
-concurrency:
-  group: badge-loc-${{ github.ref }}
-  cancel-in-progress: true
 jobs:
-  loc-badge:
-    timeout-minutes: 15
-    runs-on: ubuntu-24.04
-    permissions:
-      contents: write
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v5
-        with:
-          persist-credentials: false
-      - name: Build a LOC badge
-        uses: shadowmoose/GHA-LoC-Badge@8c8191e02ebe2e4b4764f4711228bddcaeb88f19
-        with:
-          debug: true
-          directory: .
-          badge: target/loc-badge.svg
-      - name: Release it into gh-pages
-        # yamllint disable-line rule:line-length
-        uses: JamesIves/github-pages-deploy-action@6c2d9db40f9296374acc17b90404b6e8864128c8
-        with:
-          branch: gh-pages
-          folder: target
-          clean: false
-        if: github.ref == 'refs/heads/main'
+  badge-loc:
+    # yamllint disable-line rule:line-length
+    uses: fabriciofx/github-workflows/.github/workflows/badge-loc-template.yml@main
+    with:
+      debug: true
+      directory: .
+      badge: target/loc-badge.svg
+      branch: gh-pages
+      folder: target
+      clean: false

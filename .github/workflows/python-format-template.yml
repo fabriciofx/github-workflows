@@ -1,0 +1,60 @@
+# SPDX-FileCopyrightText: Copyright (C) 2025 Fabrício Barros Cabral
+# SPDX-License-Identifier: MIT
+---
+name: python-format
+'on':
+  push:
+    branches:
+      - main
+      - master
+  pull_request:
+    branches:
+      - main
+      - master
+defaults:
+  run:
+    shell: bash -xeuo pipefail {0}
+permissions:
+  contents: read
+jobs:
+  checkcode:
+    runs-on: ubuntu-24.04
+    outputs:
+      proceed: ${{ steps.check.outputs.proceed }}
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v5
+        with:
+          persist-credentials: false
+      - name: Check for code
+        id: check
+        run: |
+          found=$(find . -maxdepth 1 -name "requirements.txt" -o -name "*.py")
+          if [ -z "${found}" ]; then
+            echo "No code found. Stopping execution of the other jobs."
+            echo "proceed=false" >> "${GITHUB_OUTPUT}"
+          else
+            echo "proceed=true" >> "${GITHUB_OUTPUT}"
+          fi
+  python-format:
+    runs-on: ubuntu-24.04
+    needs: checkcode
+    if: needs.checkcode.outputs.proceed == 'true'
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v5
+        with:
+          persist-credentials: false
+      - name: Install venv and dependencies
+        run: |
+          if [ -s Makefile ]; then
+            make install
+          else
+            python -m venv .venv
+            . ./.venv/bin/activate
+            pip install -r requirements.txt
+          fi
+      - name: Download and install ruff
+        run: pip install ruff
+      - name: Check format
+        run: ruff format --check

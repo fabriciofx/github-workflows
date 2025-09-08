@@ -1,0 +1,31 @@
+# SPDX-FileCopyrightText: Copyright (C) 2025 Fabrício Barros Cabral
+# SPDX-License-Identifier: MIT
+---
+name: latex-lint
+'on':
+  push:
+    branches:
+      - main
+      - master
+  pull_request:
+    branches:
+      - main
+      - master
+defaults:
+  run:
+    shell: bash -xeuo pipefail {0}
+permissions:
+  contents: read
+jobs:
+  latex-lint:
+    runs-on: ubuntu-24.04
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v5
+        with:
+          persist-credentials: false
+      - name: Lint LaTeX files
+        uses: xu-cheng/texlive-action@8268537fedf1198f3ed7000c544bfdbddcbae3b7
+        with:
+          scheme: full
+          run: lacheck *.tex || echo "LaTeX files not found."

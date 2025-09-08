@@ -1,0 +1,59 @@
+# SPDX-FileCopyrightText: Copyright (C) 2025 Fabrício Barros Cabral
+# SPDX-License-Identifier: MIT
+---
+name: java-coverage-template
+'on':
+  workflow_call:
+defaults:
+  run:
+    shell: bash -xeuo pipefail {0}
+permissions:
+  contents: read
+jobs:
+  checkcode:
+    runs-on: ubuntu-24.04
+    outputs:
+      proceed: ${{ steps.check.outputs.proceed }}
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v5
+        with:
+          persist-credentials: false
+      - name: Check for code
+        id: check
+        run: |
+          found=$(find . -maxdepth 1 -name "pom.xml")
+          if [ -z "${found}" ]; then
+            echo "Code not found. Stopping execution of the other jobs."
+            echo "proceed=false" >> "${GITHUB_OUTPUT}"
+          else
+            echo "proceed=true" >> "${GITHUB_OUTPUT}"
+          fi
+  java-coverage-template:
+    timeout-minutes: 15
+    runs-on: ubuntu-24.04
+    needs: checkcode
+    if: needs.checkcode.outputs.proceed == 'true'
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v5
+        with:
+          persist-credentials: false
+      - name: Setup Java SDK
+        uses: actions/setup-java@v5
+        with:
+          distribution: 'temurin'
+          java-version: 21
+      - name: Configure Maven cache
+        uses: actions/cache@v4
+        with:
+          path: ~/.m2/repository
+          key: ubuntu-jdk-21-maven-${{ hashFiles('**/pom.xml') }}
+          restore-keys: ubuntu-jdk-21-maven-
+      - name: Checks code coverage
+        # yamllint disable rule:line-length
+        run: |
+          [ -x "mvnw" ] && mvn="./mvnw" || mvn="mvn"
+          profile=$(grep -q "<id>jacoco</id>" pom.xml && echo "-Pjacoco" || echo "")
+          ${mvn} --errors --batch-mode install "${profile}"
+        # yamllint enable rule:line-length
