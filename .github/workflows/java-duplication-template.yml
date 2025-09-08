@@ -28,4 +28,5 @@ jobs:
             http://public.yegor256.com/simian.jar
       - name: Check Java code duplication
         run: |
-          java -jar /tmp/simian.jar -threshold=16 "-excludes=**/it" "**/*.java"
+          java -jar /tmp/simian.jar -threshold=16 \
+            -ignoreBlocks="simian-off:simian-on" "-excludes=**/it" "**/*.java"
