@@ -23,11 +23,11 @@ jobs:
         id: check
         run: |
           found=$(find . -maxdepth 1 -name "pom.xml")
-          if [ -z "${found}" ]; then
+          if [[ -n "${found}" ]]; then
+            echo "proceed=true" >> "${GITHUB_OUTPUT}"
+          else
             echo "Code not found. Stopping execution of the other jobs."
             echo "proceed=false" >> "${GITHUB_OUTPUT}"
-          else
-            echo "proceed=true" >> "${GITHUB_OUTPUT}"
           fi
   java-coverage-template:
     timeout-minutes: 15
@@ -51,9 +51,9 @@ jobs:
           key: ubuntu-jdk-21-maven-${{ hashFiles('**/pom.xml') }}
           restore-keys: ubuntu-jdk-21-maven-
       - name: Checks code coverage
-        # yamllint disable rule:line-length
         run: |
-          [ -x "mvnw" ] && mvn="./mvnw" || mvn="mvn"
-          profile=$(grep -q "<id>jacoco</id>" pom.xml && echo "-Pjacoco" || echo "")
-          ${mvn} --errors --batch-mode install "${profile}"
-        # yamllint enable rule:line-length
+          [[ -x "mvnw" ]] && mvn="./mvnw" || mvn="mvn"
+          args=(--errors --batch-mode install)
+          profile=$(grep -q "<id>jacoco</id>" pom.xml && echo "-Pjacoco")
+          [[ -n "${profile}" ]] && args+=("${profile}")
+          ${mvn} "${args[@]}"
