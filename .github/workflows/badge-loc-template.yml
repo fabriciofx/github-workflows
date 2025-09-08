@@ -7,32 +7,26 @@ name: badge-loc-template
     inputs:
       debug:
         description: 'Debug'
-        required: true
         default: true
         type: boolean
       directory:
         description: 'Directory'
-        required: true
         default: .
         type: string
       badge:
         description: 'Badge filename'
-        required: true
         default: target/loc-badge.svg
         type: string
       branch:
         description: 'Branch name'
-        required: true
         default: gh-pages
         type: string
       folder:
         description: 'Folder name'
-        required: true
         default: target
         type: string
       clean:
         description: 'Clean?'
-        required: true
         default: false
         type: boolean
 defaults:
