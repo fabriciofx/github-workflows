@@ -11,7 +11,7 @@ jobs:
     # yamllint disable-line rule:line-length
     uses: fabriciofx/github-workflows/.github/workflows/java-release-template.yml@main
     secrets:
-      GPG_KEYNAME: ${{ secrets.GPG_KEYNAME }}
-      GPG_PASSPHRASE: ${{ secrets.GPG_PASSPHRASE }}
-      OSSRH_USERNAME: ${{ secrets.OSSRH_USERNAME }}
-      OSSRH_PASSWORD: ${{ secrets.OSSRH_PASSWORD }}
+      KEYNAME: ${{ secrets.GPG_KEYNAME }}
+      PASSPHRASE: ${{ secrets.GPG_PASSPHRASE }}
+      USERNAME: ${{ secrets.OSSRH_USERNAME }}
+      PASSWORD: ${{ secrets.OSSRH_PASSWORD }}
