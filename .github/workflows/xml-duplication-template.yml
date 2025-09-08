@@ -28,4 +28,5 @@ jobs:
             http://public.yegor256.com/simian.jar
       - name: Check XML duplication
         run: |
-          java -jar /tmp/simian.jar -threshold=16 "-excludes=**/it" "**/*.xml"
+          java -jar /tmp/simian.jar -threshold=16 \
+            -ignoreBlocks="simian-off:simian-on" "**/*.xml"
