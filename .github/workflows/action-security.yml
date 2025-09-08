@@ -13,6 +13,7 @@ name: action-security
       - master
 permissions:
   actions: read
+  contents: read
   security-events: write
 jobs:
   action-security:
