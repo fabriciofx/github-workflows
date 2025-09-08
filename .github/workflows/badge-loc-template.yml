@@ -8,26 +8,32 @@ name: badge-loc-template
       debug:
         description: 'Debug'
         required: true
+        default: true
         type: boolean
       directory:
-        description: 'directory'
+        description: 'Directory'
         required: true
+        default: .
         type: string
       badge:
         description: 'Badge filename'
         required: true
+        default: target/loc-badge.svg
         type: string
       branch:
         description: 'Branch name'
         required: true
+        default: gh-pages
         type: string
       folder:
         description: 'Folder name'
         required: true
+        default: target
         type: string
       clean:
-        description: 'Clean'
+        description: 'Clean?'
         required: true
+        default: false
         type: boolean
 defaults:
   run:
@@ -59,5 +65,5 @@ jobs:
         with:
           branch: ${{ inputs.branch }}
           folder: ${{ inputs.folder }}
-          clean: false
+          clean: ${{ inputs.clean }}
         if: github.ref == 'refs/heads/main'
