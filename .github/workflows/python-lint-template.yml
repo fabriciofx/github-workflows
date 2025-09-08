@@ -1,16 +1,9 @@
 # SPDX-FileCopyrightText: Copyright (C) 2025 Fabrício Barros Cabral
 # SPDX-License-Identifier: MIT
 ---
-name: python-lint
+name: python-lint-template
 'on':
-  push:
-    branches:
-      - main
-      - master
-  pull_request:
-    branches:
-      - main
-      - master
+  workflow_call:
 defaults:
   run:
     shell: bash -xeuo pipefail {0}
@@ -36,7 +29,7 @@ jobs:
           else
             echo "proceed=true" >> "${GITHUB_OUTPUT}"
           fi
-  python-lint:
+  python-lint-template:
     runs-on: ubuntu-24.04
     needs: checkcode
     if: needs.checkcode.outputs.proceed == 'true'
