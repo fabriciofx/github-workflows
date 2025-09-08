@@ -1,7 +1,7 @@
 # SPDX-FileCopyrightText: Copyright (C) 2025 Fabrício Barros Cabral
 # SPDX-License-Identifier: MIT
 ---
-name: java-infer-analysis-template
+name: java-infer-template
 'on':
   workflow_call:
 defaults:
@@ -29,7 +29,7 @@ jobs:
             echo "Code not found. Stopping execution of the other jobs."
             echo "proceed=false" >> "${GITHUB_OUTPUT}"
           fi
-  java-infer-analysis-template:
+  java-infer-template:
     runs-on: ubuntu-24.04
     needs: checkcode
     if: needs.checkcode.outputs.proceed == 'true'
