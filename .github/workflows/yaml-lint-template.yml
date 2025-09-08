@@ -1,23 +1,16 @@
 # SPDX-FileCopyrightText: Copyright (C) 2025 Fabrício Barros Cabral
 # SPDX-License-Identifier: MIT
 ---
-name: yaml-lint
+name: yaml-lint-template
 'on':
-  push:
-    branches:
-      - main
-      - master
-  pull_request:
-    branches:
-      - main
-      - master
+  workflow_call:
 defaults:
   run:
     shell: bash -xeuo pipefail {0}
 permissions:
   contents: read
 jobs:
-  yaml-lint:
+  yaml-lint-template:
     runs-on: ubuntu-24.04
     steps:
       - name: Checkout code
