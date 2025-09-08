@@ -3,10 +3,7 @@
 ---
 name: java-infer-analysis-template
 'on':
-  push:
-    branches:
-      - main
-      - master
+  workflow_call:
 defaults:
   run:
     shell: bash -xeuo pipefail {0}
