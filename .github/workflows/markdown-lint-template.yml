@@ -11,7 +11,6 @@ permissions:
   contents: read
 jobs:
   markdown-lint-template:
-    timeout-minutes: 15
     runs-on: ubuntu-24.04
     steps:
       - name: Checkout code

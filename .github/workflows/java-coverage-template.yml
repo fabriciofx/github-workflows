@@ -30,7 +30,6 @@ jobs:
             echo "proceed=false" >> "${GITHUB_OUTPUT}"
           fi
   java-coverage-template:
-    timeout-minutes: 15
     runs-on: ubuntu-24.04
     needs: checkcode
     if: needs.checkcode.outputs.proceed == 'true'
