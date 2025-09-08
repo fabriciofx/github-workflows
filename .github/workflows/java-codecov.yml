@@ -13,9 +13,30 @@ defaults:
 permissions:
   contents: read
 jobs:
+  checkcode:
+    runs-on: ubuntu-24.04
+    outputs:
+      proceed: ${{ steps.check.outputs.proceed }}
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v5
+        with:
+          persist-credentials: false
+      - name: Check for code
+        id: check
+        run: |
+          found=$(find . -maxdepth 1 -name "pom.xml")
+          if [ -z "${found}" ]; then
+            echo "Code not found. Stopping execution of the other jobs."
+            echo "proceed=false" >> "${GITHUB_OUTPUT}"
+          else
+            echo "proceed=true" >> "${GITHUB_OUTPUT}"
+          fi
   java-codecov:
     timeout-minutes: 15
     runs-on: ubuntu-24.04
+    needs: checkcode
+    if: needs.checkcode.outputs.proceed == 'true'
     steps:
       - name: Checkout code
         uses: actions/checkout@v5
@@ -35,12 +56,9 @@ jobs:
       - name: Run tests
         # yamllint disable rule:line-length
         run: |
-          # Choose maven embedded or system
-          [ -x "mvnw" ] && MVN="./mvnw" || MVN="mvn"
-
-          # If exist jacoco profile, execute using it
-          PROFILE=$(grep -q "<id>jacoco</id>" pom.xml && echo "-Pjacoco" || echo "")
-          ${MVN} --errors --batch-mode install "${PROFILE}"
+          [ -x "mvnw" ] && mvn="./mvnw" || mvn="mvn"
+          profile=$(grep -q "<id>jacoco</id>" pom.xml && echo "-Pjacoco" || echo "")
+          ${mvn} --errors --batch-mode install "${profile}"
         # yamllint enable rule:line-length
       - name: Checks code coverage
         uses: codecov/codecov-action@5a1091511ad55cbe89839c7260b706298ca349f7
