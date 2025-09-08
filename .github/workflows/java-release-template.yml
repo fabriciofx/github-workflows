@@ -56,11 +56,14 @@ jobs:
             </servers>
           </settings>
           EOF
-        # yamllint enable rule:line-length
       - name: Release to Sonatype (Maven Central)
+        # yamllint disable rule:line-length
         run: |
-          mvn clean deploy -Pqulice -Psonatype -Papp -DskipTests=true \
+          [ -x "mvnw" ] && mvn="./mvnw" || mvn="mvn"
+          qulice=$(grep -q "<id>qulice</id>" pom.xml && echo "-Pqulice" || echo "")
+          ${mvn} deploy -Psonatype -Papp "${qulice}" -DskipTests=true \
             --errors --batch-mode
+        # yamllint enable rule:line-length
         env:
           GPG_TTY: $(tty)
           JDK_JAVA_OPTIONS: >
