@@ -11,6 +11,8 @@ name: latex-lint
     branches:
       - main
       - master
+permissions:
+  contents: read
 jobs:
   latex-lint:
     # yamllint disable-line rule:line-length
