@@ -5,8 +5,8 @@ name: action-security-template
 'on':
   workflow_call:
     secrets:
-      TOKEN:
-        description: 'Token to allow scan'
+      GH_TOKEN:
+        description: 'GitHub token'
         required: true
 defaults:
   run:
@@ -33,7 +33,7 @@ jobs:
           chmod +x /tmp/as/zizmor
       - name: Check security in workflow files
         env:
-          GH_TOKEN: ${{ secrets.TOKEN }}
+          GH_TOKEN: ${{ secrets.GH_TOKEN }}
         run: |
           /tmp/as/zizmor .github/workflows --config .github/zizmor.yml
       - name: Stop pipeline if issues are found
