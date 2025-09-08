@@ -33,7 +33,7 @@ jobs:
           chmod +x /tmp/as/zizmor
       - name: Check security in workflow files
         env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GH_TOKEN: ${{ secrets.TOKEN }}
         run: |
           /tmp/as/zizmor .github/workflows --config .github/zizmor.yml
       - name: Stop pipeline if issues are found
