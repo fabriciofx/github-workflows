@@ -5,16 +5,16 @@ name: java-release-template
 'on':
   workflow_call:
     secrets:
-      GPG_KEYNAME:
+      KEYNAME:
         description: 'GPG key name'
         required: true
-      GPG_PASSPHRASE:
+      PASSPHRASE:
         description: 'GPG passphrase'
         required: true
-      OSSRH_USERNAME:
+      USERNAME:
         description: 'Sonatype username'
         required: true
-      OSSRH_PASSWORD:
+      PASSWORD:
         description: 'Sonatype password'
         required: true
 defaults:

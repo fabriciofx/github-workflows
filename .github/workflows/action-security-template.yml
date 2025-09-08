@@ -5,8 +5,8 @@ name: action-security-template
 'on':
   workflow_call:
     secrets:
-      GITHUB_TOKEN:
-        description: 'GitHub token for scan'
+      TOKEN:
+        description: 'Token to allow scan'
         required: true
 defaults:
   run:
