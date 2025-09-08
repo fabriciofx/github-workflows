@@ -24,11 +24,11 @@ jobs:
         # yamllint disable rule:line-length
         run: |
           found=$(find . -maxdepth 1 -name "autogen.sh" -o -name "configure" -o -name "Makefile")
-          if [ -z "${found}" ]; then
-            echo "No code found to proceed. Stopping execution of the other jobs."
-            echo "proceed=false" >> "${GITHUB_OUTPUT}"
-          else
+          if [[ -n "${found}" ]]; then
             echo "proceed=true" >> "${GITHUB_OUTPUT}"
+          else
+            echo "Code not found. Stopping execution of the other jobs."
+            echo "proceed=false" >> "${GITHUB_OUTPUT}"
           fi
         # yamllint enable rule:line-length
   c-cpp-linux-build-template:
