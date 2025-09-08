@@ -17,8 +17,29 @@ defaults:
 permissions:
   contents: read
 jobs:
+  checkcode:
+    runs-on: ubuntu-24.04
+    outputs:
+      proceed: ${{ steps.check.outputs.proceed }}
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v5
+        with:
+          persist-credentials: false
+      - name: Check for code
+        id: check
+        run: |
+          found=$(find . -maxdepth 1 -name "*.tex")
+          if [ -z "${found}" ]; then
+            echo "No code found. Stopping execution of the other jobs."
+            echo "proceed=false" >> "${GITHUB_OUTPUT}"
+          else
+            echo "proceed=true" >> "${GITHUB_OUTPUT}"
+          fi
   latex-build:
     runs-on: ubuntu-24.04
+    needs: checkcode
+    if: needs.checkcode.outputs.proceed == 'true'
     steps:
       - name: Checkout code
         uses: actions/checkout@v5
@@ -40,7 +61,7 @@ jobs:
       - name: Compile LaTeX document
         run: |
           [ -s Makefile ] || {
-            echo "Makefile not found. Please, check your files.";
+            echo "Makefile file not found. Please, check your project.";
             exit 1;
           }
           make
