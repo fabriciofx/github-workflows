@@ -42,7 +42,7 @@ jobs:
         uses: actions/checkout@v5
         with:
           persist-credentials: false
-      - name: Configure apt cache
+      - name: Configure APT cache
         uses: actions/cache@v4
         with:
           path: /var/cache/apt/archives
@@ -50,24 +50,24 @@ jobs:
           restore-keys: ${{ runner.os }}-apt-
       - name: Install dependencies
         run: |
-          sudo apt-get update
-          if [ -s apt-packages.txt ]; then
-            xargs -a apt-packages.txt sudo apt-get install \
-              -y --no-install-recommends
+          if [[ -s apt-packages.txt ]]; then
+            sudo apt-get update
+            xargs sudo apt-get install -y \
+              --no-install-recommends < apt-packages.txt
           fi
       - name: Setup Java SDK
         uses: actions/setup-java@v5
         with:
           distribution: 'temurin'
           java-version: ${{ matrix.java }}
-      - name: Configure maven cache
+      - name: Configure Maven cache
         uses: actions/cache@v4
         with:
           path: ~/.m2/repository
           # yamllint disable-line rule:line-length
           key: ${{ runner.os }}-jdk-${{ matrix.java }}-maven-${{ hashFiles('**/pom.xml') }}
           restore-keys: ${{ runner.os }}-jdk-${{ matrix.java }}-maven-
-      - name: Build project
+      - name: Build Maven project
         run: |
           [[ -x "mvnw" ]] && mvn="./mvnw" || mvn="mvn"
           args=(--errors --batch-mode install)
@@ -87,10 +87,16 @@ jobs:
         uses: actions/checkout@v5
         with:
           persist-credentials: false
+      - name: Configure Homebrew cache
+        uses: actions/cache@v4
+        with:
+          path: /Users/runner/Library/Caches/Homebrew
+          key: brew-cache-${{ runner.os }}-${{ hashFiles('**/Brewfile') }}
+          restore-keys: brew-cache-${{ runner.os }}-
       - name: Install dependencies
         run: |
-          brew update
-          if [ -s brew-packages.txt ]; then
+          if [[ -s brew-packages.txt ]]; then
+            brew update
             xargs brew install < brew-packages.txt
           fi
       - name: Setup Java SDK
@@ -98,20 +104,20 @@ jobs:
         with:
           distribution: 'temurin'
           java-version: ${{ matrix.java }}
-      - name: Configure maven cache
+      - name: Configure Maven cache
         uses: actions/cache@v4
         with:
           path: ~/.m2/repository
           # yamllint disable-line rule:line-length
           key: ${{ runner.os }}-jdk-${{ matrix.java }}-maven-${{ hashFiles('**/pom.xml') }}
           restore-keys: ${{ runner.os }}-jdk-${{ matrix.java }}-maven-
-      - name: Build project
-        # yamllint disable rule:line-length
+      - name: Build Maven project
         run: |
-          [ -x "mvnw" ] && mvn="./mvnw" || mvn="mvn"
-          profile=$(grep -q "<id>qulice</id>" pom.xml && echo "-Pqulice" || echo "")
-          ${mvn} --errors --batch-mode install "${profile}"
-        # yamllint enable rule:line-length
+          [[ -x "mvnw" ]] && mvn="./mvnw" || mvn="mvn"
+          args=(--errors --batch-mode install)
+          qulice=$(grep -q "<id>qulice</id>" pom.xml && echo "-Pqulice")
+          [[ -n "${qulice}" ]] && args+=("${qulice}")
+          ${mvn} "${args[@]}"
   java-windows-build-template:
     runs-on: ${{ matrix.os }}
     needs: checkcode
@@ -125,7 +131,17 @@ jobs:
         uses: actions/checkout@v5
         with:
           persist-credentials: false
+      - name: Configure Chocolatey cache
+        uses: actions/cache@v4
+        with:
+          path: |
+            C:\ProgramData\chocolatey\cache
+            C:\ProgramData\chocolatey\lib
+          # yamllint disable-line rule:line-length
+          key: choco-cache-${{ runner.os }}-${{ hashFiles('**/packages.config') }}
+          restore-keys: choco-cache-${{ runner.os }}-
       - name: Install dependencies
+        shell: cmd
         run: |
           @echo off
           setlocal enabledelayedexpansion
@@ -134,20 +150,19 @@ jobs:
               choco install %%P -y --ignore-checksums
             )
           )
-        shell: cmd
       - name: Setup Java SDK
         uses: actions/setup-java@v5
         with:
           distribution: 'temurin'
           java-version: ${{ matrix.java }}
-      - name: Configure maven cache
+      - name: Configure Maven cache
         uses: actions/cache@v4
         with:
           path: ~/.m2/repository
           # yamllint disable-line rule:line-length
           key: ${{ runner.os }}-jdk-${{ matrix.java }}-maven-${{ hashFiles('**/pom.xml') }}
           restore-keys: ${{ runner.os }}-jdk-${{ matrix.java }}-maven-
-      - name: Build project
+      - name: Build Maven project
         shell: cmd
         # yamllint disable rule:line-length
         run: |
