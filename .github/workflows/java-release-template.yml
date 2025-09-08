@@ -5,16 +5,16 @@ name: java-release-template
 'on':
   workflow_call:
     secrets:
-      KEYNAME:
+      RELEASE_KEYNAME:
         description: 'GPG key name'
         required: true
-      PASSPHRASE:
+      RELEASE_PASSPHRASE:
         description: 'GPG passphrase'
         required: true
-      USERNAME:
+      RELEASE_USERNAME:
         description: 'Sonatype username'
         required: true
-      PASSWORD:
+      RELEASE_PASSWORD:
         description: 'Sonatype password'
         required: true
 defaults:
@@ -42,16 +42,16 @@ jobs:
               <profile>
                 <id>app</id>
                 <properties>
-                  <gpg.keyname>"${{ secrets.GPG_KEYNAME }}"</gpg.keyname>
-                  <gpg.passphrase>"${{ secrets.GPG_PASSPHRASE }}"</gpg.passphrase>
+                  <gpg.keyname>"${{ secrets.RELEASE_KEYNAME }}"</gpg.keyname>
+                  <gpg.passphrase>"${{ secrets.RELEASE_PASSPHRASE }}"</gpg.passphrase>
                 </properties>
               </profile>
             </profiles>
             <servers>
               <server>
                 <id>oss.sonatype.org</id>
-                <username>"${{ secrets.OSSRH_USERNAME }}"</username>
-                <password>"${{ secrets.OSSRH_PASSWORD }}"</password>
+                <username>"${{ secrets.RELEASE_USERNAME }}"</username>
+                <password>"${{ secrets.RELEASE_PASSWORD }}"</password>
               </server>
             </servers>
           </settings>
