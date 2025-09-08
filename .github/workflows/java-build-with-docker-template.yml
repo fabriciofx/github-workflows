@@ -75,6 +75,6 @@ jobs:
         run: |
           [[ -x "mvnw" ]] && mvn="./mvnw" || mvn="mvn"
           args=(--errors --batch-mode install)
-          qulice=$(grep -q "<id>qulice</id>" pom.xml && echo "-Pqulice")
-          [[ -n "${qulice}" ]] && args+=("${qulice}")
+          profile=$(grep -q "<id>qulice</id>" pom.xml && echo "-Pqulice")
+          [[ -n "${profile}" ]] && args+=("${profile}")
           ${mvn} "${args[@]}"
