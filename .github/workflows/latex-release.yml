@@ -10,55 +10,10 @@ defaults:
   run:
     shell: bash -xeuo pipefail {0}
 permissions:
-  contents: read
+  contents: write
 jobs:
-  latex-build:
-    runs-on: ubuntu-24.04
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v5
-        with:
-          persist-credentials: false
-      - name: Install dependencies
-        run: |
-          sudo apt-get update
-          if [ -s apt-packages.txt ]; then
-            xargs -a apt-packages.txt sudo apt-get install \
-              -y --no-install-recommends
-          fi
-      - name: Compile LaTeX document
-        run: |
-          [ -s Makefile ] || {
-            echo "Makefile not found. Please, check your files.";
-            exit 1;
-          }
-      - name: Upload PDF
-        uses: actions/upload-artifact@v4
-        with:
-          name: document
-          path: ./*.pdf
   latex-release:
-    runs-on: ubuntu-24.04
-    needs: [latex-build]
-    permissions:
-      contents: write
-    steps:
-      - name: Download PDF
-        uses: actions/download-artifact@v5
-        with:
-          name: document
-          path: ./artifacts
-      - name: Set release tag
-        id: tag
-        run: |
-          # Detects which tag triggered the build
-          echo "tag=${GITHUB_REF##*/}" >> "${GITHUB_OUTPUT}"
-      - name: Release document
-        # yamllint disable-line rule:line-length
-        uses: softprops/action-gh-release@6cbd405e2c4e67a21c47fa9e383d020e4e28b836
-        with:
-          tag_name: ${{ steps.tag.outputs.tag }}
-          files: ./artifacts/*.pdf
-          generate_release_notes: true
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    # yamllint disable-line rule:line-length
+    uses: fabriciofx/github-workflows/.github/workflows/latex-release-template.yml@main
+    secrets:
+      GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
