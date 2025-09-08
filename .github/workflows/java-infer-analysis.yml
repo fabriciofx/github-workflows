@@ -7,6 +7,8 @@ name: java-infer-analysis
     branches:
       - main
       - master
+permissions:
+  contents: read
 jobs:
   java-infer-analysis:
     # yamllint disable-line rule:line-length

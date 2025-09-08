@@ -7,6 +7,8 @@ name: java-sonar
     branches:
       - main
       - master
+permissions:
+  contents: read
 jobs:
   java-sonar:
     # yamllint disable-line rule:line-length

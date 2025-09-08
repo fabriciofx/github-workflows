@@ -7,6 +7,8 @@ name: badge-hoc
     branches:
       - main
       - master
+permissions:
+  contents: read
 jobs:
   badge-hoc:
     # yamllint disable-line rule:line-length

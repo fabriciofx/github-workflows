@@ -11,6 +11,8 @@ name: bash-lint
     branches:
       - main
       - master
+permissions:
+  contents: read
 jobs:
   bash-lint:
     # yamllint disable-line rule:line-length

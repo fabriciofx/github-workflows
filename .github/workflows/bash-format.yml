@@ -11,6 +11,8 @@ name: bash-format
     branches:
       - main
       - master
+permissions:
+  contents: read
 jobs:
   bash-format:
     # yamllint disable-line rule:line-length
