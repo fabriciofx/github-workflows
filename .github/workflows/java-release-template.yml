@@ -32,7 +32,7 @@ jobs:
     runs-on: ubuntu-24.04
     needs: java-build-template
     steps:
-      - name: Setup maven settings.xml
+      - name: Setup Maven settings.xml
         # yamllint disable rule:line-length
         run: |
           mkdir -p ~/.m2
@@ -57,13 +57,12 @@ jobs:
           </settings>
           EOF
       - name: Release to Sonatype (Maven Central)
-        # yamllint disable rule:line-length
         run: |
-          [ -x "mvnw" ] && mvn="./mvnw" || mvn="mvn"
-          qulice=$(grep -q "<id>qulice</id>" pom.xml && echo "-Pqulice" || echo "")
-          ${mvn} deploy -Psonatype -Papp "${qulice}" -DskipTests=true \
-            --errors --batch-mode
-        # yamllint enable rule:line-length
+          [[ -x "mvnw" ]] && mvn="./mvnw" || mvn="mvn"
+          args=(--errors --batch-mode deploy -Psonatype -Papp -DskipTests=true)
+          profile=$(grep -q "<id>qulice</id>" pom.xml && echo "-Pqulice")
+          [[ -n "${profile}" ]] && args+=("${profile}")
+          ${mvn} "${args[@]}"
         env:
           GPG_TTY: $(tty)
           JDK_JAVA_OPTIONS: >
