@@ -5,8 +5,8 @@ name: c-cpp-release-template
 'on':
   workflow_call:
     secrets:
-      GITHUB_TOKEN:
-        description: 'GitHub token for scan'
+      GH_TOKEN:
+        description: 'GitHub token'
         required: true
 defaults:
   run:
