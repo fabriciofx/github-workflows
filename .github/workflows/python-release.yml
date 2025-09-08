@@ -14,22 +14,5 @@ permissions:
   contents: read
 jobs:
   python-release:
-    runs-on: ubuntu-24.04
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v5
-        with:
-          persist-credentials: false
-      - name: Set up Python
-        uses: actions/setup-python@v6
-        with:
-          python-version: '3.13'
-      - name: Install build tool
-        run: pip install build
-      - name: Build package
-        run: python -m build
-      - name: Release to PyPI
-        # yamllint disable-line rule:line-length
-        uses: pypa/gh-action-pypi-publish@ed0c53931b1dc9bd32cbe73a98c7f6766f8a527e
-        with:
-          verbose: true
+    # yamllint disable-line rule:line-length
+    uses: fabriciofx/github-workflows/.github/workflows/python-release-template.yml@main
