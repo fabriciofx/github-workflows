@@ -1,26 +1,16 @@
 # SPDX-FileCopyrightText: Copyright (C) 2025 Fabrício Barros Cabral
 # SPDX-License-Identifier: MIT
 ---
-name: markdown-lint
+name: markdown-lint-template
 'on':
-  push:
-    branches:
-      - main
-      - master
-  pull_request:
-    branches:
-      - main
-      - master
+  workflow_call:
 defaults:
   run:
     shell: bash -xeuo pipefail {0}
 permissions:
   contents: read
-concurrency:
-  group: markdown-lint-${{ github.ref }}
-  cancel-in-progress: true
 jobs:
-  markdown-lint:
+  markdown-lint-template:
     timeout-minutes: 15
     runs-on: ubuntu-24.04
     steps:
