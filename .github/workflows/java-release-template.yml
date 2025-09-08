@@ -1,0 +1,68 @@
+# SPDX-FileCopyrightText: Copyright (C) 2025 Fabrício Barros Cabral
+# SPDX-License-Identifier: MIT
+---
+name: java-release-template
+'on':
+  workflow_call:
+    secrets:
+      GPG_KEYNAME:
+        description: 'GPG key name'
+        required: true
+      GPG_PASSPHRASE:
+        description: 'GPG passphrase'
+        required: true
+      OSSRH_USERNAME:
+        description: 'Sonatype username'
+        required: true
+      OSSRH_PASSWORD:
+        description: 'Sonatype password'
+        required: true
+defaults:
+  run:
+    shell: bash -xeuo pipefail {0}
+permissions:
+  contents: read
+jobs:
+  java-build-template:
+    # yamllint disable-line rule:line-length
+    uses: fabriciofx/github-workflows/.github/workflows/java-build-template.yml@main
+  java-release-template:
+    runs-on: ubuntu-24.04
+    needs: java-build-template
+    steps:
+      - name: Setup maven settings.xml
+        # yamllint disable rule:line-length
+        run: |
+          mkdir -p ~/.m2
+          cat > ~/.m2/settings.xml <<EOF
+          <settings>
+            <profiles>
+              <profile>
+                <id>app</id>
+                <properties>
+                  <gpg.keyname>"${{ secrets.GPG_KEYNAME }}"</gpg.keyname>
+                  <gpg.passphrase>"${{ secrets.GPG_PASSPHRASE }}"</gpg.passphrase>
+                </properties>
+              </profile>
+            </profiles>
+            <servers>
+              <server>
+                <id>oss.sonatype.org</id>
+                <username>"${{ secrets.OSSRH_USERNAME }}"</username>
+                <password>"${{ secrets.OSSRH_PASSWORD }}"</password>
+              </server>
+            </servers>
+          </settings>
+          EOF
+        # yamllint enable rule:line-length
+      - name: Release to Sonatype (Maven Central)
+        run: |
+          mvn clean deploy -Pqulice -Psonatype -Papp -DskipTests=true \
+            --errors --batch-mode
+        env:
+          GPG_TTY: $(tty)
+          JDK_JAVA_OPTIONS: >
+            --add-opens java.base/java.lang=ALL-UNNAMED
+            --add-opens java.base/java.io=ALL-UNNAMED
+            --add-opens java.base/java.util=ALL-UNNAMED
+            --add-opens java.base/java.util.concurrent=ALL-UNNAMED

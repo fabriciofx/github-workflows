@@ -1,0 +1,56 @@
+# SPDX-FileCopyrightText: Copyright (C) 2025 Fabrício Barros Cabral
+# SPDX-License-Identifier: MIT
+---
+name: badge-hoc-template
+'on':
+  workflow_call:
+    inputs:
+     output-dir:
+        description: 'Output directory'
+        required: true
+        type: string
+     filename:
+        description: 'Filename'
+        required: true
+        type: string
+     branch:
+        description: 'Branch name'
+        required: true
+        type: string
+     folder:
+        description: 'Folder name'
+        required: true
+        type: string
+defaults:
+  run:
+    shell: bash -xeuo pipefail {0}
+permissions:
+  contents: read
+concurrency:
+  group: badge-hoc-${{ github.ref }}
+  cancel-in-progress: true
+jobs:
+  badge-hoc-template:
+    timeout-minutes: 15
+    runs-on: ubuntu-24.04
+    permissions:
+      contents: write
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v5
+        with:
+          persist-credentials: false
+      - name: Build a HOC badge
+        # yamllint disable-line rule:line-length
+        uses: MikhailEpatko/hits-of-code-badge@da9d30c03970a5af529f69a1eaa3e35f3a65bd78
+        with:
+          output_dir: ${{ inputs.output-dir }}
+          filename: ${{ inputs.filename }}
+      - name: Release it into gh-pages
+        # yamllint disable-line rule:line-length
+        uses: JamesIves/github-pages-deploy-action@6c2d9db40f9296374acc17b90404b6e8864128c8
+        with:
+          branch: ${{ inputs.branch }}
+          folder: ${{ inputs.folder }}
+          clean: false
+        if: github.ref == 'refs/heads/main'

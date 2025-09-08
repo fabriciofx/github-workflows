@@ -1,0 +1,160 @@
+# SPDX-FileCopyrightText: Copyright (C) 2025 Fabrício Barros Cabral
+# SPDX-License-Identifier: MIT
+---
+name: java-build-template
+'on':
+  workflow_call:
+defaults:
+  run:
+    shell: bash -xeuo pipefail {0}
+permissions:
+  contents: read
+jobs:
+  checkcode:
+    runs-on: ubuntu-24.04
+    outputs:
+      proceed: ${{ steps.check.outputs.proceed }}
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v5
+        with:
+          persist-credentials: false
+      - name: Check for code
+        id: check
+        # yamllint disable rule:line-length
+        run: |
+          found=$(find . -maxdepth 1 -name "pom.xml" -o -name "*.gradle" -o -name "*.gradle.kts")
+          if [ -z "${found}" ]; then
+            echo "Code not found. Stopping execution of the other jobs."
+            echo "proceed=false" >> "${GITHUB_OUTPUT}"
+          else
+            echo "proceed=true" >> "${GITHUB_OUTPUT}"
+          fi
+        # yamllint enable rule:line-length
+  java-linux-build-template:
+    runs-on: ${{ matrix.os }}
+    needs: checkcode
+    if: needs.checkcode.outputs.proceed == 'true'
+    strategy:
+      matrix:
+        os: [ubuntu-24.04]
+        java: [11, 17, 21]
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v5
+        with:
+          persist-credentials: false
+      - name: Configure apt cache
+        uses: actions/cache@v4
+        with:
+          path: /var/cache/apt/archives
+          key: ${{ runner.os }}-apt-${{ hashFiles('**/apt-packages.txt') }}
+          restore-keys: ${{ runner.os }}-apt-
+      - name: Install dependencies
+        run: |
+          sudo apt-get update
+          if [ -s apt-packages.txt ]; then
+            xargs -a apt-packages.txt sudo apt-get install \
+              -y --no-install-recommends
+          fi
+      - name: Setup Java SDK
+        uses: actions/setup-java@v5
+        with:
+          distribution: 'temurin'
+          java-version: ${{ matrix.java }}
+      - name: Configure maven cache
+        uses: actions/cache@v4
+        with:
+          path: ~/.m2/repository
+          # yamllint disable-line rule:line-length
+          key: ${{ runner.os }}-jdk-${{ matrix.java }}-maven-${{ hashFiles('**/pom.xml') }}
+          restore-keys: ${{ runner.os }}-jdk-${{ matrix.java }}-maven-
+      - name: Build project
+        # yamllint disable rule:line-length
+        run: |
+          [ -x "mvnw" ] && mvn="./mvnw" || mvn="mvn"
+          profile=$(grep -q "<id>qulice</id>" pom.xml && echo "-Pqulice" || echo "")
+          ${mvn} --errors --batch-mode install "${profile}"
+        # yamllint enable rule:line-length
+  java-macos-build-template:
+    runs-on: ${{ matrix.os }}
+    needs: checkcode
+    if: needs.checkcode.outputs.proceed == 'true'
+    strategy:
+      matrix:
+        os: [macos-14, macos-15]
+        java: [11, 17, 21]
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v5
+        with:
+          persist-credentials: false
+      - name: Install dependencies
+        run: |
+          brew update
+          if [ -s brew-packages.txt ]; then
+            xargs brew install < brew-packages.txt
+          fi
+      - name: Setup Java SDK
+        uses: actions/setup-java@v5
+        with:
+          distribution: 'temurin'
+          java-version: ${{ matrix.java }}
+      - name: Configure maven cache
+        uses: actions/cache@v4
+        with:
+          path: ~/.m2/repository
+          # yamllint disable-line rule:line-length
+          key: ${{ runner.os }}-jdk-${{ matrix.java }}-maven-${{ hashFiles('**/pom.xml') }}
+          restore-keys: ${{ runner.os }}-jdk-${{ matrix.java }}-maven-
+      - name: Build project
+        # yamllint disable rule:line-length
+        run: |
+          [ -x "mvnw" ] && mvn="./mvnw" || mvn="mvn"
+          profile=$(grep -q "<id>qulice</id>" pom.xml && echo "-Pqulice" || echo "")
+          ${mvn} --errors --batch-mode install "${profile}"
+        # yamllint enable rule:line-length
+  java-windows-build-template:
+    runs-on: ${{ matrix.os }}
+    needs: checkcode
+    if: needs.checkcode.outputs.proceed == 'true'
+    strategy:
+      matrix:
+        os: [windows-2025]
+        java: [11, 17, 21]
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v5
+        with:
+          persist-credentials: false
+      - name: Install dependencies
+        run: |
+          @echo off
+          setlocal enabledelayedexpansion
+          if exist "choco-packages.txt" (
+            for /f "usebackq delims=" %%P in ("choco-packages.txt") do (
+              choco install %%P -y --ignore-checksums
+            )
+          )
+        shell: cmd
+      - name: Setup Java SDK
+        uses: actions/setup-java@v5
+        with:
+          distribution: 'temurin'
+          java-version: ${{ matrix.java }}
+      - name: Configure maven cache
+        uses: actions/cache@v4
+        with:
+          path: ~/.m2/repository
+          # yamllint disable-line rule:line-length
+          key: ${{ runner.os }}-jdk-${{ matrix.java }}-maven-${{ hashFiles('**/pom.xml') }}
+          restore-keys: ${{ runner.os }}-jdk-${{ matrix.java }}-maven-
+      - name: Build project
+        shell: cmd
+        # yamllint disable rule:line-length
+        run: |
+          @echo off
+          for /f "delims=" %%i in ('findstr "<id>qulice</id>" pom.xml') do set "Q=1"
+          if exist "mvnw.cmd" (set "M=mvnw.cmd") else (set "M=mvn")
+          %M% --errors --batch-mode install %Q:~-2,-1%-Pqulice
+        # yamllint enable rule:line-length
