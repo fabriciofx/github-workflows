@@ -21,6 +21,10 @@ name: badge-hoc-template
         description: 'Folder name'
         required: true
         type: string
+      clean:
+        description: 'Clean?'
+        required: true
+        type: boolean
 defaults:
   run:
     shell: bash -xeuo pipefail {0}
