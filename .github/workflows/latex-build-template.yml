@@ -22,12 +22,12 @@ jobs:
       - name: Check for code
         id: check
         run: |
-          found=$(find . -maxdepth 1 -name "*.tex")
-          if [ -z "${found}" ]; then
-            echo "No code found. Stopping execution of the other jobs."
-            echo "proceed=false" >> "${GITHUB_OUTPUT}"
-          else
+          found=$(find . -maxdepth 1 -name "pom.xml")
+          if [[ -n "${found}" ]]; then
             echo "proceed=true" >> "${GITHUB_OUTPUT}"
+          else
+            echo "Code not found. Stopping execution of the other jobs."
+            echo "proceed=false" >> "${GITHUB_OUTPUT}"
           fi
   latex-build-template:
     runs-on: ubuntu-24.04
