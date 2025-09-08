@@ -23,11 +23,11 @@ jobs:
         id: check
         run: |
           found=$(find . -maxdepth 1 -name "pom.xml")
-          if [ -z "${found}" ]; then
+          if [[ -n "${found}" ]]; then
+            echo "proceed=true" >> "${GITHUB_OUTPUT}"
+          else
             echo "Code not found. Stopping execution of the other jobs."
             echo "proceed=false" >> "${GITHUB_OUTPUT}"
-          else
-            echo "proceed=true" >> "${GITHUB_OUTPUT}"
           fi
   java-infer-analysis-template:
     runs-on: ubuntu-24.04
@@ -42,5 +42,6 @@ jobs:
         uses: srz-zumix/setup-infer@530856effeae228d1f3c8251c91ea8348d9480ee
       - name: Run infer
         run: |
+          [[ -x "mvnw" ]] && mvn="./mvnw" || mvn="mvn"
           infer --version
-          infer run --fail-on-issue --no-progress-bar -- mvn test
+          infer run --fail-on-issue --no-progress-bar -- ${mvn} test
