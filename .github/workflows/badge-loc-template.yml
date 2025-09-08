@@ -5,27 +5,27 @@ name: badge-loc-template
 'on':
   workflow_call:
     inputs:
-     debug:
+      debug:
         description: 'Debug'
         required: true
         type: boolean
-     directory:
+      directory:
         description: 'directory'
         required: true
         type: string
-     badge:
+      badge:
         description: 'Badge filename'
         required: true
         type: string
-     branch:
+      branch:
         description: 'Branch name'
         required: true
         type: string
-     folder:
+      folder:
         description: 'Folder name'
         required: true
         type: string
-     clean:
+      clean:
         description: 'Clean'
         required: true
         type: boolean

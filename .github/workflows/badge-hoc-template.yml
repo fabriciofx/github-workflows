@@ -5,19 +5,19 @@ name: badge-hoc-template
 'on':
   workflow_call:
     inputs:
-     output-dir:
+      output-dir:
         description: 'Output directory'
         required: true
         type: string
-     filename:
+      filename:
         description: 'Filename'
         required: true
         type: string
-     branch:
+      branch:
         description: 'Branch name'
         required: true
         type: string
-     folder:
+      folder:
         description: 'Folder name'
         required: true
         type: string
