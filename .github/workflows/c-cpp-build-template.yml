@@ -48,10 +48,10 @@ jobs:
           restore-keys: ${{ runner.os }}-apt-
       - name: Install dependencies
         run: |
-          sudo apt-get update
           if [[ -s apt-packages.txt ]]; then
-            xargs -a apt-packages.txt sudo apt-get install \
-              -y --no-install-recommends
+            sudo apt-get update
+            xargs sudo apt-get install -y \
+              --no-install-recommends < apt-packages.txt
           fi
       - name: Configure and build
         run: |
@@ -112,8 +112,8 @@ jobs:
           persist-credentials: false
       - name: Install dependencies
         run: |
-          brew update
           if [[ -s brew-packages.txt ]]; then
+            brew update
             xargs brew install < brew-packages.txt
           fi
       - name: Configure and build
