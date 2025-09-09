@@ -1,0 +1,32 @@
+# SPDX-FileCopyrightText: Copyright (C) 2025 Fabrício Barros Cabral
+# SPDX-License-Identifier: MIT
+---
+name: css-duplication-template
+'on':
+  workflow_call:
+defaults:
+  run:
+    shell: bash -xeuo pipefail {0}
+permissions:
+  contents: read
+jobs:
+  css-duplication-template:
+    runs-on: ubuntu-24.04
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v5
+        with:
+          persist-credentials: false
+      - name: Setup Java SDK
+        uses: actions/setup-java@v5
+        with:
+          distribution: 'temurin'
+          java-version: 17
+      - name: Download Simian
+        run: |
+          curl -sS -L --retry 3 -o /tmp/simian.jar \
+            http://public.yegor256.com/simian.jar
+      - name: Check HTML code duplication
+        run: |
+          java -jar /tmp/simian.jar -threshold=16 \
+            -ignoreBlocks="simian-off:simian-on" "**/*.css"
