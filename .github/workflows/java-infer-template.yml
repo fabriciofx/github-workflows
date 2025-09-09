@@ -40,8 +40,9 @@ jobs:
           persist-credentials: false
       - name: Setup Infer
         uses: srz-zumix/setup-infer@530856effeae228d1f3c8251c91ea8348d9480ee
-      - name: Run infer
+      - name: Run Infer
         run: |
           [[ -x "mvnw" ]] && mvn="./mvnw" || mvn="mvn"
           infer --version
-          infer run --fail-on-issue --no-progress-bar -- "${mvn}" test
+          infer run --fail-on-issue --no-progress-bar \
+            -- "${mvn} --batch-mode test"
