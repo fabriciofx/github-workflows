@@ -6,10 +6,10 @@ name: java-sonar-template
   workflow_call:
     secrets:
       GH_TOKEN:
-        description: 'Token from GitHub'
+        description: 'GitHub Token'
         required: true
       SN_TOKEN:
-        description: 'Token from Sonar'
+        description: 'Sonar Token'
         required: true
 defaults:
   run:
