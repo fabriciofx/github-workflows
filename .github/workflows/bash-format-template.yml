@@ -26,5 +26,8 @@ jobs:
       - name: Check bash format
         run: |
           readarray -t files < <(find . -name "*.sh")
-          [ ${#files[@]} -eq 0 ] && { echo "No '*.sh'. files found."; exit 0; }
+          [[ ${#files[@]} -eq 0 ]] && {
+            echo "No '*.sh'. files found.";
+            exit 0;
+          }
           bashate -i E006,E003 "${files[@]}"

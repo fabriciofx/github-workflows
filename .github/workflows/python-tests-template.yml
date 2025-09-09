@@ -50,7 +50,7 @@ jobs:
           persist-credentials: false
       - name: Install venv and dependencies
         run: |
-          if [ -s Makefile ]; then
+          if [[ -s Makefile ]]; then
             make install
           else
             python -m venv .venv
@@ -59,7 +59,7 @@ jobs:
           fi
       - name: Recreate certificates
         run: |
-          if [ -n "${{ secrets.SSL_SERVER_KEY }}" ]; then
+          if [[ -n "${{ secrets.SSL_SERVER_KEY }}" ]]; then
             mkdir certificates
             echo "${{ secrets.SSL_SERVER_KEY }}" | \
               base64 --decode > certificates/server.key

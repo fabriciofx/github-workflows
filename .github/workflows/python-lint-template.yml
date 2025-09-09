@@ -40,7 +40,7 @@ jobs:
           persist-credentials: false
       - name: Install venv and dependencies
         run: |
-          if [ -s Makefile ]; then
+          if [[ -s Makefile ]]; then
             make install
           else
             python -m venv .venv
