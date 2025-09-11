@@ -34,9 +34,6 @@ defaults:
     shell: bash -xeuo pipefail {0}
 permissions:
   contents: read
-concurrency:
-  group: badge-loc-${{ github.ref }}
-  cancel-in-progress: true
 jobs:
   badge-loc-template:
     runs-on: ubuntu-24.04
