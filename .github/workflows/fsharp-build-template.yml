@@ -14,10 +14,6 @@ env:
   DOTNET_SKIP_FIRST_TIME_EXPERIENCE: true
   # Disable sending usage data to Microsoft
   DOTNET_CLI_TELEMETRY_OPTOUT: true
-concurrency:
-  # yamllint disable-line rule:line-length
-  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
-  cancel-in-progress: true
 jobs:
   checkcode:
     runs-on: ubuntu-24.04
