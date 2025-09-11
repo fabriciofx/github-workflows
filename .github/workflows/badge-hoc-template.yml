@@ -30,9 +30,6 @@ defaults:
     shell: bash -xeuo pipefail {0}
 permissions:
   contents: read
-concurrency:
-  group: badge-hoc-${{ github.ref }}
-  cancel-in-progress: true
 jobs:
   badge-hoc-template:
     runs-on: ubuntu-24.04
