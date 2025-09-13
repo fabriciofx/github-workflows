@@ -1,0 +1,33 @@
+# SPDX-FileCopyrightText: Copyright (C) 2025 Fabrício Barros Cabral
+# SPDX-License-Identifier: MIT
+---
+name: tag-semver-template
+'on':
+  workflow_call:
+defaults:
+  run:
+    shell: bash -xeuo pipefail {0}
+permissions:
+  contents: read
+jobs:
+  tag-semver-template:
+    runs-on: ubuntu-24.04
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v5
+        with:
+          persist-credentials: false
+      - name: Extract tag name
+        id: tag
+        run: |
+          name="$(echo "${{ github.ref_name }}" | tr -cd '[:alnum:]._-' )"
+          echo "name=${name}" >> "${GITHUB_OUTPUT}"
+      - name: Check tag name
+        # yamllint disable rule:line-length
+        run: |
+          tag_name="${{ steps.tag.outputs.name }}"
+          [[ "${tag_name}" =~ ^[0-9]+\.[0-9]+\.[0-9]+$ ]] || {
+            echo "Tag '${tag_name}' is in an invalid semver format: ^[0-9]+\.[0-9]+\.[0-9]+$";
+            exit 1;
+          }
+        # yamllint enable rule:line-length
