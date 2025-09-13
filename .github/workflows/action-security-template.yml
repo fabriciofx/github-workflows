@@ -20,7 +20,7 @@ jobs:
         with:
           persist-credentials: false
       - name: Run zizmor
-        uses: zizmorcore/zizmor-action@5ca5fc7a4779c5263a3ffa0e1f693009994446d1
+        uses: zizmorcore/zizmor-action@2d5a33f24d267bf01caf142277eb9de2a9836a2d
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
           inputs: .github/workflows/
