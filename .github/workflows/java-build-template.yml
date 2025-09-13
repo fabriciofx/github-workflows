@@ -1,6 +1,7 @@
 # SPDX-FileCopyrightText: Copyright (C) 2025 Fabrício Barros Cabral
 # SPDX-License-Identifier: MIT
 ---
+# yamllint disable rule:line-length
 name: java-build-template
 'on':
   workflow_call:
@@ -64,7 +65,6 @@ jobs:
         uses: actions/cache@v4
         with:
           path: ~/.m2/repository
-          # yamllint disable-line rule:line-length
           key: ${{ runner.os }}-jdk-${{ matrix.java }}-maven-${{ hashFiles('**/pom.xml') }}
           restore-keys: ${{ runner.os }}-jdk-${{ matrix.java }}-maven-
       - name: Build Maven project
@@ -137,7 +137,6 @@ jobs:
           path: |
             C:\ProgramData\chocolatey\cache
             C:\ProgramData\chocolatey\lib
-          # yamllint disable-line rule:line-length
           key: choco-cache-${{ runner.os }}-${{ hashFiles('**/packages.config') }}
           restore-keys: choco-cache-${{ runner.os }}-
       - name: Install dependencies
@@ -159,15 +158,12 @@ jobs:
         uses: actions/cache@v4
         with:
           path: ~/.m2/repository
-          # yamllint disable-line rule:line-length
           key: ${{ runner.os }}-jdk-${{ matrix.java }}-maven-${{ hashFiles('**/pom.xml') }}
           restore-keys: ${{ runner.os }}-jdk-${{ matrix.java }}-maven-
       - name: Build Maven project
         shell: cmd
-        # yamllint disable rule:line-length
         run: |
           @echo off
           for /f "delims=" %%i in ('findstr "<id>qulice</id>" pom.xml') do set "Q=1"
           if exist "mvnw.cmd" (set "M=mvnw.cmd") else (set "M=mvn")
           %M% --errors --batch-mode install %Q:~-2,-1%-Pqulice
-        # yamllint enable rule:line-length

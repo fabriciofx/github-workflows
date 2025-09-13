@@ -1,6 +1,7 @@
 # SPDX-FileCopyrightText: Copyright (C) 2025 Fabrício Barros Cabral
 # SPDX-License-Identifier: MIT
 ---
+# yamllint disable rule:line-length
 name: java-release
 'on':
   push:
@@ -10,7 +11,6 @@ permissions:
   contents: read
 jobs:
   java-release:
-    # yamllint disable-line rule:line-length
     uses: fabriciofx/github-workflows/.github/workflows/java-release-template.yml@main
     secrets:
       RELEASE_KEYNAME: ${{ secrets.GPG_KEYNAME }}

@@ -1,6 +1,7 @@
 # SPDX-FileCopyrightText: Copyright (C) 2025 Fabrício Barros Cabral
 # SPDX-License-Identifier: MIT
 ---
+# yamllint disable rule:line-length
 name: c-cpp-build-template
 'on':
   workflow_call:
@@ -21,7 +22,6 @@ jobs:
           persist-credentials: false
       - name: Check for code
         id: check
-        # yamllint disable rule:line-length
         run: |
           found=$(find . -maxdepth 1 -name "autogen.sh" -o -name "configure" -o -name "Makefile")
           if [[ -n "${found}" ]]; then
@@ -30,7 +30,6 @@ jobs:
             echo "Code not found. Stopping execution of the other jobs."
             echo "proceed=false" >> "${GITHUB_OUTPUT}"
           fi
-        # yamllint enable rule:line-length
   c-cpp-linux-build-template:
     runs-on: ubuntu-24.04
     needs: checkcode
@@ -65,13 +64,11 @@ jobs:
           make
       - name: Get properties from configure.ac
         id: props
-        # yamllint disable rule:line-length
         run: |
           name="$(sed -n 's/AC_INIT(\[\([^]]*\)\],.*/\1/p' configure.ac)"
           echo "name=${name}" >> "${GITHUB_OUTPUT}"
           version="$(sed -n 's/AC_INIT(\[[^]]*\], \[\([^]]*\)\], \[[^]]*\])/\1/p' configure.ac)"
           echo "version=${version}" >> "${GITHUB_OUTPUT}"
-        # yamllint enable rule:line-length
       - name: Create source package
         run: |
           make dist
@@ -79,7 +76,6 @@ jobs:
         run: |
           make binary-dist
       - name: Prepare packages to distribution
-        # yamllint disable rule:line-length
         run: |
           # Sanitize variables for security purposes
           safe_name="$(echo "${{ steps.props.outputs.name }}" | tr -cd '[:alnum:]._-' )"
@@ -99,7 +95,6 @@ jobs:
           mkdir -p dist
           mv "${src}" dist/
           mv "${bin}" "dist/${safe_name}-${safe_version}-linux.tar.gz"
-        # yamllint enable rule:line-length
   c-cpp-macos-build-template:
     runs-on: macos-15
     needs: checkcode
@@ -127,18 +122,15 @@ jobs:
           make
       - name: Get properties from configure.ac
         id: props
-        # yamllint disable rule:line-length
         run: |
           name="$(sed -n 's/AC_INIT(\[\([^]]*\)\],.*/\1/p' configure.ac)"
           echo "name=${name}" >> "${GITHUB_OUTPUT}"
           version="$(sed -n 's/AC_INIT(\[[^]]*\], \[\([^]]*\)\], \[[^]]*\])/\1/p' configure.ac)"
           echo "version=${version}" >> "${GITHUB_OUTPUT}"
-        # yamllint enable rule:line-length
       - name: Create macOS binary package
         run: |
           make binary-dist
       - name: Prepare package to distribution
-        # yamllint disable rule:line-length
         run: |
           # Sanitize variables for security purposes
           safe_name="$(echo "${{ steps.props.outputs.name }}" | tr -cd '[:alnum:]._-' )"
@@ -155,7 +147,6 @@ jobs:
           # Move file
           mkdir -p dist
           mv "${bin}" dist/"${safe_name}-${safe_version}-macos.tar.gz"
-        # yamllint enable rule:line-length
   c-cpp-windows-build-template:
     runs-on: windows-2025
     needs: checkcode
@@ -193,13 +184,11 @@ jobs:
           make
       - name: Get properties from configure.ac
         id: props
-        # yamllint disable rule:line-length
         run: |
           name="$(sed -n 's/AC_INIT(\[\([^]]*\)\],.*/\1/p' configure.ac)"
           echo "name=${name}" >> "${GITHUB_OUTPUT}"
           version="$(sed -n 's/AC_INIT(\[[^]]*\], \[\([^]]*\)\], \[[^]]*\])/\1/p' configure.ac)"
           echo "version=${version}" >> "${GITHUB_OUTPUT}"
-        # yamllint enable rule:line-length
       - name: Create source package
         run: |
           make dist
@@ -207,12 +196,10 @@ jobs:
         run: |
           make binary-dist
       - name: Prepare packages to distribution
-        # yamllint disable rule:line-length
         run: |
           md dist
           move "${{ steps.props.outputs.name }}-${{ steps.props.outputs.version }}-bin.zip" ^
             "dist/${{ steps.props.outputs.name }}-${{ steps.props.outputs.version }}-windows.zip"
-        # yamllint enable rule:line-length
       - name: Upload Windows artifacts
         uses: actions/upload-artifact@v4
         with:

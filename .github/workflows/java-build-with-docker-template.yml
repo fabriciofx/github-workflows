@@ -1,6 +1,7 @@
 # SPDX-FileCopyrightText: Copyright (C) 2025 Fabrício Barros Cabral
 # SPDX-License-Identifier: MIT
 ---
+# yamllint disable rule:line-length
 name: java-build-with-docker-template
 'on':
   workflow_call:
@@ -68,7 +69,6 @@ jobs:
         uses: actions/cache@v4
         with:
           path: ~/.m2/repository
-          # yamllint disable-line rule:line-length
           key: ${{ runner.os }}-jdk-${{ matrix.java }}-maven-${{ hashFiles('**/pom.xml') }}
           restore-keys: ${{ runner.os }}-jdk-${{ matrix.java }}-maven-
       - name: Build Maven project

@@ -1,6 +1,7 @@
 # SPDX-FileCopyrightText: Copyright (C) 2025 Fabrício Barros Cabral
 # SPDX-License-Identifier: MIT
 ---
+# yamllint disable rule:line-length
 name: c-cpp-release
 'on':
   push:
@@ -10,11 +11,9 @@ permissions:
   contents: read
 jobs:
   c-cpp-build:
-    # yamllint disable-line rule:line-length
     uses: fabriciofx/github-workflows/.github/workflows/c-cpp-build-template.yml@main
   c-cpp-release:
     needs: c-cpp-build
-    # yamllint disable-line rule:line-length
     uses: fabriciofx/github-workflows/.github/workflows/c-cpp-release-template.yml@main
     secrets:
       GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}

@@ -1,6 +1,7 @@
 # SPDX-FileCopyrightText: Copyright (C) 2025 Fabrício Barros Cabral
 # SPDX-License-Identifier: MIT
 ---
+# yamllint disable rule:line-length
 name: license-copyright-template
 'on':
   workflow_call:
@@ -18,7 +19,6 @@ jobs:
         with:
           persist-credentials: false
       - name: Check copyright header
-        # yamllint disable-line rule:line-length
         uses: yegor256/copyrights-action@869354d906e9c8c807f48b86cb47f8b241add249
         with:
           ignore: >-

@@ -1,6 +1,7 @@
 # SPDX-FileCopyrightText: Copyright (C) 2025 Fabrício Barros Cabral
 # SPDX-License-Identifier: MIT
 ---
+# yamllint disable rule:line-length
 name: markdown-lint-template
 'on':
   workflow_call:
@@ -18,7 +19,6 @@ jobs:
         with:
           persist-credentials: false
       - name: Lint Markdown files
-        # yamllint disable-line rule:line-length
         uses: DavidAnson/markdownlint-cli2-action@992badcdf24e3b8eb7e87ff9287fe931bcb00c6e
         with:
           globs: '**/*.md'
