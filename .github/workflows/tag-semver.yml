@@ -6,7 +6,7 @@ name: tag-semver
 'on':
   push:
     tags:
-      - '^[0-9]+\.[0-9]+\.[0-9]+$'
+      - '[0-9]+.[0-9]+.[0-9]+'
 permissions:
   contents: read
 jobs:
