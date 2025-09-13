@@ -79,13 +79,11 @@ jobs:
         run: |
           make binary-dist
       - name: Prepare packages to distribution
-        env:
-          NAME: ${{ steps.props.outputs.name }}
-          VERSION: ${{ steps.props.outputs.version }}
+        # yamllint disable rule:line-length
         run: |
           # Sanitize variables for security purposes
-          safe_name="$(echo "${NAME}" | tr -cd '[:alnum:]._-' )"
-          safe_version="$(echo "${VERSION}" | tr -cd '[:alnum:]._-' )"
+          safe_name="$(echo "${{ steps.props.outputs.name }}" | tr -cd '[:alnum:]._-' )"
+          safe_version="$(echo "${{ steps.props.outputs.version }}" | tr -cd '[:alnum:]._-' )"
 
           # Check if variables are empty
           [[ -z "$safe_name" ]] && { echo "Invalid name"; exit 1; }
@@ -101,6 +99,7 @@ jobs:
           mkdir -p dist
           mv "${src}" dist/
           mv "${bin}" "dist/${safe_name}-${safe_version}-linux.tar.gz"
+        # yamllint enable rule:line-length
   c-cpp-macos-build-template:
     runs-on: macos-15
     needs: checkcode
@@ -139,13 +138,11 @@ jobs:
         run: |
           make binary-dist
       - name: Prepare package to distribution
-        env:
-          NAME: ${{ steps.props.outputs.name }}
-          VERSION: ${{ steps.props.outputs.version }}
+        # yamllint disable rule:line-length
         run: |
           # Sanitize variables for security purposes
-          safe_name="$(echo "${NAME}" | tr -cd '[:alnum:]._-' )"
-          safe_version="$(echo "${VERSION}" | tr -cd '[:alnum:]._-' )"
+          safe_name="$(echo "${{ steps.props.outputs.name }}" | tr -cd '[:alnum:]._-' )"
+          safe_version="$(echo "${{ steps.props.outputs.version }}" | tr -cd '[:alnum:]._-' )"
 
           # Check if variables are empty
           [[ -z "$safe_name" ]] && { echo "Invalid name"; exit 1; }
@@ -158,6 +155,7 @@ jobs:
           # Move file
           mkdir -p dist
           mv "${bin}" dist/"${safe_name}-${safe_version}-macos.tar.gz"
+        # yamllint enable rule:line-length
   c-cpp-windows-build-template:
     runs-on: windows-2025
     needs: checkcode
@@ -209,13 +207,11 @@ jobs:
         run: |
           make binary-dist
       - name: Prepare packages to distribution
-        env:
-          NAME: ${{ steps.props.outputs.name }}
-          VERSION: ${{ steps.props.outputs.version }}
         # yamllint disable rule:line-length
         run: |
           md dist
-          move "${NAME}-${VERSION}-bin.zip" "dist/${NAME}-${VERSION}-windows.zip"
+          move "${{ steps.props.outputs.name }}-${{ steps.props.outputs.version }}-bin.zip" ^
+            "dist/${{ steps.props.outputs.name }}-${{ steps.props.outputs.version }}-windows.zip"
         # yamllint enable rule:line-length
       - name: Upload Windows artifacts
         uses: actions/upload-artifact@v4
