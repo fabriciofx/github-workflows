@@ -1,6 +1,7 @@
 # SPDX-FileCopyrightText: Copyright (C) 2025 Fabrício Barros Cabral
 # SPDX-License-Identifier: MIT
 ---
+# yamllint disable rule:line-length
 name: python-release
 'on':
   push:
@@ -14,5 +15,4 @@ permissions:
   contents: read
 jobs:
   python-release:
-    # yamllint disable-line rule:line-length
     uses: fabriciofx/github-workflows/.github/workflows/python-release-template.yml@main

@@ -1,6 +1,7 @@
 # SPDX-FileCopyrightText: Copyright (C) 2025 Fabrício Barros Cabral
 # SPDX-License-Identifier: MIT
 ---
+# yamllint disable rule:line-length
 name: latex-release
 'on':
   push:
@@ -13,7 +14,6 @@ permissions:
   contents: write
 jobs:
   latex-release:
-    # yamllint disable-line rule:line-length
     uses: fabriciofx/github-workflows/.github/workflows/latex-release-template.yml@main
     secrets:
       GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}

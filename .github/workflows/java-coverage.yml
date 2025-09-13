@@ -1,6 +1,7 @@
 # SPDX-FileCopyrightText: Copyright (C) 2025 Fabrício Barros Cabral
 # SPDX-License-Identifier: MIT
 ---
+# yamllint disable rule:line-length
 name: java-coverage
 'on':
   push:
@@ -11,5 +12,4 @@ permissions:
   contents: read
 jobs:
   java-coverage:
-    # yamllint disable-line rule:line-length
     uses: fabriciofx/github-workflows/.github/workflows/java-coverage-template.yml@main
