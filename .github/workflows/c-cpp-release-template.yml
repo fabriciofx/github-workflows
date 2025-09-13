@@ -77,13 +77,11 @@ jobs:
         run: |
           make binary-dist
       - name: Prepare packages to distribution
-        env:
-          NAME: ${{ steps.props.outputs.name }}
-          VERSION: ${{ steps.props.outputs.version }}
+        # yamllint disable rule:line-length
         run: |
           # Sanitize variables for security purposes
-          safe_name="$(echo "${NAME}" | tr -cd '[:alnum:]._-' )"
-          safe_version="$(echo "${VERSION}" | tr -cd '[:alnum:]._-' )"
+          safe_name="$(echo "${{ steps.props.outputs.name }}" | tr -cd '[:alnum:]._-' )"
+          safe_version="$(echo "${{ steps.props.outputs.version }}" | tr -cd '[:alnum:]._-' )"
 
           # Check if variables are empty
           [[ -z "$safe_name" ]] && { echo "Invalid name"; exit 1; }
@@ -99,6 +97,7 @@ jobs:
           mkdir -p dist
           mv "${src}" dist/
           mv "${bin}" "dist/${safe_name}-${safe_version}-linux.tar.gz"
+        # yamllint enable rule:line-length
   c-cpp-macos-build-template:
     runs-on: macos-15
     needs: checkcode
@@ -137,13 +136,11 @@ jobs:
         run: |
           make binary-dist
       - name: Prepare package to distribution
-        env:
-          NAME: ${{ steps.props.outputs.name }}
-          VERSION: ${{ steps.props.outputs.version }}
+        # yamllint disable rule:line-length
         run: |
           # Sanitize variables for security purposes
-          safe_name="$(echo "${NAME}" | tr -cd '[:alnum:]._-' )"
-          safe_version="$(echo "${VERSION}" | tr -cd '[:alnum:]._-' )"
+          safe_name="$(echo "${{ steps.props.outputs.name }}" | tr -cd '[:alnum:]._-' )"
+          safe_version="$(echo "${{ steps.props.outputs.version }}" | tr -cd '[:alnum:]._-' )"
 
           # Check if variables are empty
           [[ -z "$safe_name" ]] && { echo "Invalid name"; exit 1; }
@@ -156,6 +153,7 @@ jobs:
           # Move file
           mkdir -p "dist"
           mv "${bin}" dist/"${safe_name}-${safe_version}-macos.tar.gz"
+        # yamllint enable rule:line-length
   c-cpp-release-template:
     runs-on: ubuntu-24.04
     needs: [c-cpp-linux-build-template, c-cpp-macos-build-template]
