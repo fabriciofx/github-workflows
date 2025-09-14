@@ -1,7 +1,6 @@
 # SPDX-FileCopyrightText: Copyright (C) 2025 Fabrício Barros Cabral
 # SPDX-License-Identifier: MIT
 ---
-# yamllint disable rule:line-length
 name: action-lint-template
 'on':
   workflow_call:
@@ -18,10 +17,5 @@ jobs:
         uses: actions/checkout@v5
         with:
           persist-credentials: false
-      - name: Download and installs actionlint
-        run: |
-          curl -sS -L --retry 3 -o /tmp/download-actionlint.bash \
-            https://raw.githubusercontent.com/rhysd/actionlint/main/scripts/download-actionlint.bash
-          bash /tmp/download-actionlint.bash latest /tmp
-      - name: Check workflow files
-        run: /tmp/actionlint -color
+      - name: Run actionlint
+        uses: raven-actions/actionlint@3a24062651993d40fed1019b58ac6fbdfbf276cc
