@@ -26,7 +26,7 @@ jobs:
         id: check
         uses: thebinaryfelix/check-file-existence-action@436223737a098725b8d10ab1950a03efba5e6fc6
         with:
-          files: 'autogen.sh, configure, Makefile'
+          files: '{autogen.sh,configure,Makefile}'
       - name: Install dependencies
         if: steps.check.outputs.exists == 'true'
         run: |
@@ -89,7 +89,7 @@ jobs:
         id: check
         uses: thebinaryfelix/check-file-existence-action@436223737a098725b8d10ab1950a03efba5e6fc6
         with:
-          files: 'autogen.sh, configure, Makefile'
+          files: '{autogen.sh,configure,Makefile}'
       - name: Install dependencies
         if: steps.check.outputs.exists == 'true'
         run: |
