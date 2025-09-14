@@ -15,35 +15,20 @@ defaults:
 permissions:
   contents: read
 jobs:
-  checkcode:
-    runs-on: ubuntu-24.04
-    outputs:
-      proceed: ${{ steps.check.outputs.proceed }}
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v5
-        with:
-          persist-credentials: false
-      - name: Check for code
-        id: check
-        run: |
-          found=$(find . -maxdepth 1 -name "autogen.sh" -o -name "configure" -o -name "Makefile")
-          if [[ -n "${found}" ]]; then
-            echo "proceed=true" >> "${GITHUB_OUTPUT}"
-          else
-            echo "Code not found. Stopping execution of the other jobs."
-            echo "proceed=false" >> "${GITHUB_OUTPUT}"
-          fi
   c-cpp-linux-build-template:
     runs-on: ubuntu-24.04
-    needs: checkcode
-    if: needs.checkcode.outputs.proceed == 'true'
     steps:
       - name: Checkout code
         uses: actions/checkout@v5
         with:
           persist-credentials: false
+      - name: Check if code exists
+        id: check
+        uses: thebinaryfelix/check-file-existence-action@436223737a098725b8d10ab1950a03efba5e6fc6
+        with:
+          files: 'autogen.sh, configure, Makefile'
       - name: Install dependencies
+        if: steps.check.outputs.exists == 'true'
         run: |
           if [[ -s apt-packages.txt ]]; then
             sudo apt-get update
@@ -95,14 +80,18 @@ jobs:
           mv "${bin}" "dist/${safe_name}-${safe_version}-linux.tar.gz"
   c-cpp-macos-build-template:
     runs-on: macos-15
-    needs: checkcode
-    if: needs.checkcode.outputs.proceed == 'true'
     steps:
       - name: Checkout code
         uses: actions/checkout@v5
         with:
           persist-credentials: false
+      - name: Check if code exists
+        id: check
+        uses: thebinaryfelix/check-file-existence-action@436223737a098725b8d10ab1950a03efba5e6fc6
+        with:
+          files: 'autogen.sh, configure, Makefile'
       - name: Install dependencies
+        if: steps.check.outputs.exists == 'true'
         run: |
           if [[ -s brew-packages.txt ]]; then
             brew update
