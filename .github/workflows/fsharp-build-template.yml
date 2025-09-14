@@ -26,7 +26,6 @@ jobs:
           persist-credentials: false
       - name: Check for code
         id: check
-        # yamllint disable rule:line-length
         run: |
           found=$(find . -maxdepth 1 -name "*.csproj" -o -name "*.sln")
           if [[ -n "${found}" ]]; then
@@ -35,7 +34,6 @@ jobs:
             echo "Code not found. Stopping execution of the other jobs."
             echo "proceed=false" >> "${GITHUB_OUTPUT}"
           fi
-        # yamllint enable rule:line-length
   fsharp-build-template:
     runs-on: ${{ matrix.os }}
     needs: checkcode
