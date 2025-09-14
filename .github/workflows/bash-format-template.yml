@@ -21,7 +21,7 @@ jobs:
         id: check
         uses: thebinaryfelix/check-file-existence-action@436223737a098725b8d10ab1950a03efba5e6fc6
         with:
-          files: '**/*.sh, **/*.bash'
+          files: '**/*.sh'
       - name: Setup Python SDK
         if: steps.check.outputs.exists == 'true'
         uses: actions/setup-python@v6
