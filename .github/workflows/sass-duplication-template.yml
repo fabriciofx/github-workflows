@@ -21,7 +21,7 @@ jobs:
         id: check
         uses: thebinaryfelix/check-file-existence-action@436223737a098725b8d10ab1950a03efba5e6fc6
         with:
-          files: '**/*.{sass,scss}'
+          files: '**/*.scss'
       - name: Setup Java SDK
         if: steps.check.outputs.exists == 'true'
         uses: actions/setup-java@v5
