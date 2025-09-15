@@ -37,25 +37,6 @@ jobs:
         with:
           persist-credentials: false
           fetch-depth: 0
-      - name: Check if code exists
-        id: check
-        uses: thebinaryfelix/check-file-existence-action@436223737a098725b8d10ab1950a03efba5e6fc6
-        with:
-          files: '**/pom.xml'
-      - name: Configure APT cache
-        if: steps.check.outputs.exists == 'true'
-        uses: actions/cache@v4
-        with:
-          path: /var/cache/apt/archives
-          key: ${{ runner.os }}-apt-${{ hashFiles('**/apt-packages.txt') }}
-          restore-keys: ${{ runner.os }}-apt-
-      - name: Install dependencies
-        run: |
-          if [[ -s apt-packages.txt ]]; then
-            sudo apt-get update
-            xargs sudo apt-get install -y \
-              --no-install-recommends < apt-packages.txt
-          fi
       - name: Setup Java SDK
         uses: actions/setup-java@v5
         with:
@@ -114,7 +95,16 @@ jobs:
             -s "/*[local-name()='settings']/*[local-name()='profiles']/profile[last()]/properties" \
               -t elem -n "gpg.keyname" -v "${{ secrets.RELEASE_KEYNAME }}" \
             "${settings}"
+      - name: Detect working directory
+        id: detect
+        run: |
+          if [[ -d java ]]; then
+            echo "dir=java" >> "${GITHUB_OUTPUT}"
+          else
+            echo "dir=." >> "${GITHUB_OUTPUT}"
+          fi
       - name: Release to Maven Central
+        working-directory: ${{ steps.detect.outputs.dir }}
         run: |
           [[ -x "mvnw" ]] && mvn="./mvnw" || mvn="mvn"
           ${mvn} --errors --batch-mode deploy -Pcentral -Pgpg -DskipTests=true
