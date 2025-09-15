@@ -55,10 +55,27 @@ jobs:
         with:
           distribution: 'temurin'
           java-version: ${{ matrix.java }}
-      - name: Debug
+      - name: Debug workspace (safe)
         run: |
-          ls -R
-          git ls-files
+          echo "Listing all files in the workspace (ignoring permission errors)..."
+          # Lista recursivamente todos os arquivos, ignorando mensagens de erro de permissão
+          find . -type f 2>/dev/null
+
+          echo
+          echo "Verifying important files:"
+          # Verifica se o pom.xml existe
+          if [ -f "pom.xml" ]; then
+            echo "pom.xml exists"
+          else
+            echo "WARNING: pom.xml not found!"
+          fi
+
+          # Verifica se o apt-packages.txt existe
+          if [ -f "apt-packages.txt" ]; then
+            echo "apt-packages.txt exists"
+          else
+            echo "WARNING: apt-packages.txt not found!"
+          fi
       - name: Configure Maven cache
         uses: actions/cache@v4
         with:
