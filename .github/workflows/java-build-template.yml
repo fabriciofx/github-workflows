@@ -37,7 +37,7 @@ jobs:
         id: detect
         run: |
           if [[ -d java ]]; then
-            echo "dir=java" >> "${GITHUB_OUTPUT}""
+            echo "dir=java" >> "${GITHUB_OUTPUT}"
           else
             echo "dir=." >> "${GITHUB_OUTPUT}"
           fi
@@ -75,7 +75,7 @@ jobs:
         id: detect
         run: |
           if [[ -d java ]]; then
-            echo "dir=java" >> "${GITHUB_OUTPUT}""
+            echo "dir=java" >> "${GITHUB_OUTPUT}"
           else
             echo "dir=." >> "${GITHUB_OUTPUT}"
           fi
@@ -113,7 +113,7 @@ jobs:
         id: detect
         run: |
           if [[ -d java ]]; then
-            echo "dir=java" >> "${GITHUB_OUTPUT}""
+            echo "dir=java" >> "${GITHUB_OUTPUT}"
           else
             echo "dir=." >> "${GITHUB_OUTPUT}"
           fi
