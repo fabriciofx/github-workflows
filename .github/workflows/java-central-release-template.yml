@@ -12,9 +12,6 @@ name: java-central-release-template
       RELEASE_PASSPHRASE:
         description: 'GPG passphrase'
         required: true
-      RELEASE_PRIVATE_KEY:
-        description: 'GPG private key'
-        required: true
       RELEASE_USERNAME:
         description: 'Central token username'
         required: true
