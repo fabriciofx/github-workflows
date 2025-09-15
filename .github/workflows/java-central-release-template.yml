@@ -97,7 +97,4 @@ jobs:
       - name: Release to Maven Central
         run: |
           [[ -x "mvnw" ]] && mvn="./mvnw" || mvn="mvn"
-          args=(--errors --batch-mode deploy -Pcentral -Pgpg -DskipTests=true)
-          profile=$(grep -q "<id>qulice</id>" pom.xml && echo "-Pqulice")
-          [[ -n "${profile}" ]] && args+=("${profile}")
-          ${mvn} "${args[@]}"
+          ${mvn} --errors --batch-mode deploy -Pcentral -Pgpg -DskipTests=true
