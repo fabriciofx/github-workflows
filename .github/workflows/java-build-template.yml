@@ -33,8 +33,16 @@ jobs:
           path: ~/.m2/repository
           key: ${{ runner.os }}-jdk-${{ matrix.java }}-maven-${{ hashFiles('pom.xml') }}
           restore-keys: ${{ runner.os }}-jdk-${{ matrix.java }}-maven-
+      - name: Detect working dir
+        id: detect
+        run: |
+          if [[ -d java ]]; then
+            echo "dir=java" >> "${GITHUB_OUTPUT}""
+          else
+            echo "dir=." >> "${GITHUB_OUTPUT}"
+          fi
       - name: Build Maven project
-        working-directory: java
+        working-directory: ${{ steps.detect.outputs.dir }}
         run: |
           [[ -x "mvnw" ]] && mvn="./mvnw" || mvn="mvn"
           args=(--errors --batch-mode install)
@@ -63,8 +71,16 @@ jobs:
           path: ~/.m2/repository
           key: ${{ runner.os }}-jdk-${{ matrix.java }}-maven-${{ github.job }}-${{ hashFiles('**/pom.xml') }}
           restore-keys: ${{ runner.os }}-jdk-${{ matrix.java }}-maven-${{ github.job }}-
+      - name: Detect working dir
+        id: detect
+        run: |
+          if [[ -d java ]]; then
+            echo "dir=java" >> "${GITHUB_OUTPUT}""
+          else
+            echo "dir=." >> "${GITHUB_OUTPUT}"
+          fi
       - name: Build Maven project
-        working-directory: java
+        working-directory: ${{ steps.detect.outputs.dir }}
         run: |
           [[ -x "mvnw" ]] && mvn="./mvnw" || mvn="mvn"
           args=(--errors --batch-mode install)
@@ -93,9 +109,17 @@ jobs:
           path: ~/.m2/repository
           key: ${{ runner.os }}-jdk-${{ matrix.java }}-maven-${{ github.job }}-${{ hashFiles('**/pom.xml') }}
           restore-keys: ${{ runner.os }}-jdk-${{ matrix.java }}-maven-${{ github.job }}-
+      - name: Detect working dir
+        id: detect
+        run: |
+          if [[ -d java ]]; then
+            echo "dir=java" >> "${GITHUB_OUTPUT}""
+          else
+            echo "dir=." >> "${GITHUB_OUTPUT}"
+          fi
       - name: Build Maven project
         shell: cmd
-        working-directory: java
+        working-directory: ${{ steps.detect.outputs.dir }}
         run: |
           @echo off
           for /f "delims=" %%i in ('findstr "<id>qulice</id>" pom.xml') do set "Q=1"
