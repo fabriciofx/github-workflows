@@ -55,6 +55,10 @@ jobs:
         with:
           distribution: 'temurin'
           java-version: ${{ matrix.java }}
+      - name: Debug
+        run: |
+          ls -R
+          git ls-files
       - name: Configure Maven cache
         uses: actions/cache@v4
         with:
