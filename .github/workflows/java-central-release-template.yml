@@ -26,12 +26,43 @@ permissions:
   security-events: write
   contents: read
 jobs:
-  java-build-template:
-    uses: fabriciofx/github-workflows/.github/workflows/java-build-template.yml@main
   java-central-release-template:
     runs-on: ubuntu-24.04
-    needs: java-build-template
     steps:
+      - name: Checkout code
+        uses: actions/checkout@v5
+        with:
+          persist-credentials: false
+      - name: Check if code exists
+        id: check
+        uses: thebinaryfelix/check-file-existence-action@436223737a098725b8d10ab1950a03efba5e6fc6
+        with:
+          files: '**/pom.xml'
+      - name: Configure APT cache
+        if: steps.check.outputs.exists == 'true'
+        uses: actions/cache@v4
+        with:
+          path: /var/cache/apt/archives
+          key: ${{ runner.os }}-apt-${{ hashFiles('**/apt-packages.txt') }}
+          restore-keys: ${{ runner.os }}-apt-
+      - name: Install dependencies
+        run: |
+          if [[ -s apt-packages.txt ]]; then
+            sudo apt-get update
+            xargs sudo apt-get install -y \
+              --no-install-recommends < apt-packages.txt
+          fi
+      - name: Setup Java SDK
+        uses: actions/setup-java@v5
+        with:
+          distribution: 'temurin'
+          java-version: 17
+      - name: Configure Maven cache
+        uses: actions/cache@v4
+        with:
+          path: ~/.m2/repository
+          key: ${{ runner.os }}-jdk-17-maven-${{ hashFiles('**/pom.xml') }}
+          restore-keys: ${{ runner.os }}-jdk-17-maven-
       - name: Setup Maven settings.xml
         run: |
           mkdir -p ~/.m2
