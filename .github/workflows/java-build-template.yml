@@ -27,11 +27,17 @@ jobs:
         uses: thebinaryfelix/check-file-existence-action@436223737a098725b8d10ab1950a03efba5e6fc6
         with:
           files: '**/pom.xml'
-      - name: Configure APT cache
+      - name: Prepare APT cache
         if: steps.check.outputs.exists == 'true'
+        run: |
+          mkdir -p ./apt-cache
+          sudo apt-get -qq update
+          sudo apt-get -qq --download-only -o dir::cache=./apt-cache install \
+            -y $(cat apt-packages.txt)
+      - name: Configure APT cache
         uses: actions/cache@v4
         with:
-          path: /var/cache/apt/archives
+          path: ./apt-cache
           key: ${{ runner.os }}-apt-${{ hashFiles('**/apt-packages.txt') }}
           restore-keys: ${{ runner.os }}-apt-
       - name: Install dependencies
