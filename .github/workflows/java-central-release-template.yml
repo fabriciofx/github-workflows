@@ -92,19 +92,27 @@ jobs:
 
           # Add 'central' server
           xmlstarlet ed -L \
-            -s "/*[local-name()='settings']/*[local-name()='servers']" -t elem -n "server" -v "" \
-            -s "/*[local-name()='settings']/*[local-name()='servers']/server[last()]" -t elem -n "id" -v "central" \
-            -s "/*[local-name()='settings']/*[local-name()='servers']/server[last()]" -t elem -n "username" -v "${{ secrets.RELEASE_USERNAME }}" \
-            -s "/*[local-name()='settings']/*[local-name()='servers']/server[last()]" -t elem -n "password" -v "${{ secrets.RELEASE_PASSWORD }}" \
+            -s "/*[local-name()='settings']/*[local-name()='servers']" \
+              -t elem -n "server" -v "" \
+            -s "/*[local-name()='settings']/*[local-name()='servers']/server[last()]" \
+              -t elem -n "id" -v "central" \
+            -s "/*[local-name()='settings']/*[local-name()='servers']/server[last()]" \
+              -t elem -n "username" -v "${{ secrets.RELEASE_USERNAME }}" \
+            -s "/*[local-name()='settings']/*[local-name()='servers']/server[last()]" \
+              -t elem -n "password" -v "${{ secrets.RELEASE_PASSWORD }}" \
             "${settings}"
 
           # Add 'gpg' profile
           xmlstarlet ed -L \
             -s "/*[local-name()='settings']" -t elem -n "profiles" -v "" \
-            -s "/*[local-name()='settings']/*[local-name()='profiles']" -t elem -n "profile" -v "" \
-            -s "/*[local-name()='settings']/*[local-name()='profiles']/profile[last()]" -t elem -n "id" -v "gpg" \
-            -s "/*[local-name()='settings']/*[local-name()='profiles']/profile[last()]" -t elem -n "properties" -v "" \
-            -s "/*[local-name()='settings']/*[local-name()='profiles']/profile[last()]/properties" -t elem -n "gpg.keyname" -v "${{ secrets.RELEASE_KEYNAME }}" \
+            -s "/*[local-name()='settings']/*[local-name()='profiles']" \
+              -t elem -n "profile" -v "" \
+            -s "/*[local-name()='settings']/*[local-name()='profiles']/profile[last()]" \
+              -t elem -n "id" -v "gpg" \
+            -s "/*[local-name()='settings']/*[local-name()='profiles']/profile[last()]" \
+              -t elem -n "properties" -v "" \
+            -s "/*[local-name()='settings']/*[local-name()='profiles']/profile[last()]/properties" \
+              -t elem -n "gpg.keyname" -v "${{ secrets.RELEASE_KEYNAME }}" \
             "${settings}"
       - name: Release to Maven Central
         run: |
