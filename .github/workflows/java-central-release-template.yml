@@ -74,15 +74,17 @@ jobs:
           gpgconf --launch gpg-agent
           echo "allow-loopback-pinentry" >> "${HOME}/.gnupg/gpg-agent.conf"
           gpgconf --reload gpg-agent
+          # Bootstrapping: forces the key to be initialized and unlocked
           echo "test" | gpg --batch --yes --pinentry-mode loopback \
             --passphrase "${{ secrets.RELEASE_PASSPHRASE }}" \
-            -u "${{ secrets.RELEASE_KEYNAME }}" -o test.sig -a --sign
+            -u "${{ secrets.RELEASE_KEYNAME }}" -o /dev/null -a --sign
         env:
           GPG_TTY: $(tty)
       - name: Setup Maven settings.xml
         env:
           MAVEN_GPG_PASSPHRASE: ${{ secrets.RELEASE_PASSPHRASE }}
         run: |
+          cat ~/.m2/settings.xml
           mkdir -p ~/.m2
           cat > ~/.m2/settings.xml <<EOF
           <settings>
