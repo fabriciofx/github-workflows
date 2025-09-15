@@ -82,7 +82,6 @@ jobs:
               <profile>
                 <id>gpg</id>
                 <properties>
-                  <gpg.homedir>${{ env.HOME }}/.gnupg/</gpg.homedir>
                   <gpg.keyname>${{ secrets.RELEASE_KEYNAME }}</gpg.keyname>
                 </properties>
               </profile>
