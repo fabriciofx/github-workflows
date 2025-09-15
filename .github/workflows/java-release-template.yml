@@ -55,7 +55,16 @@ jobs:
             </servers>
           </settings>
           EOF
+      - name: Detect working directory
+        id: detect
+        run: |
+          if [[ -d java ]]; then
+            echo "dir=java" >> "${GITHUB_OUTPUT}"
+          else
+            echo "dir=." >> "${GITHUB_OUTPUT}"
+          fi
       - name: Release to Sonatype (Maven Central)
+        working-directory: ${{ steps.detect.outputs.dir }}
         run: |
           [[ -x "mvnw" ]] && mvn="./mvnw" || mvn="mvn"
           args=(--errors --batch-mode deploy -Psonatype -Papp -DskipTests=true)

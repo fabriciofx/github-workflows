@@ -25,13 +25,7 @@ jobs:
         with:
           persist-credentials: false
           fetch-depth: 0
-      - name: Check if code exists
-        id: check
-        uses: thebinaryfelix/check-file-existence-action@436223737a098725b8d10ab1950a03efba5e6fc6
-        with:
-          files: '**/pom.xml'
       - name: Setup Java SDK
-        if: steps.check.outputs.exists == 'true'
         uses: actions/setup-java@v5
         with:
           distribution: 'temurin'
@@ -48,10 +42,19 @@ jobs:
           path: ~/.sonar/cache
           key: ${{ runner.os }}-sonar
           restore-keys: ${{ runner.os }}-sonar
+      - name: Detect working directory
+        id: detect
+        run: |
+          if [[ -d java ]]; then
+            echo "dir=java" >> "${GITHUB_OUTPUT}"
+          else
+            echo "dir=." >> "${GITHUB_OUTPUT}"
+          fi
       - name: Run Sonar
         env:
           GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
           SONAR_TOKEN: ${{ secrets.SN_TOKEN }}
+        working-directory: ${{ steps.detect.outputs.dir }}
         run: |
           [[ -x "mvnw" ]] && mvn="./mvnw" || mvn="mvn"
           args=(--errors --batch-mode verify -Dinvoker.skip)
