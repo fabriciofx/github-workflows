@@ -65,8 +65,8 @@ jobs:
         uses: actions/cache@v4
         with:
           path: ~/.m2/repository
-          key: ${{ runner.os }}-jdk-17-maven-${{ hashFiles('**/pom.xml') }}
-          restore-keys: ${{ runner.os }}-jdk-17-maven-
+          key: ${{ runner.os }}-jdk-maven-${{ github.job }}-${{ hashFiles('**/pom.xml') }}
+          restore-keys: ${{ runner.os }}-jdk-maven-${{ github.job }}-
       - name: Configure GPG
         run: |
           echo "${{ secrets.RELEASE_PRIVATE_KEY }}" | gpg --batch --import
