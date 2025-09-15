@@ -15,6 +15,12 @@ name: all
 permissions:
   contents: read
 jobs:
-  java:
-    name: Java
+  java-build:
+    name: Java Build
     uses: ./.github/workflows/java-build-template.yml
+  java-coverage:
+    name: Java Coverage
+    uses: ./.github/workflows/java-coverage-template.yml
+  java-duplication:
+    name: Java Duplication
+    uses: ./.github/workflows/java-duplication-template.yml
