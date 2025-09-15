@@ -27,26 +27,29 @@ jobs:
         uses: thebinaryfelix/check-file-existence-action@436223737a098725b8d10ab1950a03efba5e6fc6
         with:
           files: '**/pom.xml'
-      - name: Prepare APT cache
+      - name: Prepare APT cache folder
         if: steps.check.outputs.exists == 'true'
+        id: apt
         run: |
-          mkdir -p ./apt-cache
-          sudo apt-get -qq update
-          sudo apt-get -qq --download-only -o dir::cache=./apt-cache install \
-            -y $(cat apt-packages.txt)
+          if [[ -s apt-packages.txt ]]; then
+            mkdir -p ./apt-cache
+            echo "caching=true" >> "${GITHUB_OUTPUT}"
+          else
+            echo "caching=false" >> "${GITHUB_OUTPUT}"
+          fi
       - name: Configure APT cache
+        if: steps.apt.outputs.caching == 'true'
         uses: actions/cache@v4
         with:
           path: ./apt-cache
           key: ${{ runner.os }}-apt-${{ hashFiles('**/apt-packages.txt') }}
           restore-keys: ${{ runner.os }}-apt-
       - name: Install dependencies
+        if: steps.apt.outputs.caching == 'true'
         run: |
-          if [[ -s apt-packages.txt ]]; then
-            sudo apt-get update
-            xargs sudo apt-get install -y \
-              --no-install-recommends < apt-packages.txt
-          fi
+          sudo apt-get update
+          xargs sudo apt-get --download-only -o dir::cache=./apt-cache install \
+            -y --no-install-recommends < apt-packages.txt
       - name: Setup Java SDK
         uses: actions/setup-java@v5
         with:
