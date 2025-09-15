@@ -70,6 +70,11 @@ jobs:
       - name: Import GPG key
         run: |
           echo "${{ secrets.RELEASE_PRIVATE_KEY }}" | gpg --batch --import
+      - name: Configure GPG
+        run: |
+          echo "pinentry-mode loopback" >> "${HOME}/.gnupg/gpg.conf"
+        env:
+          GPG_TTY: $(tty)
       - name: Setup Maven settings.xml
         env:
           MAVEN_GPG_PASSPHRASE: ${{ secrets.RELEASE_PASSPHRASE }}
@@ -97,5 +102,4 @@ jobs:
       - name: Release to Maven Central
         run: |
           [[ -x "mvnw" ]] && mvn="./mvnw" || mvn="mvn"
-          ${mvn} --errors --batch-mode deploy -Pcentral -Pgpg \
-            -DskipTests=true -Dgpg.args=--pinentry-mode,loopback
+          ${mvn} --errors --batch-mode deploy -Pcentral -Pgpg -DskipTests=true
