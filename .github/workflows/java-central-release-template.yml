@@ -97,4 +97,5 @@ jobs:
       - name: Release to Maven Central
         run: |
           [[ -x "mvnw" ]] && mvn="./mvnw" || mvn="mvn"
-          ${mvn} --errors --batch-mode deploy -Pcentral -Pgpg -DskipTests=true
+          ${mvn} --errors --batch-mode deploy -Pcentral -Pgpg \
+            -DskipTests=true -Dgpg.args=--pinentry-mode,loopback
