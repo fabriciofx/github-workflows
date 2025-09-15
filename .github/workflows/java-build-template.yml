@@ -42,7 +42,7 @@ jobs:
         uses: actions/cache@v4
         with:
           path: ./apt-cache
-          key: ${{ runner.os }}-apt-${{ hashFiles('**/apt-packages.txt') }}
+          key: ${{ runner.os }}-apt-${{ hashFiles('apt-packages.txt', '**/apt-packages.txt') }}
           restore-keys: ${{ runner.os }}-apt-
       - name: Install dependencies
         if: steps.apt.outputs.caching == 'true'
@@ -59,7 +59,7 @@ jobs:
         uses: actions/cache@v4
         with:
           path: ~/.m2/repository
-          key: ${{ runner.os }}-jdk-${{ matrix.java }}-maven-${{ hashFiles('pom.xml') }}
+          key: ${{ runner.os }}-jdk-${{ matrix.java }}-maven-${{ hashFiles('pom.xml', '**/pom.xml') }}
           restore-keys: ${{ runner.os }}-jdk-${{ matrix.java }}-maven-
       - name: Build Maven project
         run: |
