@@ -84,27 +84,30 @@ jobs:
         env:
           MAVEN_GPG_PASSPHRASE: ${{ secrets.RELEASE_PASSPHRASE }}
         run: |
-          cat ~/.m2/settings.xml
-          mkdir -p ~/.m2
-          cat > ~/.m2/settings.xml <<EOF
-          <settings>
-            <servers>
-              <server>
-                <id>central</id>
-                <username>${{ secrets.RELEASE_USERNAME }}</username>
-                <password>${{ secrets.RELEASE_PASSWORD }}</password>
-              </server>
-            </servers>
-            <profiles>
-              <profile>
-                <id>gpg</id>
-                <properties>
-                  <gpg.keyname>${{ secrets.RELEASE_KEYNAME }}</gpg.keyname>
-                </properties>
-              </profile>
-            </profiles>
-          </settings>
-          EOF
+          # Download and install xmlstarlet
+          sudo apt-get install -y xmlstarlet
+
+          # Set settings.xml path
+          settings="${HOME}/.m2/settings.xml"
+
+          # Add 'central' server
+          xmlstarlet ed -L \
+            -s "/*[local-name()='settings']/*[local-name()='servers']" -t elem -n "server" -v "" \
+            -s "/*[local-name()='settings']/*[local-name()='servers']/server[last()]" -t elem -n "id" -v "central" \
+            -s "/*[local-name()='settings']/*[local-name()='servers']/server[last()]" -t elem -n "username" -v "${{ secrets.RELEASE_USERNAME }}" \
+            -s "/*[local-name()='settings']/*[local-name()='servers']/server[last()]" -t elem -n "password" -v "${{ secrets.RELEASE_PASSWORD }}" \
+            "${settings}"
+
+          # Add 'gpg' profile
+          xmlstarlet ed -L \
+            -s "/*[local-name()='settings']" -t elem -n "profiles" -v "" \
+            -s "/*[local-name()='settings']/*[local-name()='profiles']" -t elem -n "profile" -v "" \
+            -s "/*[local-name()='settings']/*[local-name()='profiles']/profile[last()]" -t elem -n "id" -v "gpg" \
+            -s "/*[local-name()='settings']/*[local-name()='profiles']/profile[last()]" -t elem -n "properties" -v "" \
+            -s "/*[local-name()='settings']/*[local-name()='profiles']/profile[last()]/properties" -t elem -n "gpg.keyname" -v "${{ secrets.RELEASE_KEYNAME }}" \
+            "${settings}"
+
+          cat "${settings}"
       - name: Release to Maven Central
         run: |
           [[ -x "mvnw" ]] && mvn="./mvnw" || mvn="mvn"
