@@ -85,7 +85,7 @@ jobs:
           MAVEN_GPG_PASSPHRASE: ${{ secrets.RELEASE_PASSPHRASE }}
         run: |
           # Download and install xmlstarlet
-          sudo apt-get install -y xmlstarlet
+          sudo apt-get install -y -qq xmlstarlet
 
           # Set settings.xml path
           settings="${HOME}/.m2/settings.xml"
@@ -106,8 +106,6 @@ jobs:
             -s "/*[local-name()='settings']/*[local-name()='profiles']/profile[last()]" -t elem -n "properties" -v "" \
             -s "/*[local-name()='settings']/*[local-name()='profiles']/profile[last()]/properties" -t elem -n "gpg.keyname" -v "${{ secrets.RELEASE_KEYNAME }}" \
             "${settings}"
-
-          cat "${settings}"
       - name: Release to Maven Central
         run: |
           [[ -x "mvnw" ]] && mvn="./mvnw" || mvn="mvn"
