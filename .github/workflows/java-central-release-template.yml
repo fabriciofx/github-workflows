@@ -67,13 +67,9 @@ jobs:
           path: ~/.m2/repository
           key: ${{ runner.os }}-jdk-17-maven-${{ hashFiles('**/pom.xml') }}
           restore-keys: ${{ runner.os }}-jdk-17-maven-
-      - name: Import GPG key
-        run: |
-          echo "${{ secrets.RELEASE_PRIVATE_KEY }}" | gpg --batch --import
-        env:
-          GPG_KEYNAME: ${{ secrets.RELEASE_KEYNAME }}
-          GPG_PASSPHRASE: ${{ secrets.RELEASE_PASSPHRASE }}
       - name: Setup Maven settings.xml
+        env:
+          MAVEN_GPG_PASSPHRASE: ${{ secrets.RELEASE_PASSPHRASE }}
         run: |
           mkdir -p ~/.m2
           cat > ~/.m2/settings.xml <<EOF
@@ -85,12 +81,21 @@ jobs:
                 <password>${{ secrets.RELEASE_PASSWORD }}</password>
               </server>
             </servers>
+            <profiles>
+              <profile>
+                <id>gpg</id>
+                <properties>
+                  <gpg.homedir>${{ env.HOME }}/.gnupg/</gpg.homedir>
+                  <gpg.keyname>${{ secrets.RELEASE_KEYNAME }}</gpg.keyname>
+                </properties>
+              </profile>
+            </profiles>
           </settings>
           EOF
       - name: Release to Maven Central
         run: |
           [[ -x "mvnw" ]] && mvn="./mvnw" || mvn="mvn"
-          args=(--errors --batch-mode deploy -Pcentral -DskipTests=true)
+          args=(--errors --batch-mode deploy -Pcentral -Pgpg -DskipTests=true)
           profile=$(grep -q "<id>qulice</id>" pom.xml && echo "-Pqulice")
           [[ -n "${profile}" ]] && args+=("${profile}")
           ${mvn} "${args[@]}"
