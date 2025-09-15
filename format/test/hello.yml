@@ -1,0 +1,6 @@
+# SPDX-FileCopyrightText: Copyright (C) 2025 Fabrício Barros Cabral
+# SPDX-License-Identifier: MIT
+---
+message: hello-world
+  hello:
+    - world

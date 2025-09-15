@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+SPDX-FileCopyrightText: Copyright (C) 2025 Fabrício Barros Cabral
+SPDX-License-Identifier: MIT
+-->
+<messages>
+    <message>
+        Hello
+    </message>
+    <message>
+        World!
+    </message>
+    <message hello="world">
+        Hello World!
+    </message>
+</messages>
