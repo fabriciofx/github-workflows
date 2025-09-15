@@ -16,4 +16,5 @@ permissions:
   contents: read
 jobs:
   java:
-    uses: ./java/.github/workflows/java-build-template.yml
+    name: Java
+    uses: ./.github/workflows/java-build-template.yml
