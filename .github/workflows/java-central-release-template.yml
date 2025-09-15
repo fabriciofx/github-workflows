@@ -1,0 +1,62 @@
+# SPDX-FileCopyrightText: Copyright (C) 2025 Fabrício Barros Cabral
+# SPDX-License-Identifier: MIT
+---
+# yamllint disable rule:line-length
+name: java-central-release-template
+'on':
+  workflow_call:
+    secrets:
+      RELEASE_KEYNAME:
+        description: 'GPG key name'
+        required: true
+      RELEASE_PASSPHRASE:
+        description: 'GPG passphrase'
+        required: true
+      RELEASE_USERNAME:
+        description: 'Central token username'
+        required: true
+      RELEASE_PASSWORD:
+        description: 'Central token password'
+        required: true
+defaults:
+  run:
+    shell: bash -xeuo pipefail {0}
+permissions:
+  actions: read
+  security-events: write
+  contents: read
+jobs:
+  java-build-template:
+    uses: fabriciofx/github-workflows/.github/workflows/java-build-template.yml@main
+  java-central-release-template:
+    runs-on: ubuntu-24.04
+    needs: java-build-template
+    steps:
+      - name: Setup Maven settings.xml
+        run: |
+          mkdir -p ~/.m2
+          cat > ~/.m2/settings.xml <<EOF
+          <settings>
+            <servers>
+              <server>
+                <id>central</id>
+                <username>${{ secrets.RELEASE_USERNAME }}</username>
+                <password>${{ secrets.RELEASE_PASSWORD }}</password>
+              </server>
+            </servers>
+          </settings>
+          EOF
+      - name: Release to Maven Central
+        run: |
+          [[ -x "mvnw" ]] && mvn="./mvnw" || mvn="mvn"
+          args=(--errors --batch-mode deploy -Pcentral -DskipTests=true)
+          profile=$(grep -q "<id>qulice</id>" pom.xml && echo "-Pqulice")
+          [[ -n "${profile}" ]] && args+=("${profile}")
+          ${mvn} "${args[@]}"
+        env:
+          GPG_TTY: $(tty)
+          JDK_JAVA_OPTIONS: >
+            --add-opens java.base/java.lang=ALL-UNNAMED
+            --add-opens java.base/java.io=ALL-UNNAMED
+            --add-opens java.base/java.util=ALL-UNNAMED
+            --add-opens java.base/java.util.concurrent=ALL-UNNAMED
