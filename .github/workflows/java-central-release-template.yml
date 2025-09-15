@@ -74,6 +74,9 @@ jobs:
           gpgconf --launch gpg-agent
           echo "allow-loopback-pinentry" >> "${HOME}/.gnupg/gpg-agent.conf"
           gpgconf --reload gpg-agent
+          echo "test" | gpg --batch --yes --pinentry-mode loopback \
+            --passphrase "${{ secrets.RELEASE_PASSPHRASE }}" \
+            -u "${{ secrets.RELEASE_KEYNAME }}" -o test.sig -a --sign
         env:
           GPG_TTY: $(tty)
       - name: Setup Maven settings.xml
