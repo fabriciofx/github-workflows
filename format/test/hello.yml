@@ -2,5 +2,3 @@
 # SPDX-License-Identifier: MIT
 ---
 message: hello-world
-  hello:
-    - world
