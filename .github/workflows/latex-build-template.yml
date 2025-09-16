@@ -47,8 +47,8 @@ jobs:
             exit 1;
           }
           make
-      - name: Upload PDF
+      - name: Upload documents
         uses: actions/upload-artifact@v4
         with:
           name: document
-          path: ./*.pdf
+          path: "${{ steps.detect.outputs.dir }}/*.pdf"
