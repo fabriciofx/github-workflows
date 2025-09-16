@@ -37,6 +37,7 @@ jobs:
             echo "dir=." >> "${GITHUB_OUTPUT}"
           fi
       - name: Checks code coverage
+        working-directory: ${{ steps.detect.outputs.dir }}
         run: |
           [[ -x "mvnw" ]] && mvn="./mvnw" || mvn="mvn"
           args=(--errors --batch-mode install)
