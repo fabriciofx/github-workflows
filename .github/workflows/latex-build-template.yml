@@ -20,10 +20,7 @@ jobs:
       - name: Configure APT cache
         uses: actions/cache@v4
         with:
-          path: |
-            /var/cache/apt/archives
-            !/var/cache/apt/archives/lock
-            !/var/cache/apt/archives/partial
+          path: /var/cache/apt/archives
           key: ${{ runner.os }}-apt-${{ hashFiles('**/apt-packages.txt') }}
           restore-keys: ${{ runner.os }}-apt-
       - name: Detect working directory
@@ -42,6 +39,10 @@ jobs:
             xargs sudo apt-get install -y -qq \
               --no-install-recommends < apt-packages.txt
           fi
+      - name: Clean APT cache
+        run: |
+          sudo rm -f /var/cache/apt/archives/lock
+          sudo rm -rf /var/cache/apt/archives/partial
       - name: Compile LaTeX document
         working-directory: ${{ steps.detect.outputs.dir }}
         run: |
