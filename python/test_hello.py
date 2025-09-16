@@ -1,7 +1,7 @@
 # SPDX-FileCopyrightText: Copyright (C) 2025 Fabrício Barros Cabral
 # SPDX-License-Identifier: MIT
 
-def hello() -> None:
-    return "Hello World!\n"
+from hello import hello
 
-print(hello())
+def test_hello() -> None:
+    assert hello() == "Hello World!\n"
