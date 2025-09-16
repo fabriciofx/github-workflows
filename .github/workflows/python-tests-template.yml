@@ -31,8 +31,8 @@ jobs:
       - name: Detect working directory
         id: detect
         run: |
-          if [[ -d java ]]; then
-            echo "dir=java" >> "${GITHUB_OUTPUT}"
+          if [[ -d python ]]; then
+            echo "dir=python" >> "${GITHUB_OUTPUT}"
           else
             echo "dir=." >> "${GITHUB_OUTPUT}"
           fi
