@@ -20,7 +20,10 @@ jobs:
       - name: Configure APT cache
         uses: actions/cache@v4
         with:
-          path: /var/cache/apt/archives
+          path: |
+            /var/cache/apt/archives
+            !/var/cache/apt/archives/lock
+            !/var/cache/apt/archives/partial
           key: ${{ runner.os }}-apt-${{ hashFiles('**/apt-packages.txt') }}
           restore-keys: ${{ runner.os }}-apt-
       - name: Detect working directory
