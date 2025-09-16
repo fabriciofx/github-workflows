@@ -2,7 +2,7 @@
 # SPDX-License-Identifier: MIT
 ---
 # yamllint disable rule:line-length
-name: all
+name: java-build
 'on':
   push:
     branches:
@@ -16,11 +16,4 @@ permissions:
   contents: read
 jobs:
   java-build:
-    name: Java Build
-    uses: ./.github/workflows/java-build-template.yml
-  java-coverage:
-    name: Java Coverage
-    uses: ./.github/workflows/java-coverage-template.yml
-  java-duplication:
-    name: Java Duplication
-    uses: ./.github/workflows/java-duplication-template.yml
+    uses: fabriciofx/github-workflows/.github/workflows/java-build-template.yml@main
