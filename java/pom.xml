@@ -8,15 +8,15 @@ SPDX-License-Identifier: MIT
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
   <groupId>com.github.fabriciofx.github.workflows</groupId>
-  <artifactId>template</artifactId>
+  <artifactId>hello</artifactId>
   <version>0.0.1</version>
   <packaging>jar</packaging>
-  <name>template</name>
-  <description>A template for Java projects</description>
+  <name>hello</name>
+  <description>A hello for Java projects</description>
   <url>https://github.com/fabriciofx/github-workflows</url>
   <inceptionYear>2025</inceptionYear>
   <organization>
-    <name>template</name>
+    <name>hello</name>
     <url>https://github.com/fabriciofx/github-workflows</url>
   </organization>
   <licenses>
