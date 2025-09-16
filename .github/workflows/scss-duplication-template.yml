@@ -2,7 +2,7 @@
 # SPDX-License-Identifier: MIT
 ---
 # yamllint disable rule:line-length
-name: sass-duplication-template
+name: scss-duplication-template
 'on':
   workflow_call:
 defaults:
@@ -11,20 +11,14 @@ defaults:
 permissions:
   contents: read
 jobs:
-  sass-duplication-template:
+  scss-duplication-template:
     runs-on: ubuntu-24.04
     steps:
       - name: Checkout code
         uses: actions/checkout@v5
         with:
           persist-credentials: false
-      - name: Check if code exists
-        id: check
-        uses: thebinaryfelix/check-file-existence-action@436223737a098725b8d10ab1950a03efba5e6fc6
-        with:
-          files: '**/*.scss'
       - name: Setup Java SDK
-        if: steps.check.outputs.exists == 'true'
         uses: actions/setup-java@v5
         with:
           distribution: 'temurin'
@@ -36,4 +30,4 @@ jobs:
       - name: Check HTML code duplication
         run: |
           java -jar /tmp/simian.jar -threshold=16 \
-            -ignoreBlocks="simian-off:simian-on" "**/*.{sass,scss}"
+            -ignoreBlocks="simian-off:simian-on" "**/*.{scss,sass}"

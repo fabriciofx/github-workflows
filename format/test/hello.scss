@@ -1,0 +1,10 @@
+$primary-color: #3498db;
+
+.button {
+  background: $primary-color;
+  color: white;
+
+  &:hover {
+    background: darken($primary-color, 10%);
+  }
+}

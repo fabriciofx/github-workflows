@@ -2,7 +2,7 @@
 # SPDX-License-Identifier: MIT
 ---
 # yamllint disable rule:line-length
-name: sass-duplication
+name: scss-duplication
 'on':
   push:
     branches:
@@ -15,5 +15,5 @@ name: sass-duplication
 permissions:
   contents: read
 jobs:
-  sass-duplication:
-    uses: fabriciofx/github-workflows/.github/workflows/sass-duplication-template.yml@main
+  scss-duplication:
+    uses: fabriciofx/github-workflows/.github/workflows/scss-duplication-template.yml@main
