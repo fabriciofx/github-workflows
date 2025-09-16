@@ -12,17 +12,13 @@ permissions:
 jobs:
   latex-build-template:
     runs-on: ubuntu-24.04
+    container:
+      image: ghcr.io/xu-cheng/texlive-debian:latest
     steps:
       - name: Checkout code
         uses: actions/checkout@v5
         with:
           persist-credentials: false
-      - name: Configure APT cache
-        uses: actions/cache@v4
-        with:
-          path: /var/cache/apt/archives
-          key: ${{ runner.os }}-apt-${{ hashFiles('**/apt-packages.txt') }}
-          restore-keys: ${{ runner.os }}-apt-
       - name: Detect working directory
         id: detect
         run: |
@@ -31,18 +27,6 @@ jobs:
           else
             echo "dir=." >> "${GITHUB_OUTPUT}"
           fi
-      - name: Install dependencies
-        working-directory: ${{ steps.detect.outputs.dir }}
-        run: |
-          if [[ -s apt-packages.txt ]]; then
-            sudo apt-get update -qq
-            xargs sudo apt-get install -y -qq \
-              --no-install-recommends < apt-packages.txt
-          fi
-      - name: Clean APT cache
-        run: |
-          sudo rm -f /var/cache/apt/archives/lock
-          sudo rm -rf /var/cache/apt/archives/partial
       - name: Compile LaTeX document
         working-directory: ${{ steps.detect.outputs.dir }}
         run: |
