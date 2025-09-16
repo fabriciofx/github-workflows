@@ -19,7 +19,7 @@ jobs:
           persist-credentials: false
       - name: Check if code exists
         id: check
-        uses: thebinaryfelix/check-file-existence-action@436223737a098725b8d10ab1950a03efba5e6fc6
+        uses: thebinaryfelix/check-file-existence-action@ef0e5ade31a6a7455cca72c43e4bf5b1463f57da
         with:
           files: '**/*.ts'
       - name: Setup Java SDK
