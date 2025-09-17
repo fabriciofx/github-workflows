@@ -5,6 +5,16 @@
 name: action-security-template
 'on':
   workflow_call:
+    inputs:
+      working-directory:
+        description: "Set the working directory"
+        required: false
+        default: ".github/workflows/"
+        type: string
+    secrets:
+      GITHUB_TOKEN:
+        description: "GitHub Token"
+        required: true
 defaults:
   run:
     shell: bash -xeuo pipefail {0}
@@ -24,4 +34,4 @@ jobs:
         uses: zizmorcore/zizmor-action@873539476a7f9b0da7504d0d9e9a6a5275094d98
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
-          inputs: .github/workflows/
+          inputs: ${{ inputs.working-directory }}

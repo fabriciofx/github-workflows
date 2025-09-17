@@ -6,8 +6,8 @@ name: action-update-template
 'on':
   workflow_call:
     secrets:
-      GH_TOKEN:
-        description: 'GitHub token'
+      GITHUB_TOKEN:
+        description: "GitHub token"
         required: true
 defaults:
   run:
@@ -25,8 +25,8 @@ jobs:
       - name: Setup node.js
         uses: actions/setup-node@v5
         with:
-          node-version: '22'
-      - name: Run renovate
+          node-version: 22
+      - name: Run Renovate
         uses: renovatebot/github-action@ed4d0bb582ff6e994d0252a7715bd5b80f25d106
         with:
-          token: ${{ secrets.GH_TOKEN }}
+          token: ${{ secrets.GITHUB_TOKEN }}

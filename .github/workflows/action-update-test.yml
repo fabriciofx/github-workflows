@@ -1,0 +1,19 @@
+# SPDX-FileCopyrightText: Copyright (C) 2025 Fabrício Barros Cabral
+# SPDX-License-Identifier: MIT
+---
+# yamllint disable rule:line-length
+name: action-update-test
+'on':
+  schedule:
+    - cron: '0 2 * * *'
+  workflow_dispatch:
+defaults:
+  run:
+    shell: bash -xeuo pipefail {0}
+permissions:
+  contents: read
+jobs:
+  action-update-test:
+    uses: fabriciofx/github-workflows/.github/workflows/action-update-template.yml@main
+    secrets:
+      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
