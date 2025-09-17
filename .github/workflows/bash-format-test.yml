@@ -2,7 +2,7 @@
 # SPDX-License-Identifier: MIT
 ---
 # yamllint disable rule:line-length
-name: action-lint
+name: bash-format
 'on':
   push:
     branches:
@@ -15,5 +15,7 @@ name: action-lint
 permissions:
   contents: read
 jobs:
-  action-lint:
-    uses: fabriciofx/github-workflows/.github/workflows/action-lint-template.yml@main
+  bash-format:
+    uses: fabriciofx/github-workflows/.github/workflows/bash-format-template.yml@main
+    with:
+      working-dir: "bash/test"

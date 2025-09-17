@@ -1,1 +1,18 @@
-../.github/workflows/python-release.yml
+# SPDX-FileCopyrightText: Copyright (C) 2025 Fabrício Barros Cabral
+# SPDX-License-Identifier: MIT
+---
+# yamllint disable rule:line-length
+name: python-release
+'on':
+  push:
+    tags:
+      - '[0-9]+.[0-9]+.[0-9]+'
+defaults:
+  run:
+    shell: bash -xeuo pipefail {0}
+permissions:
+  id-token: write
+  contents: read
+jobs:
+  python-release:
+    uses: fabriciofx/github-workflows/.github/workflows/python-release-template.yml@main

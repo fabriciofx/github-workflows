@@ -5,6 +5,12 @@
 name: bash-format-template
 'on':
   workflow_call:
+    inputs:
+      working-dir:
+        description: "Set the working directory"
+        required: false
+        default: "."
+        type: string
 defaults:
   run:
     shell: bash -xeuo pipefail {0}
@@ -23,8 +29,10 @@ jobs:
         with:
           python-version: '3.13'
       - name: Install bashate
+        working-directory: ${{ inputs.working-dir }}
         run: pip install bashate
       - name: Check bash format
+        working-directory: ${{ inputs.working-dir }}
         run: |
           readarray -t files < <(find . -name "*.sh")
           [[ ${#files[@]} -eq 0 ]] && {
