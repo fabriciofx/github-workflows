@@ -2,7 +2,7 @@
 # SPDX-License-Identifier: MIT
 
 
-def hello() -> None:
+def hello() -> str:
     return "Hello World!\n"
 
 
