@@ -18,4 +18,4 @@ jobs:
   java-build:
     uses: fabriciofx/github-workflows/.github/workflows/java-build-template.yml@main
     with:
-      working-dir: "java/test"
+      working-directory: "java/test"
