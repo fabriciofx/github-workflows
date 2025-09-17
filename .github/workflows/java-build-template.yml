@@ -6,7 +6,7 @@ name: java-build-template
 'on':
   workflow_call:
     inputs:
-      working-dir:
+      working-directory:
         description: "Set the working directory"
         required: false
         default: "."
@@ -40,7 +40,7 @@ jobs:
           key: ${{ runner.os }}-jdk-${{ matrix.java }}-maven-${{ hashFiles('**/pom.xml') }}
           restore-keys: ${{ runner.os }}-jdk-${{ matrix.java }}-maven-
       - name: Build Maven project
-        working-directory: ${{ inputs.working-dir }}
+        working-directory: ${{ inputs.working-directory }}
         run: |
           [[ -x "mvnw" ]] && mvn="./mvnw" || mvn="mvn"
           args=(--errors --batch-mode install)
@@ -70,7 +70,7 @@ jobs:
           key: ${{ runner.os }}-jdk-${{ matrix.java }}-maven-${{ github.job }}-${{ hashFiles('**/pom.xml') }}
           restore-keys: ${{ runner.os }}-jdk-${{ matrix.java }}-maven-${{ github.job }}-
       - name: Build Maven project
-        working-directory: ${{ inputs.working-dir }}
+        working-directory: ${{ inputs.working-directory }}
         run: |
           [[ -x "mvnw" ]] && mvn="./mvnw" || mvn="mvn"
           args=(--errors --batch-mode install)
@@ -101,7 +101,7 @@ jobs:
           restore-keys: ${{ runner.os }}-jdk-${{ matrix.java }}-maven-${{ github.job }}-
       - name: Build Maven project
         shell: cmd
-        working-directory: ${{ inputs.working-dir }}
+        working-directory: ${{ inputs.working-directory }}
         run: |
           @echo off
           for /f "delims=" %%i in ('findstr "<id>qulice</id>" pom.xml') do set "Q=1"
