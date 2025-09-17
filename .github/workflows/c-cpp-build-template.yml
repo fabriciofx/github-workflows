@@ -24,7 +24,16 @@ jobs:
           path: /var/cache/apt/archives
           key: ${{ runner.os }}-apt-${{ hashFiles('**/apt-packages.txt') }}
           restore-keys: ${{ runner.os }}-apt-
+      - name: Detect working directory
+        id: detect
+        run: |
+          if [[ -d python ]]; then
+            echo "dir=python" >> "${GITHUB_OUTPUT}"
+          else
+            echo "dir=." >> "${GITHUB_OUTPUT}"
+          fi
       - name: Install dependencies
+        working-directory: ${{ steps.detect.outputs.dir }}
         run: |
           if [[ -s apt-packages.txt ]]; then
             sudo apt-get update
@@ -32,6 +41,7 @@ jobs:
               --no-install-recommends < apt-packages.txt
           fi
       - name: Configure and build
+        working-directory: ${{ steps.detect.outputs.dir }}
         run: |
           [[ -x ./autogen.sh ]] && ./autogen.sh
           [[ -x ./configure ]] && ./configure
@@ -42,6 +52,7 @@ jobs:
           }
           make
       - name: Get properties from configure.ac
+        working-directory: ${{ steps.detect.outputs.dir }}
         id: props
         run: |
           name="$(sed -n 's/AC_INIT(\[\([^]]*\)\],.*/\1/p' configure.ac)"
@@ -49,12 +60,15 @@ jobs:
           version="$(sed -n 's/AC_INIT(\[[^]]*\], \[\([^]]*\)\], \[[^]]*\])/\1/p' configure.ac)"
           echo "version=${version}" >> "${GITHUB_OUTPUT}"
       - name: Create source package
+        working-directory: ${{ steps.detect.outputs.dir }}
         run: |
           make dist
       - name: Create Linux binary package
+        working-directory: ${{ steps.detect.outputs.dir }}
         run: |
           make binary-dist
       - name: Prepare packages to distribution
+        working-directory: ${{ steps.detect.outputs.dir }}
         run: |
           # Sanitize variables for security purposes
           safe_name="$(echo "${{ steps.props.outputs.name }}" | tr -cd '[:alnum:]._-' )"
@@ -81,13 +95,23 @@ jobs:
         uses: actions/checkout@v5
         with:
           persist-credentials: false
+      - name: Detect working directory
+        id: detect
+        run: |
+          if [[ -d python ]]; then
+            echo "dir=python" >> "${GITHUB_OUTPUT}"
+          else
+            echo "dir=." >> "${GITHUB_OUTPUT}"
+          fi
       - name: Install dependencies
+        working-directory: ${{ steps.detect.outputs.dir }}
         run: |
           if [[ -s brew-packages.txt ]]; then
             brew update
             xargs brew install < brew-packages.txt
           fi
       - name: Configure and build
+        working-directory: ${{ steps.detect.outputs.dir }}
         run: |
           [[ -x ./autogen.sh ]] && ./autogen.sh
           [[ -x ./configure ]] && ./configure
@@ -98,6 +122,7 @@ jobs:
           }
           make
       - name: Get properties from configure.ac
+        working-directory: ${{ steps.detect.outputs.dir }}
         id: props
         run: |
           name="$(sed -n 's/AC_INIT(\[\([^]]*\)\],.*/\1/p' configure.ac)"
@@ -105,9 +130,11 @@ jobs:
           version="$(sed -n 's/AC_INIT(\[[^]]*\], \[\([^]]*\)\], \[[^]]*\])/\1/p' configure.ac)"
           echo "version=${version}" >> "${GITHUB_OUTPUT}"
       - name: Create macOS binary package
+        working-directory: ${{ steps.detect.outputs.dir }}
         run: |
           make binary-dist
       - name: Prepare package to distribution
+        working-directory: ${{ steps.detect.outputs.dir }}
         run: |
           # Sanitize variables for security purposes
           safe_name="$(echo "${{ steps.props.outputs.name }}" | tr -cd '[:alnum:]._-' )"
@@ -146,7 +173,16 @@ jobs:
             mingw-w64-x86_64-pkgconf
             mingw-w64-x86_64-libpcap
             mingw-w64-x86_64-tcl
+      - name: Detect working directory
+        id: detect
+        run: |
+          if [[ -d python ]]; then
+            echo "dir=python" >> "${GITHUB_OUTPUT}"
+          else
+            echo "dir=." >> "${GITHUB_OUTPUT}"
+          fi
       - name: Configure and build
+        working-directory: ${{ steps.detect.outputs.dir }}
         shell: msys2 {0}
         run: |
           [[ -x ./autogen.sh ]] && ./autogen.sh
@@ -158,6 +194,7 @@ jobs:
           }
           make
       - name: Get properties from configure.ac
+        working-directory: ${{ steps.detect.outputs.dir }}
         id: props
         run: |
           name="$(sed -n 's/AC_INIT(\[\([^]]*\)\],.*/\1/p' configure.ac)"
@@ -165,12 +202,15 @@ jobs:
           version="$(sed -n 's/AC_INIT(\[[^]]*\], \[\([^]]*\)\], \[[^]]*\])/\1/p' configure.ac)"
           echo "version=${version}" >> "${GITHUB_OUTPUT}"
       - name: Create source package
+        working-directory: ${{ steps.detect.outputs.dir }}
         run: |
           make dist
       - name: Create Windows binary package
+        working-directory: ${{ steps.detect.outputs.dir }}
         run: |
           make binary-dist
       - name: Prepare packages to distribution
+        working-directory: ${{ steps.detect.outputs.dir }}
         run: |
           md dist
           move "${{ steps.props.outputs.name }}-${{ steps.props.outputs.version }}-bin.zip" ^
