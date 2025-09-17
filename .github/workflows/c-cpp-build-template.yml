@@ -27,8 +27,8 @@ jobs:
       - name: Detect working directory
         id: detect
         run: |
-          if [[ -d python ]]; then
-            echo "dir=python" >> "${GITHUB_OUTPUT}"
+          if [[ -d c-cpp ]]; then
+            echo "dir=c-cpp" >> "${GITHUB_OUTPUT}"
           else
             echo "dir=." >> "${GITHUB_OUTPUT}"
           fi
@@ -103,8 +103,8 @@ jobs:
       - name: Detect working directory
         id: detect
         run: |
-          if [[ -d python ]]; then
-            echo "dir=python" >> "${GITHUB_OUTPUT}"
+          if [[ -d c-cpp ]]; then
+            echo "dir=c-cpp" >> "${GITHUB_OUTPUT}"
           else
             echo "dir=." >> "${GITHUB_OUTPUT}"
           fi
@@ -186,8 +186,8 @@ jobs:
       - name: Detect working directory
         id: detect
         run: |
-          if [[ -d python ]]; then
-            echo "dir=python" >> "${GITHUB_OUTPUT}"
+          if [[ -d c-cpp ]]; then
+            echo "dir=c-cpp" >> "${GITHUB_OUTPUT}"
           else
             echo "dir=." >> "${GITHUB_OUTPUT}"
           fi
