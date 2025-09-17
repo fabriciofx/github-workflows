@@ -18,13 +18,7 @@ jobs:
         uses: actions/checkout@v5
         with:
           persist-credentials: false
-      - name: Check if code exists
-        id: check
-        uses: thebinaryfelix/check-file-existence-action@436223737a098725b8d10ab1950a03efba5e6fc6
-        with:
-          files: '**/*.html'
       - name: Setup Java SDK
-        if: steps.check.outputs.exists == 'true'
         uses: actions/setup-java@v5
         with:
           distribution: 'temurin'
