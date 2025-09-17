@@ -72,10 +72,10 @@ jobs:
         working-directory: ${{ steps.detect.outputs.dir }}
         run: |
           mkdir dist
-          mv "${{ steps.props.outputs.name }}-${{ steps.props.outputs.version }}-bin.zip" \
-            "dist/${{ steps.props.outputs.name }}-${{ steps.props.outputs.version }}-windows.zip"
+          mv "${{ steps.props.outputs.name }}-${{ steps.props.outputs.version }}-bin.tar.gz" \
+            "dist/${{ steps.props.outputs.name }}-${{ steps.props.outputs.version }}-windows.tar.gz"
       - name: Upload Windows artifacts
         uses: actions/upload-artifact@v4
         with:
           name: windows-dist
-          path: "${{ steps.detect.outputs.dir }}/dist/*.zip"
+          path: "${{ steps.detect.outputs.dir }}/dist/*.tar.gz"
