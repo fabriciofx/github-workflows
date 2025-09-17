@@ -15,8 +15,8 @@ jobs:
     uses: fabriciofx/github-workflows/.github/workflows/any-sonar-template.yml@main
     with:
       working-directory: "."
+      sonar_organization: "fabriciofx"
+      sonar_project_key: "fabriciofx_github-workflows"
     secrets:
       gh_token: ${{ secrets.GITHUB_TOKEN }}
       sr_token: ${{ secrets.SONAR_TOKEN }}
-      sonar_organization: "fabriciofx"
-      sonar_project_key: "fabriciofx_github-workflows"
