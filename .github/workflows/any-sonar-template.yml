@@ -112,9 +112,6 @@ jobs:
             </profiles>
           </project>
           EOF
-          # To avoid 'Missing blame information for the following files: pom.xml' warning
-          git add pom.xml
-          git commit -m "Add for Sonar (to avoid warning)"
       - name: Run Sonar
         working-directory: ${{ inputs.working-directory }}
         env:
