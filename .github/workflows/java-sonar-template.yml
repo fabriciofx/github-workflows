@@ -5,6 +5,12 @@
 name: java-sonar-template
 'on':
   workflow_call:
+    inputs:
+      working-directory:
+        description: "Set the working directory"
+        required: false
+        default: "."
+        type: string
     secrets:
       GH_TOKEN:
         description: 'GitHub Token'
@@ -43,16 +49,8 @@ jobs:
           path: ~/.sonar/cache
           key: ${{ runner.os }}-sonar
           restore-keys: ${{ runner.os }}-sonar
-      - name: Detect working directory
-        id: detect
-        run: |
-          if [[ -d java ]]; then
-            echo "dir=java" >> "${GITHUB_OUTPUT}"
-          else
-            echo "dir=." >> "${GITHUB_OUTPUT}"
-          fi
       - name: Run Sonar
-        working-directory: ${{ steps.detect.outputs.dir }}
+        working-directory: ${{ inputs.working-directory }}
         env:
           GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
           SONAR_TOKEN: ${{ secrets.SN_TOKEN }}

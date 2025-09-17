@@ -5,6 +5,12 @@
 name: latex-release-template
 'on':
   workflow_call:
+    inputs:
+      working-directory:
+        description: "Set the working directory"
+        required: false
+        default: "."
+        type: string
     secrets:
       GH_TOKEN:
         description: 'GitHub token'

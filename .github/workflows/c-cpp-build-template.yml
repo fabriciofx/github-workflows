@@ -5,6 +5,12 @@
 name: c-cpp-build-template
 'on':
   workflow_call:
+    inputs:
+      working-directory:
+        description: "Set the working directory"
+        required: false
+        default: "."
+        type: string
 defaults:
   run:
     shell: bash -xeuo pipefail {0}
@@ -24,16 +30,8 @@ jobs:
           path: /var/cache/apt/archives
           key: ${{ runner.os }}-apt-${{ hashFiles('**/apt-packages.txt') }}
           restore-keys: ${{ runner.os }}-apt-
-      - name: Detect working directory
-        id: detect
-        run: |
-          if [[ -d c-cpp ]]; then
-            echo "dir=c-cpp" >> "${GITHUB_OUTPUT}"
-          else
-            echo "dir=." >> "${GITHUB_OUTPUT}"
-          fi
       - name: Install dependencies
-        working-directory: ${{ steps.detect.outputs.dir }}
+        working-directory: ${{ inputs.working-directory }}
         run: |
           if [[ -s apt-packages.txt ]]; then
             sudo apt-get update
@@ -41,7 +39,7 @@ jobs:
               --no-install-recommends < apt-packages.txt
           fi
       - name: Configure and build
-        working-directory: ${{ steps.detect.outputs.dir }}
+        working-directory: ${{ inputs.working-directory }}
         run: |
           [[ -x ./autogen.sh ]] && ./autogen.sh
           [[ -x ./configure ]] && ./configure
@@ -52,7 +50,7 @@ jobs:
           }
           make
       - name: Get properties from configure.ac
-        working-directory: ${{ steps.detect.outputs.dir }}
+        working-directory: ${{ inputs.working-directory }}
         id: props
         run: |
           name="$(sed -n 's/AC_INIT(\[\([^]]*\)\],.*/\1/p' configure.ac)"
@@ -60,15 +58,15 @@ jobs:
           version="$(sed -n 's/AC_INIT(\[[^]]*\], \[\([^]]*\)\], \[[^]]*\])/\1/p' configure.ac)"
           echo "version=${version}" >> "${GITHUB_OUTPUT}"
       - name: Create source package
-        working-directory: ${{ steps.detect.outputs.dir }}
+        working-directory: ${{ inputs.working-directory }}
         run: |
           make dist
       - name: Create Linux binary package
-        working-directory: ${{ steps.detect.outputs.dir }}
+        working-directory: ${{ inputs.working-directory }}
         run: |
           make binary-dist
       - name: Prepare packages to distribution
-        working-directory: ${{ steps.detect.outputs.dir }}
+        working-directory: ${{ inputs.working-directory }}
         run: |
           # Sanitize variables for security purposes
           safe_name="$(echo "${{ steps.props.outputs.name }}" | tr -cd '[:alnum:]._-' )"
@@ -92,7 +90,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: linux-dist
-          path: "${{ steps.detect.outputs.dir }}/dist/*.tar.gz"
+          path: "${{ inputs.working-directory }}/dist/*.tar.gz"
   c-cpp-macos-build-template:
     runs-on: macos-15
     steps:
@@ -100,23 +98,15 @@ jobs:
         uses: actions/checkout@v5
         with:
           persist-credentials: false
-      - name: Detect working directory
-        id: detect
-        run: |
-          if [[ -d c-cpp ]]; then
-            echo "dir=c-cpp" >> "${GITHUB_OUTPUT}"
-          else
-            echo "dir=." >> "${GITHUB_OUTPUT}"
-          fi
       - name: Install dependencies
-        working-directory: ${{ steps.detect.outputs.dir }}
+        working-directory: ${{ inputs.working-directory }}
         run: |
           if [[ -s brew-packages.txt ]]; then
             brew update
             xargs brew install < brew-packages.txt
           fi
       - name: Configure and build
-        working-directory: ${{ steps.detect.outputs.dir }}
+        working-directory: ${{ inputs.working-directory }}
         run: |
           [[ -x ./autogen.sh ]] && ./autogen.sh
           [[ -x ./configure ]] && ./configure
@@ -127,7 +117,7 @@ jobs:
           }
           make
       - name: Get properties from configure.ac
-        working-directory: ${{ steps.detect.outputs.dir }}
+        working-directory: ${{ inputs.working-directory }}
         id: props
         run: |
           name="$(sed -n 's/AC_INIT(\[\([^]]*\)\],.*/\1/p' configure.ac)"
@@ -135,11 +125,11 @@ jobs:
           version="$(sed -n 's/AC_INIT(\[[^]]*\], \[\([^]]*\)\], \[[^]]*\])/\1/p' configure.ac)"
           echo "version=${version}" >> "${GITHUB_OUTPUT}"
       - name: Create macOS binary package
-        working-directory: ${{ steps.detect.outputs.dir }}
+        working-directory: ${{ inputs.working-directory }}
         run: |
           make binary-dist
       - name: Prepare package to distribution
-        working-directory: ${{ steps.detect.outputs.dir }}
+        working-directory: ${{ inputs.working-directory }}
         run: |
           # Sanitize variables for security purposes
           safe_name="$(echo "${{ steps.props.outputs.name }}" | tr -cd '[:alnum:]._-' )"
@@ -160,4 +150,4 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: macos-dist
-          path: "${{ steps.detect.outputs.dir }}/dist/*.tar.gz"
+          path: "${{ inputs.working-directory }}/dist/*.tar.gz"

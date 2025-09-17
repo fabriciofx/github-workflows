@@ -1,0 +1,21 @@
+# SPDX-FileCopyrightText: Copyright (C) 2025 Fabrício Barros Cabral
+# SPDX-License-Identifier: MIT
+---
+# yamllint disable rule:line-length
+name: latex-release
+'on':
+  push:
+    tags:
+      - '[0-9]+.[0-9]+.[0-9]+'
+defaults:
+  run:
+    shell: bash -xeuo pipefail {0}
+permissions:
+  contents: write
+jobs:
+  latex-release:
+    uses: fabriciofx/github-workflows/.github/workflows/latex-release-template.yml@main
+    with:
+      working-directory: "latex/test"
+    secrets:
+      GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}

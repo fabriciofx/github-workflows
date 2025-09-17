@@ -5,6 +5,12 @@
 name: c-cpp-windows-build-template
 'on':
   workflow_call:
+    inputs:
+      working-directory:
+        description: "Set the working directory"
+        required: false
+        default: "."
+        type: string
 defaults:
   run:
     shell: msys2 {0}
@@ -33,16 +39,8 @@ jobs:
             mingw-w64-x86_64-pkgconf
             mingw-w64-x86_64-libpcap
             mingw-w64-x86_64-tcl
-      - name: Detect working directory
-        id: detect
-        run: |
-          if [[ -d c-cpp ]]; then
-            echo "dir=c-cpp" >> "${GITHUB_OUTPUT}"
-          else
-            echo "dir=." >> "${GITHUB_OUTPUT}"
-          fi
       - name: Configure and build
-        working-directory: ${{ steps.detect.outputs.dir }}
+        working-directory: ${{ inputs.working-directory }}
         run: |
           [[ -x ./autogen.sh ]] && ./autogen.sh
           [[ -x ./configure ]] && ./configure --host=x86_64-w64-mingw64
@@ -53,7 +51,7 @@ jobs:
           }
           make
       - name: Get properties from configure.ac
-        working-directory: ${{ steps.detect.outputs.dir }}
+        working-directory: ${{ inputs.working-directory }}
         id: props
         run: |
           name="$(sed -n 's/AC_INIT(\[\([^]]*\)\],.*/\1/p' configure.ac)"
@@ -61,15 +59,15 @@ jobs:
           version="$(sed -n 's/AC_INIT(\[[^]]*\], \[\([^]]*\)\], \[[^]]*\])/\1/p' configure.ac)"
           echo "version=${version}" >> "${GITHUB_OUTPUT}"
       - name: Create source package
-        working-directory: ${{ steps.detect.outputs.dir }}
+        working-directory: ${{ inputs.working-directory }}
         run: |
           make dist
       - name: Create Windows binary package
-        working-directory: ${{ steps.detect.outputs.dir }}
+        working-directory: ${{ inputs.working-directory }}
         run: |
           make binary-dist
       - name: Prepare packages to distribution
-        working-directory: ${{ steps.detect.outputs.dir }}
+        working-directory: ${{ inputs.working-directory }}
         run: |
           mkdir dist
           mv "${{ steps.props.outputs.name }}-${{ steps.props.outputs.version }}-bin.tar.gz" \
@@ -78,4 +76,4 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: windows-dist
-          path: "${{ steps.detect.outputs.dir }}/dist/*.tar.gz"
+          path: "${{ inputs.working-directory }}/dist/*.tar.gz"

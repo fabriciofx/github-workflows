@@ -1,0 +1,21 @@
+# SPDX-FileCopyrightText: Copyright (C) 2025 Fabrício Barros Cabral
+# SPDX-License-Identifier: MIT
+---
+# yamllint disable rule:line-length
+name: html-duplication
+'on':
+  push:
+    branches:
+      - main
+      - master
+  pull_request:
+    branches:
+      - main
+      - master
+permissions:
+  contents: read
+jobs:
+  html-duplication:
+    uses: fabriciofx/github-workflows/.github/workflows/html-duplication-template.yml@main
+    with:
+      working-directory: "format/test"

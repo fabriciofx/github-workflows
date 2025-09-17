@@ -5,6 +5,12 @@
 name: latex-build-template
 'on':
   workflow_call:
+    inputs:
+      working-directory:
+        description: "Set the working directory"
+        required: false
+        default: "."
+        type: string
 defaults:
   run:
     shell: bash -xeuo pipefail {0}
@@ -20,16 +26,8 @@ jobs:
         uses: actions/checkout@v5
         with:
           persist-credentials: false
-      - name: Detect working directory
-        id: detect
-        run: |
-          if [[ -d latex ]]; then
-            echo "dir=latex" >> "${GITHUB_OUTPUT}"
-          else
-            echo "dir=." >> "${GITHUB_OUTPUT}"
-          fi
       - name: Compile LaTeX document
-        working-directory: ${{ steps.detect.outputs.dir }}
+        working-directory: ${{ inputs.working-directory }}
         run: |
           [[ -s Makefile ]] || {
             echo "Makefile file not found. Please, check your project.";
@@ -40,4 +38,4 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: document
-          path: "${{ steps.detect.outputs.dir }}/*.pdf"
+          path: "${{ inputs.working-directory }}/*.pdf"

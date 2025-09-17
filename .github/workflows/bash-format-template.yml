@@ -6,7 +6,7 @@ name: bash-format-template
 'on':
   workflow_call:
     inputs:
-      working-dir:
+      working-directory:
         description: "Set the working directory"
         required: false
         default: "."
@@ -29,10 +29,10 @@ jobs:
         with:
           python-version: '3.13'
       - name: Install bashate
-        working-directory: ${{ inputs.working-dir }}
+        working-directory: ${{ inputs.working-directory }}
         run: pip install bashate
       - name: Check bash format
-        working-directory: ${{ inputs.working-dir }}
+        working-directory: ${{ inputs.working-directory }}
         run: |
           readarray -t files < <(find . -name "*.sh")
           [[ ${#files[@]} -eq 0 ]] && {

@@ -5,6 +5,12 @@
 name: java-infer-template
 'on':
   workflow_call:
+    inputs:
+      working-directory:
+        description: "Set the working directory"
+        required: false
+        default: "."
+        type: string
 defaults:
   run:
     shell: bash -xeuo pipefail {0}
@@ -20,16 +26,8 @@ jobs:
           persist-credentials: false
       - name: Setup Infer
         uses: srz-zumix/setup-infer@530856effeae228d1f3c8251c91ea8348d9480ee
-      - name: Detect working directory
-        id: detect
-        run: |
-          if [[ -d java ]]; then
-            echo "dir=java" >> "${GITHUB_OUTPUT}"
-          else
-            echo "dir=." >> "${GITHUB_OUTPUT}"
-          fi
       - name: Run Infer
-        working-directory: ${{ steps.detect.outputs.dir }}
+        working-directory: ${{ inputs.working-directory }}
         run: |
           [[ -x "mvnw" ]] && mvn="./mvnw" || mvn="mvn"
           infer --version

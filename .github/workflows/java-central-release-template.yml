@@ -5,6 +5,12 @@
 name: java-central-release-template
 'on':
   workflow_call:
+    inputs:
+      working-directory:
+        description: "Set the working directory"
+        required: false
+        default: "."
+        type: string
     secrets:
       RELEASE_KEYNAME:
         description: 'GPG key name'
@@ -49,6 +55,7 @@ jobs:
           key: ${{ runner.os }}-jdk-maven-${{ github.job }}-${{ hashFiles('**/pom.xml') }}
           restore-keys: ${{ runner.os }}-jdk-maven-${{ github.job }}-
       - name: Configure GPG
+        working-directory: ${{ inputs.working-directory }}
         run: |
           echo "${{ secrets.RELEASE_PRIVATE_KEY }}" | gpg --batch --import
           echo "pinentry-mode loopback" >> "${HOME}/.gnupg/gpg.conf"
@@ -62,6 +69,7 @@ jobs:
         env:
           GPG_TTY: $(tty)
       - name: Setup Maven settings.xml
+        working-directory: ${{ inputs.working-directory }}
         env:
           MAVEN_GPG_PASSPHRASE: ${{ secrets.RELEASE_PASSPHRASE }}
         run: |
@@ -95,16 +103,8 @@ jobs:
             -s "/*[local-name()='settings']/*[local-name()='profiles']/profile[last()]/properties" \
               -t elem -n "gpg.keyname" -v "${{ secrets.RELEASE_KEYNAME }}" \
             "${settings}"
-      - name: Detect working directory
-        id: detect
-        run: |
-          if [[ -d java ]]; then
-            echo "dir=java" >> "${GITHUB_OUTPUT}"
-          else
-            echo "dir=." >> "${GITHUB_OUTPUT}"
-          fi
       - name: Release to Maven Central
-        working-directory: ${{ steps.detect.outputs.dir }}
+        working-directory: ${{ inputs.working-directory }}
         run: |
           [[ -x "mvnw" ]] && mvn="./mvnw" || mvn="mvn"
           ${mvn} --errors --batch-mode deploy -Pcentral -Pgpg -DskipTests=true
