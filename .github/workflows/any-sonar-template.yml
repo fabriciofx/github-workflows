@@ -72,6 +72,10 @@ jobs:
             <groupId>com.github.fabriciofx.github.workflows</groupId>
             <artifactId>sonar-template</artifactId>
             <version>0.0.1</version>
+            <properties>
+              <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+              <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+            </properties>
             <profiles>
               <profile>
                 <id>sonar</id>
@@ -79,6 +83,13 @@ jobs:
                   <sonar.host.url>${{ inputs.sonar_host_url }}</sonar.host.url>
                   <sonar.organization>${{ inputs.sonar_organization }}</sonar.organization>
                   <sonar.projectKey>${{ inputs.sonar_project_key }}</sonar.projectKey>
+                  <sonar.sources>.</sonar.sources>
+                  <sonar.inclusions>**</sonar.inclusions>
+                  <sonar.exclusions>node_modules/**,dist/**,build/**</sonar.exclusions>
+                  <sonar.issuesReport.console.enable>true</sonar.issuesReport.console.enable>
+                  <sonar.c.file.suffixes>-</sonar.c.file.suffixes>
+                  <sonar.cpp.file.suffixes>-</sonar.cpp.file.suffixes>
+                  <sonar.objc.file.suffixes>-</sonar.objc.file.suffixes>
                 </properties>
                 <build>
                   <plugins>
@@ -88,7 +99,7 @@ jobs:
                       <version>5.2.0.4988</version>
                       <executions>
                         <execution>
-                          <phase>package</phase>
+                          <phase>verify</phase>
                           <goals>
                             <goal>sonar</goal>
                           </goals>
@@ -101,6 +112,9 @@ jobs:
             </profiles>
           </project>
           EOF
+          # To avoid 'Missing blame information for the following files: pom.xml' warning
+          git add pom.xml
+          git commit -m "Add for Sonar (to avoid warning)"
       - name: Run Sonar
         working-directory: ${{ inputs.working-directory }}
         env:
