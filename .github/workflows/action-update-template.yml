@@ -6,7 +6,7 @@ name: action-update-template
 'on':
   workflow_call:
     secrets:
-      github_token:
+      gh_token:
         description: "GitHub token"
         required: true
 defaults:
@@ -29,4 +29,4 @@ jobs:
       - name: Run Renovate
         uses: renovatebot/github-action@ed4d0bb582ff6e994d0252a7715bd5b80f25d106
         with:
-          token: ${{ secrets.github_token }}
+          token: ${{ secrets.gh_token }}
