@@ -88,6 +88,11 @@ jobs:
           mkdir -p dist
           mv "${src}" dist/
           mv "${bin}" "dist/${safe_name}-${safe_version}-linux.tar.gz"
+      - name: Upload Windows artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: linux-dist
+          path: "${{ steps.detect.outputs.dir }}/dist/*.tar.gz"
   c-cpp-macos-build-template:
     runs-on: macos-15
     steps:
@@ -151,6 +156,11 @@ jobs:
           # Move file
           mkdir -p dist
           mv "${bin}" dist/"${safe_name}-${safe_version}-macos.tar.gz"
+      - name: Upload Windows artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: macos-dist
+          path: "${{ steps.detect.outputs.dir }}/dist/*.tar.gz"
   c-cpp-windows-build-template:
     runs-on: windows-2025
     steps:
@@ -219,4 +229,4 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: windows-dist
-          path: dist/*.zip
+          path: "${{ steps.detect.outputs.dir }}/dist/*.zip"
