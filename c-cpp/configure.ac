@@ -16,7 +16,7 @@ LT_INIT
 AC_SUBST([PACKAGE_NAME])
 AC_SUBST([PACKAGE_VERSION])
 
-# To detect endianess
+# To detect endianness
 AC_C_BIGENDIAN([WORDS_BIGENDIAN])
 
 # Detect host system
