@@ -20,4 +20,4 @@ jobs:
   action-security-test:
     uses: fabriciofx/github-workflows/.github/workflows/action-security-template.yml@main
     secrets:
-      token: ${{ secrets.GITHUB_TOKEN }}
+      github_token: ${{ secrets.GITHUB_TOKEN }}
