@@ -100,7 +100,7 @@ SPDX-License-Identifier: MIT
       <properties>
         <sonar.host.url>https://sonarcloud.io</sonar.host.url>
         <sonar.organization>fabriciofx</sonar.organization>
-        <sonar.projectKey>com.github.fabriciofx.github.workflows</sonar.projectKey>
+        <sonar.projectKey>fabriciofx_github-workflows</sonar.projectKey>
       </properties>
       <build>
         <plugins>
