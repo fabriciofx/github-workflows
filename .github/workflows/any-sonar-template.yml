@@ -11,12 +11,25 @@ name: any-sonar-template
         required: false
         default: "."
         type: string
-    secrets:
-      GH_TOKEN:
-        description: 'GitHub Token'
+      sonar_host_url:
+        description: "Sonar host url"
+        required: false
+        default: "https://sonarcloud.io"
+        type: string
+      sonar_organization:
+        description: "Sonar organization (login)"
         required: true
-      SN_TOKEN:
-        description: 'Sonar Token'
+        type: string
+      sonar_project_key:
+        description: "Sonar project key"
+        required: true
+        type: string
+    secrets:
+      github_token:
+        description: "GitHub Token"
+        required: true
+      sonar_token:
+        description: "Sonar Token"
         required: true
 defaults:
   run:
@@ -49,11 +62,53 @@ jobs:
           path: ~/.sonar/cache
           key: ${{ runner.os }}-sonar
           restore-keys: ${{ runner.os }}-sonar
+      - name: Create pom.xml if not exists
+        working-directory: ${{ inputs.working-directory }}
+        run: |
+          cat <<EOF > pom.xml
+            <?xml version="1.0" encoding="UTF-8"?>
+            <project xmlns="http://maven.apache.org/POM/4.0.0"
+              xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+              xsi:schemaLocation="http://maven.apache.org/POM/4.0.0
+                                  http://maven.apache.org/xsd/maven-4.0.0.xsd">
+              <modelVersion>4.0.0</modelVersion>
+              <groupId>com.github.fabriciofx.github.workflows</groupId>
+              <artifactId>sonar-template</artifactId>
+              <version>0.0.1</version>
+              <profiles>
+                <profile>
+                  <id>sonar</id>
+                  <properties>
+                    <sonar.host.url>${{ inputs.sonar_host_url }}</sonar.host.url>
+                    <sonar.organization>${{ inputs.sonar_organization }}</sonar.organization>
+                    <sonar.projectKey>${{ inputs.sonar_project_key }}</sonar.projectKey>
+                  </properties>
+                  <build>
+                    <plugins>
+                      <plugin>
+                        <groupId>org.sonarsource.scanner.maven</groupId>
+                        <artifactId>sonar-maven-plugin</artifactId>
+                        <version>5.2.0.4988</version>
+                        <executions>
+                          <execution>
+                            <phase>package</phase>
+                            <goals>
+                              <goal>sonar</goal>
+                            </goals>
+                          </execution>
+                        </executions>
+                      </plugin>
+                    </plugins>
+                  </build>
+                </profile>
+              </profiles>
+            </project>
+          EOF
       - name: Run Sonar
         working-directory: ${{ inputs.working-directory }}
         env:
-          GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
-          SONAR_TOKEN: ${{ secrets.SN_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.github_token }}
+          SONAR_TOKEN: ${{ secrets.sonar_token }}
         run: |
           [[ -x "mvnw" ]] && mvn="./mvnw" || mvn="mvn"
           args=(--errors --batch-mode package)
