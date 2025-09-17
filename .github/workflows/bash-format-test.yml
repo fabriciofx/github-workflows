@@ -18,4 +18,4 @@ jobs:
   bash-format:
     uses: fabriciofx/github-workflows/.github/workflows/bash-format-template.yml@main
     with:
-      working-dir: "bash/test"
+      working-directory: "bash/test"
