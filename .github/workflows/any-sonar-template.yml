@@ -25,10 +25,10 @@ name: any-sonar-template
         required: true
         type: string
     secrets:
-      github_token:
+      gh_token:
         description: "GitHub Token"
         required: true
-      sonar_token:
+      sr_token:
         description: "Sonar Token"
         required: true
 defaults:
@@ -107,8 +107,8 @@ jobs:
       - name: Run Sonar
         working-directory: ${{ inputs.working-directory }}
         env:
-          GITHUB_TOKEN: ${{ secrets.github_token }}
-          SONAR_TOKEN: ${{ secrets.sonar_token }}
+          GITHUB_TOKEN: ${{ secrets.gh_token }}
+          SONAR_TOKEN: ${{ secrets.sr_token }}
         run: |
           [[ -x "mvnw" ]] && mvn="./mvnw" || mvn="mvn"
           args=(--errors --batch-mode package)

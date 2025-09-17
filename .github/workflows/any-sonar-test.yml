@@ -16,7 +16,7 @@ jobs:
     with:
       working-directory: "."
     secrets:
-      github_token: ${{ secrets.GITHUB_TOKEN }}
-      sonar_token: ${{ secrets.SONAR_TOKEN }}
+      gh_token: ${{ secrets.GITHUB_TOKEN }}
+      sr_token: ${{ secrets.SONAR_TOKEN }}
       sonar_organization: "fabriciofx"
       sonar_project_key: "fabriciofx_github-workflows"
