@@ -12,7 +12,7 @@ name: action-security-template
         default: ".github/workflows/"
         type: string
     secrets:
-      token:
+      github_token:
         description: "GitHub Token"
         required: true
 defaults:
@@ -33,5 +33,5 @@ jobs:
       - name: Run zizmor
         uses: zizmorcore/zizmor-action@873539476a7f9b0da7504d0d9e9a6a5275094d98
         with:
-          token: ${{ secrets.token }}
+          token: ${{ secrets.github_token }}
           inputs: ${{ inputs.working-directory }}
