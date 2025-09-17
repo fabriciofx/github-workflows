@@ -88,7 +88,7 @@ jobs:
           mkdir -p dist
           mv "${src}" dist/
           mv "${bin}" "dist/${safe_name}-${safe_version}-linux.tar.gz"
-      - name: Upload Windows artifacts
+      - name: Upload Linux artifacts
         uses: actions/upload-artifact@v4
         with:
           name: linux-dist
@@ -156,7 +156,7 @@ jobs:
           # Move file
           mkdir -p dist
           mv "${bin}" dist/"${safe_name}-${safe_version}-macos.tar.gz"
-      - name: Upload Windows artifacts
+      - name: Upload macOS artifacts
         uses: actions/upload-artifact@v4
         with:
           name: macos-dist
