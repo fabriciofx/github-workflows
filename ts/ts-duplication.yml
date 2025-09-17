@@ -1,1 +1,19 @@
-../.github/workflows/ts-duplication.yml
+# SPDX-FileCopyrightText: Copyright (C) 2025 Fabrício Barros Cabral
+# SPDX-License-Identifier: MIT
+---
+# yamllint disable rule:line-length
+name: ts-duplication
+'on':
+  push:
+    branches:
+      - main
+      - master
+  pull_request:
+    branches:
+      - main
+      - master
+permissions:
+  contents: read
+jobs:
+  ts-duplication:
+    uses: fabriciofx/github-workflows/.github/workflows/ts-duplication-template.yml@main

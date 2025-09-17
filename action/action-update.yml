@@ -1,1 +1,19 @@
-../.github/workflows/action-update.yml
+# SPDX-FileCopyrightText: Copyright (C) 2025 Fabrício Barros Cabral
+# SPDX-License-Identifier: MIT
+---
+# yamllint disable rule:line-length
+name: action-update
+'on':
+  schedule:
+    - cron: '0 2 * * *'
+  workflow_dispatch:
+defaults:
+  run:
+    shell: bash -xeuo pipefail {0}
+permissions:
+  contents: read
+jobs:
+  action-update:
+    uses: fabriciofx/github-workflows/.github/workflows/action-update-template.yml@main
+    secrets:
+      GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
