@@ -4,13 +4,13 @@ SPDX-FileCopyrightText: Copyright (C) 2025 Fabrício Barros Cabral
 SPDX-License-Identifier: MIT
 -->
 <messages>
-    <message>
-        Hello
+  <message>
+    Hello
     </message>
-    <message>
-        World!
+  <message>
+    World!
     </message>
-    <message hello="world">
-        Hello World!
+  <message hello="world">
+    Hello World!
     </message>
 </messages>
