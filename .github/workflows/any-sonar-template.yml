@@ -2,7 +2,7 @@
 # SPDX-License-Identifier: MIT
 ---
 # yamllint disable rule:line-length
-name: java-sonar-template
+name: any-sonar-template
 'on':
   workflow_call:
     inputs:
@@ -24,7 +24,7 @@ defaults:
 permissions:
   contents: read
 jobs:
-  java-sonar-template:
+  any-sonar-template:
     runs-on: ubuntu-24.04
     steps:
       - name: Checkout code

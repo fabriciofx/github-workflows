@@ -2,7 +2,7 @@
 # SPDX-License-Identifier: MIT
 ---
 # yamllint disable rule:line-length
-name: java-sonar
+name: any-sonar
 'on':
   push:
     branches:
@@ -11,8 +11,10 @@ name: java-sonar
 permissions:
   contents: read
 jobs:
-  java-sonar:
-    uses: fabriciofx/github-workflows/.github/workflows/java-sonar-template.yml@main
+  any-sonar:
+    uses: fabriciofx/github-workflows/.github/workflows/any-sonar-template.yml@main
+    with:
+      working-directory: "."
     secrets:
       GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       SN_TOKEN: ${{ secrets.SONAR_TOKEN }}
