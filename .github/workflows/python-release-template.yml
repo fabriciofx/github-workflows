@@ -5,6 +5,12 @@
 name: python-release-template
 'on':
   workflow_call:
+    inputs:
+      working-directory:
+        description: "Set the working directory"
+        required: false
+        default: "."
+        type: string
 defaults:
   run:
     shell: bash -xeuo pipefail {0}
@@ -19,26 +25,18 @@ jobs:
         uses: actions/checkout@v5
         with:
           persist-credentials: false
-      - name: Detect working directory
-        id: detect
-        run: |
-          if [[ -d python ]]; then
-            echo "dir=python" >> "${GITHUB_OUTPUT}"
-          else
-            echo "dir=." >> "${GITHUB_OUTPUT}"
-          fi
       - name: Set up Python
         uses: actions/setup-python@v6
         with:
           python-version: '3.13'
       - name: Install build tool
-        working-directory: ${{ steps.detect.outputs.dir }}
+        working-directory: ${{ inputs.working-directory }}
         run: pip install build
       - name: Build package
-        working-directory: ${{ steps.detect.outputs.dir }}
+        working-directory: ${{ inputs.working-directory }}
         run: python -m build
       - name: Release to PyPI
         uses: pypa/gh-action-pypi-publish@ab69e431e9c9f48a3310be0a56527c679f56e04d
         with:
-          packages-dir: ${{ steps.detect.outputs.dir }}
+          packages-dir: ${{ inputs.working-directory }}
           verbose: true

@@ -5,6 +5,12 @@
 name: java-release-template
 'on':
   workflow_call:
+    inputs:
+      working-directory:
+        description: "Set the working directory"
+        required: false
+        default: "."
+        type: string
     secrets:
       RELEASE_KEYNAME:
         description: 'GPG key name'
@@ -33,6 +39,7 @@ jobs:
     needs: java-build-template
     steps:
       - name: Setup Maven settings.xml
+        working-directory: ${{ inputs.working-directory }}
         run: |
           mkdir -p ~/.m2
           cat > ~/.m2/settings.xml <<EOF
@@ -55,16 +62,8 @@ jobs:
             </servers>
           </settings>
           EOF
-      - name: Detect working directory
-        id: detect
-        run: |
-          if [[ -d java ]]; then
-            echo "dir=java" >> "${GITHUB_OUTPUT}"
-          else
-            echo "dir=." >> "${GITHUB_OUTPUT}"
-          fi
       - name: Release to Sonatype (Maven Central)
-        working-directory: ${{ steps.detect.outputs.dir }}
+        working-directory: ${{ inputs.working-directory }}
         run: |
           [[ -x "mvnw" ]] && mvn="./mvnw" || mvn="mvn"
           args=(--errors --batch-mode deploy -Psonatype -Papp -DskipTests=true)

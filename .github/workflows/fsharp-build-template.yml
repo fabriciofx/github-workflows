@@ -5,6 +5,12 @@
 name: fsharp-build-template
 'on':
   workflow_call:
+    inputs:
+      working-directory:
+        description: "Set the working directory"
+        required: false
+        default: "."
+        type: string
 defaults:
   run:
     shell: bash -xeuo pipefail {0}
@@ -35,6 +41,8 @@ jobs:
             8.x
             9.x
       - name: Restore
+        working-directory: ${{ inputs.working-directory }}
         run: dotnet restore
       - name: Build
+        working-directory: ${{ inputs.working-directory }}
         run: dotnet build -c Release --no-restore

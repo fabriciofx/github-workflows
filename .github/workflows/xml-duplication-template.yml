@@ -5,6 +5,12 @@
 name: xml-duplication-template
 'on':
   workflow_call:
+    inputs:
+      working-directory:
+        description: "Set the working directory"
+        required: false
+        default: "."
+        type: string
 defaults:
   run:
     shell: bash -xeuo pipefail {0}
@@ -24,10 +30,12 @@ jobs:
           distribution: 'temurin'
           java-version: 17
       - name: Download Simian
+        working-directory: ${{ inputs.working-directory }}
         run: |
           curl -sS -L --retry 3 -o /tmp/simian.jar \
             http://public.yegor256.com/simian.jar
       - name: Check XML duplication
+        working-directory: ${{ inputs.working-directory }}
         run: |
           java -jar /tmp/simian.jar -threshold=16 \
             -ignoreBlocks="simian-off:simian-on" "**/*.xml"

@@ -5,6 +5,12 @@
 name: python-tests-template
 'on':
   workflow_call:
+    inputs:
+      working-directory:
+        description: "Set the working directory"
+        required: false
+        default: "."
+        type: string
     secrets:
       SSL_SERVER_KEY:
         description: 'SSL Server key'
@@ -28,16 +34,8 @@ jobs:
         uses: actions/checkout@v5
         with:
           persist-credentials: false
-      - name: Detect working directory
-        id: detect
-        run: |
-          if [[ -d python ]]; then
-            echo "dir=python" >> "${GITHUB_OUTPUT}"
-          else
-            echo "dir=." >> "${GITHUB_OUTPUT}"
-          fi
       - name: Install venv and dependencies
-        working-directory: ${{ steps.detect.outputs.dir }}
+        working-directory: ${{ inputs.working-directory }}
         run: |
           if [[ -s Makefile ]]; then
             make install
@@ -47,7 +45,7 @@ jobs:
             pip install -r requirements.txt
           fi
       - name: Recreate certificates
-        working-directory: ${{ steps.detect.outputs.dir }}
+        working-directory: ${{ inputs.working-directory }}
         run: |
           if [[ -n "${{ secrets.SSL_SERVER_KEY }}" ]]; then
             mkdir certificates
@@ -61,7 +59,7 @@ jobs:
             echo "Set your SSL_SERVER_KEY in GitHub settings repository page."
           fi
       - name: Run tests
-        working-directory: ${{ steps.detect.outputs.dir }}
+        working-directory: ${{ inputs.working-directory }}
         run: |
           . ./.venv/bin/activate
           pytest
