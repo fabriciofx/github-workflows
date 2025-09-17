@@ -60,8 +60,5 @@ jobs:
           [[ -x "mvnw" ]] && mvn="./mvnw" || mvn="mvn"
           args=(--errors --batch-mode package)
           profile=$(grep -q "<id>sonar</id>" pom.xml && echo "-Psonar")
-          [[ -n "${profile}" ]] && {
-            args+=("${profile}");
-            args+=(-Dsonar.login=${{ env.SONAR_TOKEN }});
-          }
+          [[ -n "${profile}" ]] && args+=("${profile}")
           ${mvn} "${args[@]}"
