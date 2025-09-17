@@ -62,6 +62,6 @@ jobs:
           profile=$(grep -q "<id>sonar</id>" pom.xml && echo "-Psonar")
           [[ -n "${profile}" ]] && {
             args+=("${profile}");
-            args+=(-Dsonar.login=${{ env.SONAR_TOKEN }}")
+            args+=(-Dsonar.login=${{ env.SONAR_TOKEN }});
           }
           ${mvn} "${args[@]}"
