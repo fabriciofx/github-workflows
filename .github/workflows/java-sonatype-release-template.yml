@@ -32,12 +32,34 @@ permissions:
   security-events: write
   contents: read
 jobs:
-  java-build-template:
-    uses: fabriciofx/github-workflows/.github/workflows/java-build-template.yml@main
   java-sonatype-release-template:
     runs-on: ubuntu-24.04
-    needs: java-build-template
     steps:
+      - name: Checkout repository
+        uses: actions/checkout@v5
+        with:
+          persist-credentials: false
+          fetch-depth: 0
+          ref: ${{ github.ref }}
+      - name: Fix detached HEAD
+        run: |
+          git checkout -B "${GITHUB_HEAD_REF:-${GITHUB_REF_NAME}}"
+      - name: Setup Java SDK
+        uses: actions/setup-java@v5
+        with:
+          distribution: 'temurin'
+          java-version: 17
+      - name: Configure Maven cache
+        uses: actions/cache@v4
+        with:
+          path: ~/.m2/repository
+          key: ${{ runner.os }}-jdk-17-maven-${{ hashFiles('**/pom.xml') }}
+          restore-keys: ${{ runner.os }}-jdk-17-maven-
+      - name: Download and install xmlstarlet
+        working-directory: ${{ inputs.working-directory }}
+        run: |
+          sudo DPKG_PROGRESS_FD=0 apt-get -y -qq update
+          sudo DPKG_PROGRESS_FD=0 apt-get install -y -qq xmlstarlet
       - name: Setup Maven settings.xml
         working-directory: ${{ inputs.working-directory }}
         env:
@@ -46,9 +68,6 @@ jobs:
           USERNAME: ${{ secrets.release_username }}
           PASSWORD: ${{ secrets.release_password }}
         run: |
-          # Download and install xmlstarlet
-          sudo apt-get install -y -qq xmlstarlet
-
           # Set settings.xml path
           settings="${HOME}/.m2/settings.xml"
 
@@ -82,4 +101,4 @@ jobs:
         working-directory: ${{ inputs.working-directory }}
         run: |
           [[ -x "mvnw" ]] && mvn="./mvnw" || mvn="mvn"
-          ${mvn} --errors --batch-mode deploy -Psonatype -Pgpg -DskipTests=true
+          ${mvn} --errors --batch-mode deploy -Psonatype -Pgpg -Dmaven.test.skip=true
