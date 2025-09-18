@@ -2,7 +2,7 @@
 # SPDX-License-Identifier: MIT
 ---
 # yamllint disable rule:line-length
-name: java-sonar
+name: java-sonar-test
 'on':
   push:
     branches:
@@ -11,7 +11,7 @@ name: java-sonar
 permissions:
   contents: read
 jobs:
-  java-sonar:
+  java-sonar-test:
     uses: fabriciofx/github-workflows/.github/workflows/java-sonar-template.yml@main
     with:
       working-directory: "java/test"
