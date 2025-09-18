@@ -56,22 +56,27 @@ jobs:
           restore-keys: ${{ runner.os }}-jdk-maven-${{ github.job }}-
       - name: Configure GPG
         working-directory: ${{ inputs.working-directory }}
+        env:
+          PRIVATE_KEY: ${{ secrets.release_private_key }}
+          PASSPHRASE: ${{ secrets.release_passphrase }}
+          KEYNAME: ${{ secrets.release_keyname }}
+          GPG_TTY: $(tty)
         run: |
-          echo "${{ secrets.release_private_key }}" | gpg --batch --import
+          echo "${PRIVATE_KEY}" | gpg --batch --import
           echo "pinentry-mode loopback" >> "${HOME}/.gnupg/gpg.conf"
           gpgconf --launch gpg-agent
           echo "allow-loopback-pinentry" >> "${HOME}/.gnupg/gpg-agent.conf"
           gpgconf --reload gpg-agent
           # Bootstrapping: forces the key to be initialized and unlocked
           echo "test" | gpg --batch --yes --pinentry-mode loopback \
-            --passphrase "${{ secrets.release_passphrase }}" \
-            -u "${{ secrets.release_keyname }}" -o /dev/null -a --sign
-        env:
-          GPG_TTY: $(tty)
+            --passphrase "${PASSPHRASE}" -u "${KEYNAME}" -o /dev/null -a --sign
       - name: Setup Maven settings.xml
         working-directory: ${{ inputs.working-directory }}
         env:
           MAVEN_GPG_PASSPHRASE: ${{ secrets.release_passphrase }}
+          USERNAME: ${{ secrets.release_username }}
+          PASSWORD: ${{ secrets.release_password }}
+          KEYNAME: ${{ secrets.release_keyname }}
         run: |
           # Download and install xmlstarlet
           sudo apt-get install -y -qq xmlstarlet
@@ -86,9 +91,9 @@ jobs:
             -s "/*[local-name()='settings']/*[local-name()='servers']/server[last()]" \
               -t elem -n "id" -v "central" \
             -s "/*[local-name()='settings']/*[local-name()='servers']/server[last()]" \
-              -t elem -n "username" -v "${{ secrets.release_username }}" \
+              -t elem -n "username" -v "${USERNAME}" \
             -s "/*[local-name()='settings']/*[local-name()='servers']/server[last()]" \
-              -t elem -n "password" -v "${{ secrets.release_password }}" \
+              -t elem -n "password" -v "${PASSWORD}" \
             "${settings}"
 
           # Add 'gpg' profile
@@ -101,7 +106,7 @@ jobs:
             -s "/*[local-name()='settings']/*[local-name()='profiles']/profile[last()]" \
               -t elem -n "properties" -v "" \
             -s "/*[local-name()='settings']/*[local-name()='profiles']/profile[last()]/properties" \
-              -t elem -n "gpg.keyname" -v "${{ secrets.release_keyname }}" \
+              -t elem -n "gpg.keyname" -v "${KEYNAME}" \
             "${settings}"
       - name: Release to Maven Central
         working-directory: ${{ inputs.working-directory }}

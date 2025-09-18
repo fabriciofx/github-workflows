@@ -47,10 +47,13 @@ jobs:
           fetch-depth: 0
       - name: Create Sonar properties file
         working-directory: ${{ inputs.working-directory }}
+        env:
+          ORGANIZATION: ${{ inputs.sonar_organization }}
+          PROJECT_KEY: ${{ inputs.sonar_project_key}}
         run: |
           cat > sonar-project.properties <<EOF
-          sonar.organization=${{ inputs.sonar_organization }}
-          sonar.projectKey=${{ inputs.sonar_project_key}}
+          sonar.organization=${ORGANIZATION}
+          sonar.projectKey=${PROJECT_KEY}
           sonar.sources=.
           sonar.inclusions=**
           sonar.exclusions=node_modules/**,dist/**,build/**

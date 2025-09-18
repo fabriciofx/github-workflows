@@ -46,15 +46,16 @@ jobs:
           fi
       - name: Recreate certificates
         working-directory: ${{ inputs.working-directory }}
+        env:
+          SERVER_KEY: ${{ secrets.SSL_SERVER_KEY }}
+          SERVER_CRT: ${{ secrets.SSL_SERVER_CRT }}
+          CA_CRT: ${{ secrets.SSL_CA_CRT }}
         run: |
-          if [[ -n "${{ secrets.SSL_SERVER_KEY }}" ]]; then
+          if [[ -n "${SERVER_KEY}" ]]; then
             mkdir certificates
-            echo "${{ secrets.SSL_SERVER_KEY }}" | \
-              base64 --decode > certificates/server.key
-            echo "${{ secrets.SSL_SERVER_CRT }}" | \
-              base64 --decode > certificates/server.crt
-            echo "${{ secrets.SSL_CA_CRT }}" | \
-              base64 --decode > certificates/ca.crt
+            echo "${SERVER_KEY}" | base64 --decode > certificates/server.key
+            echo "${SERVER_CRT}" | base64 --decode > certificates/server.crt
+            echo "${CA_CRT}" | base64 --decode > certificates/ca.crt
           else
             echo "Set your SSL_SERVER_KEY in GitHub settings repository page."
           fi

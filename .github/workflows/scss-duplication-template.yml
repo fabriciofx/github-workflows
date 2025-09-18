@@ -31,11 +31,15 @@ jobs:
           java-version: 17
       - name: Download Simian
         working-directory: ${{ inputs.working-directory }}
+        env:
+          TMP: ${{ runner.temp }}
         run: |
-          curl -sS -L --retry 3 -o ${{ runner.temp }}/simian.jar \
+          curl -sS -L --retry 3 -o "${TMP}/simian.jar" \
             http://public.yegor256.com/simian.jar
       - name: Check SCSS code duplication
         working-directory: ${{ inputs.working-directory }}
+        env:
+          TMP: ${{ runner.temp }}
         run: |
-          java -jar ${{ runner.temp }}/simian.jar -threshold=16 \
+          java -jar "${TMP}/simian.jar" -threshold=16 \
             -ignoreBlocks="simian-off:simian-on" "**/*.{scss,sass}"

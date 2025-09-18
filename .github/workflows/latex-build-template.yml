@@ -36,6 +36,8 @@ jobs:
           make
       - name: Upload documents
         uses: actions/upload-artifact@v4
+        env:
+          WORKING_DIR: ${{ inputs.working-directory }}
         with:
           name: document
-          path: "${{ inputs.working-directory }}/*.pdf"
+          path: "${WORKING_DIR}/*.pdf"
