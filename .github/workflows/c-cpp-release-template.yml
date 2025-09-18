@@ -65,10 +65,13 @@ jobs:
           make binary-dist
       - name: Prepare packages to distribution
         working-directory: ${{ inputs.working-directory }}
+        env:
+          NAME: ${{ steps.props.outputs.name }}
+          VERSION: ${{ steps.props.outputs.version }}
         run: |
           # Sanitize variables for security purposes
-          safe_name="$(echo "${{ steps.props.outputs.name }}" | tr -cd '[:alnum:]._-' )"
-          safe_version="$(echo "${{ steps.props.outputs.version }}" | tr -cd '[:alnum:]._-' )"
+          safe_name="$(echo "${NAME}" | tr -cd '[:alnum:]._-' )"
+          safe_version="$(echo "${VERSION}" | tr -cd '[:alnum:]._-' )"
 
           # Check if variables are empty
           [[ -z "$safe_name" ]] && { echo "Invalid name"; exit 1; }
@@ -131,10 +134,13 @@ jobs:
           make binary-dist
       - name: Prepare package to distribution
         working-directory: ${{ inputs.working-directory }}
+        env:
+          NAME: ${{ steps.props.outputs.name }}
+          VERSION: ${{ steps.props.outputs.version }}
         run: |
           # Sanitize variables for security purposes
-          safe_name="$(echo "${{ steps.props.outputs.name }}" | tr -cd '[:alnum:]._-' )"
-          safe_version="$(echo "${{ steps.props.outputs.version }}" | tr -cd '[:alnum:]._-' )"
+          safe_name="$(echo "${NAME}" | tr -cd '[:alnum:]._-' )"
+          safe_version="$(echo "${VERSION}" | tr -cd '[:alnum:]._-' )"
 
           # Check if variables are empty
           [[ -z "$safe_name" ]] && { echo "Invalid name"; exit 1; }

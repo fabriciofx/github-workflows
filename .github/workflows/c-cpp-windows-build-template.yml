@@ -66,12 +66,17 @@ jobs:
           make binary-dist
       - name: Prepare packages to distribution
         working-directory: ${{ inputs.working-directory }}
+        env:
+          NAME: ${{ steps.props.outputs.name }}
+          VERSION: ${{ steps.props.outputs.version }}
         run: |
           mkdir dist
-          mv "${{ steps.props.outputs.name }}-${{ steps.props.outputs.version }}-bin.tar.gz" \
-            "dist/${{ steps.props.outputs.name }}-${{ steps.props.outputs.version }}-windows.tar.gz"
+          mv "${NAME}-${VERSION}-bin.tar.gz" \
+            "dist/${NAME}-${VERSION}-windows.tar.gz"
       - name: Upload Windows artifacts
         uses: actions/upload-artifact@v4
+        env:
+          WORKING_DIR: ${{ inputs.working-directory }}
         with:
           name: windows-dist
-          path: "${{ inputs.working-directory }}/dist/*.tar.gz"
+          path: "${WORKING_DIR}/dist/*.tar.gz"

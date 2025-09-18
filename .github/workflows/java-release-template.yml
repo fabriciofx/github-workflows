@@ -40,6 +40,11 @@ jobs:
     steps:
       - name: Setup Maven settings.xml
         working-directory: ${{ inputs.working-directory }}
+        env:
+          KEYNAME: ${{ secrets.release_keyname }}
+          PASSPHRASE: ${{ secrets.release_passphrase }}
+          USERNAME: ${{ secrets.release_username }}
+          PASSWORD: ${{ secrets.release_password }}
         run: |
           mkdir -p ~/.m2
           cat > ~/.m2/settings.xml <<EOF
@@ -48,16 +53,16 @@ jobs:
               <profile>
                 <id>app</id>
                 <properties>
-                  <gpg.keyname>"${{ secrets.release_keyname }}"</gpg.keyname>
-                  <gpg.passphrase>"${{ secrets.release_passphrase }}"</gpg.passphrase>
+                  <gpg.keyname>${KEYNAME}</gpg.keyname>
+                  <gpg.passphrase>${PASSPHRASE}</gpg.passphrase>
                 </properties>
               </profile>
             </profiles>
             <servers>
               <server>
                 <id>oss.sonatype.org</id>
-                <username>"${{ secrets.release_username }}"</username>
-                <password>"${{ secrets.release_password }}"</password>
+                <username>${USERNAME}</username>
+                <password>${PASSWORD}</password>
               </server>
             </servers>
           </settings>
