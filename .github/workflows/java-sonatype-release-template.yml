@@ -2,7 +2,7 @@
 # SPDX-License-Identifier: MIT
 ---
 # yamllint disable rule:line-length
-name: java-release-template
+name: java-sonatype-release-template
 'on':
   workflow_call:
     inputs:
@@ -34,7 +34,7 @@ permissions:
 jobs:
   java-build-template:
     uses: fabriciofx/github-workflows/.github/workflows/java-build-template.yml@main
-  java-release-template:
+  java-sonatype-release-template:
     runs-on: ubuntu-24.04
     needs: java-build-template
     steps:
@@ -51,7 +51,7 @@ jobs:
           <settings>
             <profiles>
               <profile>
-                <id>app</id>
+                <id>gpg</id>
                 <properties>
                   <gpg.keyname>${KEYNAME}</gpg.keyname>
                   <gpg.passphrase>${PASSPHRASE}</gpg.passphrase>
@@ -67,18 +67,8 @@ jobs:
             </servers>
           </settings>
           EOF
-      - name: Release to Sonatype (Maven Central)
+      - name: Release to Sonatype
         working-directory: ${{ inputs.working-directory }}
         run: |
           [[ -x "mvnw" ]] && mvn="./mvnw" || mvn="mvn"
-          args=(--errors --batch-mode deploy -Psonatype -Papp -DskipTests=true)
-          profile=$(grep -q "<id>qulice</id>" pom.xml && echo "-Pqulice")
-          [[ -n "${profile}" ]] && args+=("${profile}")
-          ${mvn} "${args[@]}"
-        env:
-          GPG_TTY: $(tty)
-          JDK_JAVA_OPTIONS: >
-            --add-opens java.base/java.lang=ALL-UNNAMED
-            --add-opens java.base/java.io=ALL-UNNAMED
-            --add-opens java.base/java.util=ALL-UNNAMED
-            --add-opens java.base/java.util.concurrent=ALL-UNNAMED
+          ${mvn} --errors --batch-mode deploy -Psonatype -Pgpg -DskipTests=true
