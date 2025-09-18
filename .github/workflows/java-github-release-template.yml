@@ -71,4 +71,4 @@ jobs:
         working-directory: ${{ inputs.working-directory }}
         run: |
           [[ -x "mvnw" ]] && mvn="./mvnw" || mvn="mvn"
-          ${mvn} --errors --batch-mode deploy -Dmaven.test.skip=true
+          ${mvn} --errors --batch-mode deploy -Pgithub -Dmaven.test.skip=true
