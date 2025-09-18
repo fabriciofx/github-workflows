@@ -15,8 +15,8 @@ jobs:
   java-central-release:
     uses: fabriciofx/github-workflows/.github/workflows/java-central-release-template.yml@main
     secrets:
-      RELEASE_KEYNAME: ${{ secrets.GPG_KEYNAME }}
-      RELEASE_PASSPHRASE: ${{ secrets.GPG_PASSPHRASE }}
-      RELEASE_PRIVATE_KEY: ${{ secrets.GPG_PRIVATE_KEY }}
-      RELEASE_USERNAME: ${{ secrets.CENTRAL_USERNAME }}
-      RELEASE_PASSWORD: ${{ secrets.CENTRAL_PASSWORD }}
+      release_keyname: ${{ secrets.GPG_KEYNAME }}
+      release_passphrase: ${{ secrets.GPG_PASSPHRASE }}
+      release_private_key: ${{ secrets.GPG_PRIVATE_KEY }}
+      release_username: ${{ secrets.CENTRAL_USERNAME }}
+      release_password: ${{ secrets.CENTRAL_PASSWORD }}
