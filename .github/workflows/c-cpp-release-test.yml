@@ -2,7 +2,7 @@
 # SPDX-License-Identifier: MIT
 ---
 # yamllint disable rule:line-length
-name: c-cpp-release
+name: c-cpp-release-test
 'on':
   push:
     tags:
@@ -10,10 +10,10 @@ name: c-cpp-release
 permissions:
   contents: read
 jobs:
-  c-cpp-build:
+  c-cpp-build-test:
     uses: fabriciofx/github-workflows/.github/workflows/c-cpp-build-template.yml@main
-  c-cpp-release:
-    needs: c-cpp-build
+  c-cpp-release-test:
+    needs: c-cpp-build-test
     uses: fabriciofx/github-workflows/.github/workflows/c-cpp-release-template.yml@main
     secrets:
       GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}

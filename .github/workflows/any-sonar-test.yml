@@ -2,7 +2,7 @@
 # SPDX-License-Identifier: MIT
 ---
 # yamllint disable rule:line-length
-name: any-sonar
+name: any-sonar-test
 'on':
   push:
     branches:
@@ -11,7 +11,7 @@ name: any-sonar
 permissions:
   contents: read
 jobs:
-  any-sonar:
+  any-sonar-test:
     uses: fabriciofx/github-workflows/.github/workflows/any-sonar-template.yml@main
     with:
       working-directory: "."

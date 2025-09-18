@@ -2,7 +2,7 @@
 # SPDX-License-Identifier: MIT
 ---
 # yamllint disable rule:line-length
-name: java-coverage
+name: java-coverage-test
 'on':
   push:
     branches:
@@ -11,7 +11,7 @@ name: java-coverage
 permissions:
   contents: read
 jobs:
-  java-coverage:
+  java-coverage-test:
     uses: fabriciofx/github-workflows/.github/workflows/java-coverage-template.yml@main
     with:
       working-directory: "java/test"

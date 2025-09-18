@@ -2,7 +2,7 @@
 # SPDX-License-Identifier: MIT
 ---
 # yamllint disable rule:line-length
-name: python-release
+name: python-release-test
 'on':
   push:
     tags:
@@ -14,7 +14,7 @@ permissions:
   id-token: write
   contents: read
 jobs:
-  python-release:
+  python-release-test:
     uses: fabriciofx/github-workflows/.github/workflows/python-release-template.yml@main
     with:
       working-directory: "python/test"

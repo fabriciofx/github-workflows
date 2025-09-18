@@ -2,7 +2,7 @@
 # SPDX-License-Identifier: MIT
 ---
 # yamllint disable rule:line-length
-name: java-release
+name: java-release-test
 'on':
   push:
     tags:
@@ -10,7 +10,7 @@ name: java-release
 permissions:
   contents: read
 jobs:
-  java-release:
+  java-release-test:
     uses: fabriciofx/github-workflows/.github/workflows/java-release-template.yml@main
     with:
       working-directory: "java/test"

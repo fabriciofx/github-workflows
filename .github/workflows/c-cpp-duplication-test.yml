@@ -2,7 +2,7 @@
 # SPDX-License-Identifier: MIT
 ---
 # yamllint disable rule:line-length
-name: c-cpp-duplication
+name: c-cpp-duplication-test
 'on':
   push:
     branches:
@@ -15,7 +15,7 @@ name: c-cpp-duplication
 permissions:
   contents: read
 jobs:
-  c-cpp-duplication:
+  c-cpp-duplication-test:
     uses: fabriciofx/github-workflows/.github/workflows/c-cpp-duplication-template.yml@main
     with:
       working-directory: "c-cpp/test"
