@@ -69,6 +69,8 @@ jobs:
             "${settings}"
       - name: Release to Github Packages
         working-directory: ${{ inputs.working-directory }}
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           [[ -x "mvnw" ]] && mvn="./mvnw" || mvn="mvn"
           ${mvn} --errors --batch-mode deploy -Pgithub -Dmaven.test.skip=true
