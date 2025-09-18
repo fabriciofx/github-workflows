@@ -36,7 +36,6 @@ jobs:
         with:
           distribution: 'temurin'
           java-version: 17
-          server-id: github
       - name: Configure Maven cache
         uses: actions/cache@v4
         with:
@@ -48,22 +47,6 @@ jobs:
         run: |
           sudo apt-get -y -qq update
           sudo apt-get install -y -qq xmlstarlet
-      - name: Setup Maven pom.xml
-        env:
-          REPOSITORY: ${{ github.repository }}
-        run: |
-          xmlstarlet ed -L \
-            -i '/project[not(distributionManagement)]' -t elem \
-              -n distributionManagement -v "" \
-            -s '/project/distributionManagement[not(repository)]' -t elem \
-              -n repository -v "" \
-            -s '/project/distributionManagement/repository[not(id)]' -t elem \
-              -n id -v "github" \
-            -s '/project/distributionManagement/repository[not(name)]' -t elem \
-              -n name -v "GitHub Packages" \
-            -s '/project/distributionManagement/repository[not(url)]' -t elem \
-              -n url -v "https://maven.pkg.github.com/${REPOSITORY}" \
-            pom.xml
       - name: Setup Maven settings.xml
         working-directory: ${{ inputs.working-directory }}
         env:
