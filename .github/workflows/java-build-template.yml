@@ -47,10 +47,6 @@ jobs:
           profile=$(grep -q "<id>qulice</id>" pom.xml && echo "-Pqulice")
           [[ -n "${profile}" ]] && args+=("${profile}")
           ${mvn} "${args[@]}"
-      - name: Mostrar github context
-        run: |
-          echo "===== Contexto github ====="
-          echo '${{ toJson(github) }}' | jq .
   java-macos-build-template:
     runs-on: ${{ matrix.os }}
     strategy:
