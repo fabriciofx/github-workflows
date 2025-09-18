@@ -2,7 +2,7 @@
 # SPDX-License-Identifier: MIT
 ---
 # yamllint disable rule:line-length
-name: latex-build
+name: latex-build-test
 'on':
   push:
     branches:
@@ -15,7 +15,7 @@ name: latex-build
 permissions:
   contents: read
 jobs:
-  latex-build:
+  latex-build-test:
     uses: fabriciofx/github-workflows/.github/workflows/latex-build-template.yml@main
     with:
       working-directory: "latex/test"

@@ -2,7 +2,7 @@
 # SPDX-License-Identifier: MIT
 ---
 # yamllint disable rule:line-length
-name: spell-lint
+name: spell-lint-test
 'on':
   push:
     branches:
@@ -15,7 +15,7 @@ name: spell-lint
 permissions:
   contents: read
 jobs:
-  spell-lint:
+  spell-lint-test:
     uses: fabriciofx/github-workflows/.github/workflows/spell-lint-template.yml@main
     with:
       working-directory: "."

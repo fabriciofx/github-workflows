@@ -2,7 +2,7 @@
 # SPDX-License-Identifier: MIT
 ---
 # yamllint disable rule:line-length
-name: java-build
+name: java-build-test
 'on':
   push:
     branches:
@@ -15,7 +15,7 @@ name: java-build
 permissions:
   contents: read
 jobs:
-  java-build:
+  java-build-test:
     uses: fabriciofx/github-workflows/.github/workflows/java-build-template.yml@main
     with:
       working-directory: "java/test"

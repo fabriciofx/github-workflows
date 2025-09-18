@@ -2,7 +2,7 @@
 # SPDX-License-Identifier: MIT
 ---
 # yamllint disable rule:line-length
-name: html-duplication
+name: html-duplication-test
 'on':
   push:
     branches:
@@ -15,7 +15,7 @@ name: html-duplication
 permissions:
   contents: read
 jobs:
-  html-duplication:
+  html-duplication-test:
     uses: fabriciofx/github-workflows/.github/workflows/html-duplication-template.yml@main
     with:
       working-directory: "format/test"

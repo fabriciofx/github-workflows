@@ -2,7 +2,7 @@
 # SPDX-License-Identifier: MIT
 ---
 # yamllint disable rule:line-length
-name: java-codecov
+name: java-codecov-test
 'on':
   push:
     branches:
@@ -11,7 +11,7 @@ name: java-codecov
 permissions:
   contents: read
 jobs:
-  java-codecov:
+  java-codecov-test:
     uses: fabriciofx/github-workflows/.github/workflows/java-codecov-template.yml@main
     with:
       working-directory: "java/test"

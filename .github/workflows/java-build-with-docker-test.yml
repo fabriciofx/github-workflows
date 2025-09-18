@@ -2,7 +2,7 @@
 # SPDX-License-Identifier: MIT
 ---
 # yamllint disable rule:line-length
-name: java-build-with-docker
+name: java-build-with-docker-test
 'on':
   push:
     branches:
@@ -15,7 +15,7 @@ name: java-build-with-docker
 permissions:
   contents: read
 jobs:
-  java-build-with-docker:
+  java-build-with-docker-test:
     uses: fabriciofx/github-workflows/.github/workflows/java-build-with-docker-template.yml@main
     with:
       working-directory: "java/test"

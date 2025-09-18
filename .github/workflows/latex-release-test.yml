@@ -2,7 +2,7 @@
 # SPDX-License-Identifier: MIT
 ---
 # yamllint disable rule:line-length
-name: latex-release
+name: latex-release-test
 'on':
   push:
     tags:
@@ -13,7 +13,7 @@ defaults:
 permissions:
   contents: write
 jobs:
-  latex-release:
+  latex-release-test:
     uses: fabriciofx/github-workflows/.github/workflows/latex-release-template.yml@main
     with:
       working-directory: "latex/test"

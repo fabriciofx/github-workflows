@@ -2,7 +2,7 @@
 # SPDX-License-Identifier: MIT
 ---
 # yamllint disable rule:line-length
-name: xml-duplication
+name: xml-duplication-test
 'on':
   push:
     branches:
@@ -15,7 +15,7 @@ name: xml-duplication
 permissions:
   contents: read
 jobs:
-  xml-duplication:
+  xml-duplication-test:
     uses: fabriciofx/github-workflows/.github/workflows/xml-duplication-template.yml@main
     with:
       working-directory: "format/test"

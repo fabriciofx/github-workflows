@@ -2,7 +2,7 @@
 # SPDX-License-Identifier: MIT
 ---
 # yamllint disable rule:line-length
-name: python-tests
+name: python-tests-test
 'on':
   push:
     branches:
@@ -15,7 +15,7 @@ name: python-tests
 permissions:
   contents: read
 jobs:
-  python-tests:
+  python-tests-test:
     uses: fabriciofx/github-workflows/.github/workflows/python-tests-template.yml@main
     with:
       working-directory: "python/test"
