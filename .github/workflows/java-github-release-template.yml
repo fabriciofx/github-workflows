@@ -1,0 +1,91 @@
+# SPDX-FileCopyrightText: Copyright (C) 2025 Fabrício Barros Cabral
+# SPDX-License-Identifier: MIT
+---
+# yamllint disable rule:line-length
+name: java-github-release-template
+'on':
+  workflow_call:
+    inputs:
+      working-directory:
+        description: "Set the working directory"
+        required: false
+        default: "."
+        type: string
+defaults:
+  run:
+    shell: bash -xeuo pipefail {0}
+permissions:
+  actions: read
+  security-events: write
+  contents: read
+jobs:
+  java-github-release-template:
+    runs-on: ubuntu-24.04
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v5
+        with:
+          persist-credentials: false
+          fetch-depth: 0
+          ref: ${{ github.ref }}
+      - name: Fix detached HEAD
+        run: |
+          git checkout -B "${GITHUB_HEAD_REF:-${GITHUB_REF_NAME}}"
+      - name: Setup Java SDK
+        uses: actions/setup-java@v5
+        with:
+          distribution: 'temurin'
+          java-version: 17
+          server-id: github
+      - name: Configure Maven cache
+        uses: actions/cache@v4
+        with:
+          path: ~/.m2/repository
+          key: ${{ runner.os }}-jdk-17-maven-${{ hashFiles('**/pom.xml') }}
+          restore-keys: ${{ runner.os }}-jdk-17-maven-
+      - name: Download and install xmlstarlet
+        working-directory: ${{ inputs.working-directory }}
+        run: |
+          sudo apt-get -y -qq update
+          sudo apt-get install -y -qq xmlstarlet
+      - name: Setup Maven pom.xml
+        env:
+          REPOSITORY: ${{ github.repository }}
+        run: |
+          xmlstarlet ed -L \
+            -i '/project[not(distributionManagement)]' -t elem \
+              -n distributionManagement -v "" \
+            -s '/project/distributionManagement[not(repository)]' -t elem \
+              -n repository -v "" \
+            -s '/project/distributionManagement/repository[not(id)]' -t elem \
+              -n id -v "github" \
+            -s '/project/distributionManagement/repository[not(name)]' -t elem \
+              -n name -v "GitHub Packages" \
+            -s '/project/distributionManagement/repository[not(url)]' -t elem \
+              -n url -v "https://maven.pkg.github.com/${REPOSITORY}" \
+            pom.xml
+      - name: Setup Maven settings.xml
+        working-directory: ${{ inputs.working-directory }}
+        env:
+          USERNAME: ${{ github.repository_owner }}
+          PASSWORD: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          # Set settings.xml path
+          settings="${HOME}/.m2/settings.xml"
+
+          # Add 'github' server
+          xmlstarlet ed -L \
+            -s "/*[local-name()='settings']/*[local-name()='servers']" \
+              -t elem -n "server" -v "" \
+            -s "/*[local-name()='settings']/*[local-name()='servers']/server[last()]" \
+              -t elem -n "id" -v "github" \
+            -s "/*[local-name()='settings']/*[local-name()='servers']/server[last()]" \
+              -t elem -n "username" -v "${USERNAME}" \
+            -s "/*[local-name()='settings']/*[local-name()='servers']/server[last()]" \
+              -t elem -n "password" -v "${PASSWORD}" \
+            "${settings}"
+      - name: Release to Github Packages
+        working-directory: ${{ inputs.working-directory }}
+        run: |
+          [[ -x "mvnw" ]] && mvn="./mvnw" || mvn="mvn"
+          ${mvn} --errors --batch-mode deploy -Dmaven.test.skip=true
