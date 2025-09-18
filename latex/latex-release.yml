@@ -16,4 +16,4 @@ jobs:
   latex-release:
     uses: fabriciofx/github-workflows/.github/workflows/latex-release-template.yml@main
     secrets:
-      GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      gh_token: ${{ secrets.GITHUB_TOKEN }}

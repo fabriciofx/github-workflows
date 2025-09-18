@@ -12,8 +12,8 @@ name: c-cpp-release-template
         default: "."
         type: string
     secrets:
-      GH_TOKEN:
-        description: 'GitHub token'
+      gh_token:
+        description: "GitHub token"
         required: true
 defaults:
   run:
@@ -175,4 +175,4 @@ jobs:
           files: dist/*.tar.gz
           generate_release_notes: true
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.gh_token }}

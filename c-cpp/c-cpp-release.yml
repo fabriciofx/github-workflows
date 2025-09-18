@@ -16,4 +16,4 @@ jobs:
     needs: c-cpp-build
     uses: fabriciofx/github-workflows/.github/workflows/c-cpp-release-template.yml@main
     secrets:
-      GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      gh_token: ${{ secrets.GITHUB_TOKEN }}
