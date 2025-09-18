@@ -35,25 +35,12 @@ permissions:
   security-events: write
   contents: read
 jobs:
+  java-build-template:
+    uses: fabriciofx/github-workflows/.github/workflows/java-build-template.yml@main
   java-central-release-template:
     runs-on: ubuntu-24.04
+    needs: java-build-template
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v5
-        with:
-          persist-credentials: false
-          fetch-depth: 0
-      - name: Setup Java SDK
-        uses: actions/setup-java@v5
-        with:
-          distribution: 'temurin'
-          java-version: 17
-      - name: Configure Maven cache
-        uses: actions/cache@v4
-        with:
-          path: ~/.m2/repository
-          key: ${{ runner.os }}-jdk-maven-${{ github.job }}-${{ hashFiles('**/pom.xml') }}
-          restore-keys: ${{ runner.os }}-jdk-maven-${{ github.job }}-
       - name: Configure GPG
         working-directory: ${{ inputs.working-directory }}
         env:
