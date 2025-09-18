@@ -97,7 +97,7 @@ jobs:
               -t elem -n "username" -v "${USERNAME}" \
             -s "/*[local-name()='settings']/*[local-name()='servers']/server[last()]" \
               -t elem -n "password" -v "${PASSWORD}" \
-            "${settings}"
+            ${settings}
 
           # Add 'gpg' profile
           xmlstarlet ed -L \
@@ -110,9 +110,9 @@ jobs:
               -t elem -n "properties" -v "" \
             -s "/*[local-name()='settings']/*[local-name()='profiles']/profile[last()]/properties" \
               -t elem -n "gpg.keyname" -v "${KEYNAME}" \
-            "${settings}"
+            ${settings}
       - name: Release to Maven Central
         working-directory: ${{ inputs.working-directory }}
         run: |
           [[ -x "mvnw" ]] && mvn="./mvnw" || mvn="mvn"
-          ${mvn} --errors --batch-mode deploy -Pcentral -Pgpg -DskipTests=true
+          ${mvn} --errors --batch-mode deploy -Pcentral -Pgpg -Dmaven.test.skip=true
