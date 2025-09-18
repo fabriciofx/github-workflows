@@ -44,6 +44,8 @@ jobs:
           key: ${{ runner.os }}-jdk-17-maven-${{ hashFiles('**/pom.xml') }}
           restore-keys: ${{ runner.os }}-jdk-17-maven-
       - name: Debug GitHub Packages
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           echo "Token length: ${#GITHUB_TOKEN}"
           echo "GITHUB_TOKEN=${GITHUB_TOKEN:0:4}..."
