@@ -67,6 +67,7 @@ jobs:
             -s "/*[local-name()='settings']/*[local-name()='servers']/server[last()]" \
               -t elem -n "password" -v "${PASSWORD}" \
             "${settings}"
+          cat "${settings}"
       - name: Release to Github Packages
         working-directory: ${{ inputs.working-directory }}
         env:
