@@ -20,4 +20,4 @@ jobs:
   action-security:
     uses: fabriciofx/github-workflows/.github/workflows/action-security-template.yml@main
     secrets:
-      github_token: ${{ secrets.GITHUB_TOKEN }}
+      gh_token: ${{ secrets.GITHUB_TOKEN }}

@@ -12,17 +12,17 @@ name: java-release-template
         default: "."
         type: string
     secrets:
-      RELEASE_KEYNAME:
-        description: 'GPG key name'
+      release_keyname:
+        description: "GPG key name"
         required: true
-      RELEASE_PASSPHRASE:
-        description: 'GPG passphrase'
+      release_passphrase:
+        description: "GPG passphrase"
         required: true
-      RELEASE_USERNAME:
-        description: 'Sonatype username'
+      release_username:
+        description: "Sonatype username"
         required: true
-      RELEASE_PASSWORD:
-        description: 'Sonatype password'
+      release_password:
+        description: "Sonatype password"
         required: true
 defaults:
   run:
@@ -48,16 +48,16 @@ jobs:
               <profile>
                 <id>app</id>
                 <properties>
-                  <gpg.keyname>"${{ secrets.RELEASE_KEYNAME }}"</gpg.keyname>
-                  <gpg.passphrase>"${{ secrets.RELEASE_PASSPHRASE }}"</gpg.passphrase>
+                  <gpg.keyname>"${{ secrets.release_keyname }}"</gpg.keyname>
+                  <gpg.passphrase>"${{ secrets.release_passphrase }}"</gpg.passphrase>
                 </properties>
               </profile>
             </profiles>
             <servers>
               <server>
                 <id>oss.sonatype.org</id>
-                <username>"${{ secrets.RELEASE_USERNAME }}"</username>
-                <password>"${{ secrets.RELEASE_PASSWORD }}"</password>
+                <username>"${{ secrets.release_username }}"</username>
+                <password>"${{ secrets.release_password }}"</password>
               </server>
             </servers>
           </settings>

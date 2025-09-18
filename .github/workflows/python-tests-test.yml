@@ -20,6 +20,6 @@ jobs:
     with:
       working-directory: "python/test"
     secrets:
-      SSL_SERVER_KEY: ${{ secrets.SSL_SERVER_KEY }}
-      SSL_SERVER_CRT: ${{ secrets.SSL_SERVER_CRT }}
-      SSL_CA_CRT: ${{ secrets.SSL_CA_CRT }}
+      ssl_server_key: ${{ secrets.SSL_SERVER_KEY }}
+      ssl_server_crt: ${{ secrets.SSL_SERVER_CRT }}
+      ssl_ca_crt: ${{ secrets.SSL_CA_CRT }}

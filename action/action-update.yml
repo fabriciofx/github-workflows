@@ -16,4 +16,4 @@ jobs:
   action-update:
     uses: fabriciofx/github-workflows/.github/workflows/action-update-template.yml@main
     secrets:
-      github_token: ${{ secrets.GITHUB_TOKEN }}
+      gh_token: ${{ secrets.GITHUB_TOKEN }}

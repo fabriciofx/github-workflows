@@ -12,20 +12,20 @@ name: java-central-release-template
         default: "."
         type: string
     secrets:
-      RELEASE_KEYNAME:
-        description: 'GPG key name'
+      release_keyname:
+        description: "GPG key name"
         required: true
-      RELEASE_PASSPHRASE:
-        description: 'GPG passphrase'
+      release_passphrase:
+        description: "GPG passphrase"
         required: true
-      RELEASE_PRIVATE_KEY:
-        description: 'GPG private key'
+      release_private_key:
+        description: "GPG private key"
         required: true
-      RELEASE_USERNAME:
-        description: 'Central token username'
+      release_username:
+        description: "Central token username"
         required: true
-      RELEASE_PASSWORD:
-        description: 'Central token password'
+      release_password:
+        description: "Central token password"
         required: true
 defaults:
   run:
@@ -57,21 +57,21 @@ jobs:
       - name: Configure GPG
         working-directory: ${{ inputs.working-directory }}
         run: |
-          echo "${{ secrets.RELEASE_PRIVATE_KEY }}" | gpg --batch --import
+          echo "${{ secrets.release_private_key }}" | gpg --batch --import
           echo "pinentry-mode loopback" >> "${HOME}/.gnupg/gpg.conf"
           gpgconf --launch gpg-agent
           echo "allow-loopback-pinentry" >> "${HOME}/.gnupg/gpg-agent.conf"
           gpgconf --reload gpg-agent
           # Bootstrapping: forces the key to be initialized and unlocked
           echo "test" | gpg --batch --yes --pinentry-mode loopback \
-            --passphrase "${{ secrets.RELEASE_PASSPHRASE }}" \
-            -u "${{ secrets.RELEASE_KEYNAME }}" -o /dev/null -a --sign
+            --passphrase "${{ secrets.release_passphrase }}" \
+            -u "${{ secrets.release_keyname }}" -o /dev/null -a --sign
         env:
           GPG_TTY: $(tty)
       - name: Setup Maven settings.xml
         working-directory: ${{ inputs.working-directory }}
         env:
-          MAVEN_GPG_PASSPHRASE: ${{ secrets.RELEASE_PASSPHRASE }}
+          MAVEN_GPG_PASSPHRASE: ${{ secrets.release_passphrase }}
         run: |
           # Download and install xmlstarlet
           sudo apt-get install -y -qq xmlstarlet
@@ -86,9 +86,9 @@ jobs:
             -s "/*[local-name()='settings']/*[local-name()='servers']/server[last()]" \
               -t elem -n "id" -v "central" \
             -s "/*[local-name()='settings']/*[local-name()='servers']/server[last()]" \
-              -t elem -n "username" -v "${{ secrets.RELEASE_USERNAME }}" \
+              -t elem -n "username" -v "${{ secrets.release_username }}" \
             -s "/*[local-name()='settings']/*[local-name()='servers']/server[last()]" \
-              -t elem -n "password" -v "${{ secrets.RELEASE_PASSWORD }}" \
+              -t elem -n "password" -v "${{ secrets.release_password }}" \
             "${settings}"
 
           # Add 'gpg' profile
@@ -101,7 +101,7 @@ jobs:
             -s "/*[local-name()='settings']/*[local-name()='profiles']/profile[last()]" \
               -t elem -n "properties" -v "" \
             -s "/*[local-name()='settings']/*[local-name()='profiles']/profile[last()]/properties" \
-              -t elem -n "gpg.keyname" -v "${{ secrets.RELEASE_KEYNAME }}" \
+              -t elem -n "gpg.keyname" -v "${{ secrets.release_keyname }}" \
             "${settings}"
       - name: Release to Maven Central
         working-directory: ${{ inputs.working-directory }}
