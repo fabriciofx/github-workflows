@@ -1,2 +1,4 @@
-﻿// For more information see https://aka.ms/fsharp-console-apps
+﻿// SPDX-FileCopyrightText: Copyright (C) 2025 Fabrício Barros Cabral
+// SPDX-License-Identifier: MIT
+
 printfn "Hello from F#"
