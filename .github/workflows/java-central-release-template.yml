@@ -58,8 +58,8 @@ jobs:
       - name: Download and install xmlstarlet
         working-directory: ${{ inputs.working-directory }}
         run: |
-          sudo apt-get -y -qq update
-          sudo apt-get install -y -qq xmlstarlet
+          sudo DPKG_PROGRESS_FD=0 apt-get -y -qq update
+          sudo DPKG_PROGRESS_FD=0 apt-get install -y -qq xmlstarlet
       - name: Configure GPG
         working-directory: ${{ inputs.working-directory }}
         env:
