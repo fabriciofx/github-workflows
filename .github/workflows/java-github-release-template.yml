@@ -50,3 +50,40 @@ jobs:
         run: |
           [[ -x "mvnw" ]] && mvn="./mvnw" || mvn="mvn"
           ${mvn} --errors --batch-mode deploy -Pgithub -Dmaven.test.skip=true
+      - name: Create GitHub Release
+        id: release
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: ${{ github.ref_name }}
+          release_name: Release ${{ github.ref_name }}
+          draft: false
+          prerelease: false
+      - name: Deploy binary artifact
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.release.outputs.upload_url }}
+          asset_path: target/${{ github.event.repository.name }}-${{ github.ref_name }}.jar
+          asset_name: ${{ github.event.repository.name }}-${{ github.ref_name }}.jar
+          asset_content_type: application/java-archive
+      - name: Deploy sources artifact
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.release.outputs.upload_url }}
+          asset_path: target/${{ github.event.repository.name }}-${{ github.ref_name }}-sources.jar
+          asset_name: ${{ github.event.repository.name }}-${{ github.ref_name }}-sources.jar
+          asset_content_type: application/java-archive
+      - name: Deploy javadoc artifact
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.release.outputs.upload_url }}
+          asset_path: target/${{ github.event.repository.name }}-${{ github.ref_name }}-javadoc.jar
+          asset_name: ${{ github.event.repository.name }}-${{ github.ref_name }}-javadoc.jar
+          asset_content_type: application/java-archive
