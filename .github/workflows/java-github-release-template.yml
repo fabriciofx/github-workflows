@@ -43,6 +43,11 @@ jobs:
           path: ~/.m2/repository
           key: ${{ runner.os }}-jdk-17-maven-${{ hashFiles('**/pom.xml') }}
           restore-keys: ${{ runner.os }}-jdk-17-maven-
+      - name: Debug GitHub Packages
+        run: |
+          echo "Token length: ${#GITHUB_TOKEN}"
+          echo "GITHUB_TOKEN=${GITHUB_TOKEN:0:4}..."
+          curl -v -u "fabriciofx:${GITHUB_TOKEN}" https://maven.pkg.github.com/fabriciofx/dict/
       - name: Release to Github Packages
         working-directory: ${{ inputs.working-directory }}
         env:
