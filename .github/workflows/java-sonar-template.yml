@@ -27,7 +27,7 @@ jobs:
   java-sonar-template:
     runs-on: ubuntu-24.04
     steps:
-      - name: Checkout code
+      - name: Checkout repository
         uses: actions/checkout@v5
         with:
           persist-credentials: false

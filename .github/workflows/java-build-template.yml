@@ -24,7 +24,7 @@ jobs:
         os: [ubuntu-22.04, ubuntu-24.04]
         java: [17, 21]
     steps:
-      - name: Checkout code
+      - name: Checkout repository
         uses: actions/checkout@v5
         with:
           persist-credentials: false
@@ -54,7 +54,7 @@ jobs:
         os: [macos-14, macos-15]
         java: [17, 21]
     steps:
-      - name: Checkout code
+      - name: Checkout repository
         uses: actions/checkout@v5
         with:
           persist-credentials: false
@@ -84,7 +84,7 @@ jobs:
         os: [windows-2022, windows-2025]
         java: [17, 21]
     steps:
-      - name: Checkout code
+      - name: Checkout repository
         uses: actions/checkout@v5
         with:
           persist-credentials: false

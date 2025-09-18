@@ -22,7 +22,7 @@ jobs:
     container:
       image: ghcr.io/xu-cheng/texlive-debian:latest
     steps:
-      - name: Checkout code
+      - name: Checkout repository
         uses: actions/checkout@v5
         with:
           persist-credentials: false

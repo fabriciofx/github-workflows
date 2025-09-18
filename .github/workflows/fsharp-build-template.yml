@@ -28,7 +28,7 @@ jobs:
       matrix:
         os: [ubuntu-24.04, macos-14, macos-15, windows-2025]
     steps:
-      - name: Checkout code
+      - name: Checkout repository
         uses: actions/checkout@v5
         with:
           persist-credentials: false

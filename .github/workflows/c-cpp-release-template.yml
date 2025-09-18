@@ -24,7 +24,7 @@ jobs:
   c-cpp-linux-build-template:
     runs-on: ubuntu-24.04
     steps:
-      - name: Checkout code
+      - name: Checkout repository
         uses: actions/checkout@v5
         with:
           persist-credentials: false
@@ -87,7 +87,7 @@ jobs:
   c-cpp-macos-build-template:
     runs-on: macos-15
     steps:
-      - name: Checkout code
+      - name: Checkout repository
         uses: actions/checkout@v5
         with:
           persist-credentials: false
