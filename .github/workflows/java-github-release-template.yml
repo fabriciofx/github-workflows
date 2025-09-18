@@ -17,8 +17,7 @@ defaults:
 permissions:
   actions: read
   security-events: write
-  contents: write
-  packages: write
+  contents: read
 jobs:
   java-github-release-template:
     runs-on: ubuntu-24.04
