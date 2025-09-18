@@ -10,7 +10,8 @@ name: java-github-release
 permissions:
   actions: read
   security-events: write
-  contents: read
+  contents: write
+  packages: write
 jobs:
   java-github-release:
     uses: fabriciofx/github-workflows/.github/workflows/java-github-release-template.yml@main
