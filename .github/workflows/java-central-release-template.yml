@@ -46,7 +46,7 @@ jobs:
           ref: ${{ github.ref }}
       - name: Fix detached HEAD
         run: |
-          git checkout -B "${GITHUB_HEAD_REF:-${GITHUB_REF_NAME}}""
+          git checkout -B "${GITHUB_HEAD_REF:-${GITHUB_REF_NAME}}"
       - name: Setup Java SDK
         uses: actions/setup-java@v5
         with:
