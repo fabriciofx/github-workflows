@@ -46,27 +46,38 @@ jobs:
           USERNAME: ${{ secrets.release_username }}
           PASSWORD: ${{ secrets.release_password }}
         run: |
-          mkdir -p ~/.m2
-          cat > ~/.m2/settings.xml <<EOF
-          <settings>
-            <profiles>
-              <profile>
-                <id>gpg</id>
-                <properties>
-                  <gpg.keyname>${KEYNAME}</gpg.keyname>
-                  <gpg.passphrase>${PASSPHRASE}</gpg.passphrase>
-                </properties>
-              </profile>
-            </profiles>
-            <servers>
-              <server>
-                <id>oss.sonatype.org</id>
-                <username>${USERNAME}</username>
-                <password>${PASSWORD}</password>
-              </server>
-            </servers>
-          </settings>
-          EOF
+          # Download and install xmlstarlet
+          sudo apt-get install -y -qq xmlstarlet
+
+          # Set settings.xml path
+          settings="${HOME}/.m2/settings.xml"
+
+          # Add 'central' server
+          xmlstarlet ed -L \
+            -s "/*[local-name()='settings']/*[local-name()='servers']" \
+              -t elem -n "server" -v "" \
+            -s "/*[local-name()='settings']/*[local-name()='servers']/server[last()]" \
+              -t elem -n "id" -v "oss.sonatype.org" \
+            -s "/*[local-name()='settings']/*[local-name()='servers']/server[last()]" \
+              -t elem -n "username" -v "${USERNAME}" \
+            -s "/*[local-name()='settings']/*[local-name()='servers']/server[last()]" \
+              -t elem -n "password" -v "${PASSWORD}" \
+            "${settings}"
+
+          # Add 'gpg' profile
+          xmlstarlet ed -L \
+            -s "/*[local-name()='settings']" -t elem -n "profiles" -v "" \
+            -s "/*[local-name()='settings']/*[local-name()='profiles']" \
+              -t elem -n "profile" -v "" \
+            -s "/*[local-name()='settings']/*[local-name()='profiles']/profile[last()]" \
+              -t elem -n "id" -v "gpg" \
+            -s "/*[local-name()='settings']/*[local-name()='profiles']/profile[last()]" \
+              -t elem -n "properties" -v "" \
+            -s "/*[local-name()='settings']/*[local-name()='profiles']/profile[last()]/properties" \
+              -t elem -n "gpg.keyname" -v "${KEYNAME}" \
+            -s "/*[local-name()='settings']/*[local-name()='profiles']/profile[last()]/properties" \
+              -t elem -n "gpg.passphrase" -v "${PASSPHRASE}" \
+            "${settings}"
       - name: Release to Sonatype
         working-directory: ${{ inputs.working-directory }}
         run: |
