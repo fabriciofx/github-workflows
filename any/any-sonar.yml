@@ -14,5 +14,5 @@ jobs:
   any-sonar:
     uses: fabriciofx/github-workflows/.github/workflows/any-sonar-template.yml@main
     secrets:
-      github_token: ${{ secrets.GITHUB_TOKEN }}
-      sonar_token: ${{ secrets.SONAR_TOKEN }}
+      gh_token: ${{ secrets.GITHUB_TOKEN }}
+      sr_token: ${{ secrets.SONAR_TOKEN }}
