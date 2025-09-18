@@ -42,32 +42,6 @@ jobs:
           path: ~/.m2/repository
           key: ${{ runner.os }}-jdk-17-maven-${{ hashFiles('**/pom.xml') }}
           restore-keys: ${{ runner.os }}-jdk-17-maven-
-      - name: Download and install xmlstarlet
-        working-directory: ${{ inputs.working-directory }}
-        run: |
-          sudo apt-get -y -qq update
-          sudo apt-get install -y -qq xmlstarlet
-      - name: Setup Maven settings.xml
-        working-directory: ${{ inputs.working-directory }}
-        env:
-          USERNAME: ${{ github.repository_owner }}
-          PASSWORD: ${{ secrets.GITHUB_TOKEN }}
-        run: |
-          # Set settings.xml path
-          settings="${HOME}/.m2/settings.xml"
-
-          # Add 'github' server
-          xmlstarlet ed -L \
-            -s "/*[local-name()='settings']/*[local-name()='servers']" \
-              -t elem -n "server" -v "" \
-            -s "/*[local-name()='settings']/*[local-name()='servers']/server[last()]" \
-              -t elem -n "id" -v "github" \
-            -s "/*[local-name()='settings']/*[local-name()='servers']/server[last()]" \
-              -t elem -n "username" -v "${USERNAME}" \
-            -s "/*[local-name()='settings']/*[local-name()='servers']/server[last()]" \
-              -t elem -n "password" -v "${PASSWORD}" \
-            "${settings}"
-          cat "${settings}"
       - name: Release to Github Packages
         working-directory: ${{ inputs.working-directory }}
         env:
