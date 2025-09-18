@@ -45,81 +45,22 @@ jobs:
         with:
           persist-credentials: false
           fetch-depth: 0
-      - name: Setup Java SDK
-        uses: actions/setup-java@v5
-        with:
-          distribution: 'temurin'
-          java-version: 17
-      - name: Configure Maven cache
-        uses: actions/cache@v4
-        with:
-          path: ~/.m2/repository
-          key: ubuntu-jdk-11-maven-${{ hashFiles('**/pom.xml') }}
-          restore-keys: ubuntu-jdk-11-maven-
-      - name: Configure Sonar cache
-        uses: actions/cache@v4
-        with:
-          path: ~/.sonar/cache
-          key: ${{ runner.os }}-sonar
-          restore-keys: ${{ runner.os }}-sonar
-      - name: Create pom.xml if not exists
+      - name: Create Sonar properties file
         working-directory: ${{ inputs.working-directory }}
         run: |
-          cat > pom.xml <<EOF
-          <?xml version="1.0"?>
-          <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-            <modelVersion>4.0.0</modelVersion>
-            <groupId>com.github.fabriciofx.github.workflows</groupId>
-            <artifactId>sonar-template</artifactId>
-            <version>0.0.1</version>
-            <properties>
-              <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-              <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-            </properties>
-            <profiles>
-              <profile>
-                <id>sonar</id>
-                <properties>
-                  <sonar.host.url>${{ inputs.sonar_host_url }}</sonar.host.url>
-                  <sonar.organization>${{ inputs.sonar_organization }}</sonar.organization>
-                  <sonar.projectKey>${{ inputs.sonar_project_key }}</sonar.projectKey>
-                  <sonar.sources>.</sonar.sources>
-                  <sonar.inclusions>**</sonar.inclusions>
-                  <sonar.exclusions>node_modules/**,dist/**,build/**</sonar.exclusions>
-                  <sonar.issuesReport.console.enable>true</sonar.issuesReport.console.enable>
-                  <sonar.c.file.suffixes>-</sonar.c.file.suffixes>
-                  <sonar.cpp.file.suffixes>-</sonar.cpp.file.suffixes>
-                  <sonar.objc.file.suffixes>-</sonar.objc.file.suffixes>
-                </properties>
-                <build>
-                  <plugins>
-                    <plugin>
-                      <groupId>org.sonarsource.scanner.maven</groupId>
-                      <artifactId>sonar-maven-plugin</artifactId>
-                      <version>5.2.0.4988</version>
-                      <executions>
-                        <execution>
-                          <phase>verify</phase>
-                          <goals>
-                            <goal>sonar</goal>
-                          </goals>
-                        </execution>
-                      </executions>
-                    </plugin>
-                  </plugins>
-                </build>
-              </profile>
-            </profiles>
-          </project>
+          cat > sonar-project.properties <<EOF
+          sonar.organization=${{ inputs.sonar_organization }}
+          sonar.projectKey=${{ inputs.sonar_project_key}}
+          sonar.sources=.
+          sonar.inclusions=**
+          sonar.exclusions=node_modules/**,dist/**,build/**
+          sonar.sourceEncoding=UTF-8
+          sonar.issuesReport.console.enable=true
+          sonar.c.file.suffixes=-
+          sonar.cpp.file.suffixes=-
+          sonar.objc.file.suffixes=-
           EOF
       - name: Run Sonar
-        working-directory: ${{ inputs.working-directory }}
+        uses: SonarSource/sonarqube-scan-action@v5.3.1
         env:
-          GITHUB_TOKEN: ${{ secrets.gh_token }}
           SONAR_TOKEN: ${{ secrets.sr_token }}
-        run: |
-          [[ -x "mvnw" ]] && mvn="./mvnw" || mvn="mvn"
-          args=(--errors --batch-mode package)
-          profile=$(grep -q "<id>sonar</id>" pom.xml && echo "-Psonar")
-          [[ -n "${profile}" ]] && args+=("${profile}")
-          ${mvn} "${args[@]}"
