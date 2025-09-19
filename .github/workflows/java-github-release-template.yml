@@ -51,7 +51,7 @@ jobs:
           [[ -x "mvnw" ]] && mvn="./mvnw" || mvn="mvn"
           ${mvn} --errors --batch-mode deploy -Pgithub -Dmaven.test.skip=true
       - name: Deploy to GitHub Releases
-        uses: softprops/action-gh-release@6cbd405e2c4e67a21c47fa9e383d020e4e28b836
+        uses: softprops/action-gh-release@19cd0bcd2b95a5f9e0aab8377b3cae33e51c2234
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
