@@ -2,7 +2,7 @@
 # SPDX-License-Identifier: MIT
 ---
 # yamllint disable rule:line-length
-name: tag-semver
+name: check-semver-tag-test
 'on':
   push:
     tags:
@@ -10,5 +10,5 @@ name: tag-semver
 permissions:
   contents: read
 jobs:
-  tag-semver:
-    uses: fabriciofx/github-workflows/.github/workflows/tag-semver-template.yml@main
+  check-semver-tag-test:
+    uses: fabriciofx/github-workflows/.github/workflows/check-semver-tag-template.yml@main
