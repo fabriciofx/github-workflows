@@ -2,7 +2,7 @@
 # SPDX-License-Identifier: MIT
 ---
 # yamllint disable rule:line-length
-name: tag-semver-template
+name: check-semver-tag-template
 'on':
   workflow_call:
     inputs:
@@ -17,21 +17,22 @@ defaults:
 permissions:
   contents: read
 jobs:
-  tag-semver-template:
+  check-semver-tag-template:
     runs-on: ubuntu-24.04
     steps:
       - name: Checkout repository
         uses: actions/checkout@v5
         with:
           persist-credentials: false
-      - name: Check tag name
+      - name: Check semantic version tag name
         id: workflows
         run: |
           if [[ "${GITHUB_REF_NAME}" =~ ^[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
             echo "cancel=false" >> "${GITHUB_OUPUT}"
           else
-            echo "Tag '${GITHUB_REF_NAME}' has an invalid semver format.""
+            echo "Tag '${GITHUB_REF_NAME}' has an invalid semver name format."
             echo "Please, use a valid format: ^[0-9]+\.[0-9]+\.[0-9]+$"
+            echo "For more information, visit the website https://semver.org/"
             echo "cancel=true" >> "${GITHUB_OUPUT}"
           fi
       - name: Cancel all active workflows

@@ -1,0 +1,14 @@
+# SPDX-FileCopyrightText: Copyright (C) 2025 Fabrício Barros Cabral
+# SPDX-License-Identifier: MIT
+---
+# yamllint disable rule:line-length
+name: check-semver-tag
+'on':
+  push:
+    tags:
+      - '*'
+permissions:
+  contents: read
+jobs:
+  check-semver-tag:
+    uses: fabriciofx/github-workflows/.github/workflows/check-semver-tag-template.yml@main
