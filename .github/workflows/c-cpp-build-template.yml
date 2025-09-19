@@ -151,11 +151,9 @@ jobs:
 
           # Move file
           mkdir -p dist
-          mv "${bin}" dist/"${safe_name}-${safe_version}-macos.tar.gz"
+          mv "${bin}" "dist/${safe_name}-${safe_version}-macos.tar.gz"
       - name: Upload macOS artifacts
         uses: actions/upload-artifact@v4
-        env:
-          WORKING_DIR: ${{ inputs.working-directory }}
         with:
           name: macos-dist
-          path: "${WORKING_DIR}/dist/*.tar.gz"
+          path: "${{ inputs.working-directory }}/dist/*.tar.gz"
