@@ -27,6 +27,6 @@ jobs:
         with:
           node-version: 22
       - name: Run Renovate
-        uses: renovatebot/github-action@0689a44370d5e96310e5b1df00f8477d1aa44cb5
+        uses: renovatebot/github-action@7e5b43dfa5ade45a1980e4d64d5d346a2232e089
         with:
           token: ${{ secrets.gh_token }}
