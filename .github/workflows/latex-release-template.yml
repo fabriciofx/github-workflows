@@ -38,7 +38,7 @@ jobs:
           # Detects which tag triggered the build
           echo "tag=${GITHUB_REF##*/}" >> "${GITHUB_OUTPUT}"
       - name: Release document
-        uses: softprops/action-gh-release@62c96d0c4e8a889135c1f3a25910db8dbe0e85f7
+        uses: softprops/action-gh-release@f38efdea4c5ffe13e9424b0aa2833bee28f1e34c
         with:
           tag_name: ${{ steps.tag.outputs.tag }}
           files: ./artifacts/*.pdf
