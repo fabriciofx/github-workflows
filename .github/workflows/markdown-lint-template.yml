@@ -25,6 +25,6 @@ jobs:
         with:
           persist-credentials: false
       - name: Lint Markdown files
-        uses: DavidAnson/markdownlint-cli2-action@0ff781dcd7adaf28deab19ab6797b5d030c4679a
+        uses: DavidAnson/markdownlint-cli2-action@ea23e85383042f0c9db1fba07ff5a2f8ec63d544
         with:
           globs: '**/*.md'
