@@ -28,7 +28,7 @@ jobs:
     needs: [latex-build-template]
     steps:
       - name: Download PDF
-        uses: actions/download-artifact@v5
+        uses: actions/download-artifact@v6
         with:
           name: document
           path: ./artifacts
