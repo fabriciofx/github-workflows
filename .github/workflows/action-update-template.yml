@@ -25,7 +25,7 @@ jobs:
       - name: Setup node.js
         uses: actions/setup-node@v6
         with:
-          node-version: 22
+          node-version: 24
       - name: Run Renovate
         uses: renovatebot/github-action@88d42bf420668c92be65394aced77c5e17dfec2f
         with:
