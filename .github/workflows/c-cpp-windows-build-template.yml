@@ -25,7 +25,7 @@ jobs:
         with:
           persist-credentials: false
       - name: Install and setup MSYS2 with MinGW64
-        uses: msys2/setup-msys2@fb197b72ce45fb24f17bf3f807a388985654d1f2
+        uses: msys2/setup-msys2@9d6bd180c545db4470ee1cda6cec5f4ae5fceed4
         with:
           msystem: MINGW64
           update: true
