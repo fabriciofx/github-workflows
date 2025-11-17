@@ -25,7 +25,7 @@ jobs:
         with:
           persist-credentials: false
       - name: Check copyright header
-        uses: yegor256/copyrights-action@9214827a6585db452f48d955f667d2794b0f7cdb
+        uses: yegor256/copyrights-action@5a6c06a725df97b9a4cc30fda5291bc244e2878f
         with:
           ignore: >-
             **/*.properties
