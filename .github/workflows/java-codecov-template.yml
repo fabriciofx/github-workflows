@@ -48,6 +48,6 @@ jobs:
           [[ -n "${profile}" ]] && args+=("${profile}")
           ${mvn} "${args[@]}"
       - name: Checks code coverage
-        uses: codecov/codecov-action@9b6d1f84bde660b0f784003009b1f0aa4663cdeb
+        uses: codecov/codecov-action@96b38e9e60ee60a8c3911f4612407bba2f9195fb
         with:
           token: ${{ secrets.codecov_token }}
