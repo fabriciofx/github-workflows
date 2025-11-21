@@ -19,4 +19,4 @@ jobs:
         with:
           persist-credentials: false
       - name: Run actionlint
-        uses: raven-actions/actionlint@fd1b743b251ce06a07f899ad2e53e238e94df30d
+        uses: raven-actions/actionlint@591b1dfdbabb809cef4c22b7b93f37cd994d9368
