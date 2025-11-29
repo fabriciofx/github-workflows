@@ -24,19 +24,9 @@ jobs:
         uses: actions/checkout@v6
         with:
           persist-credentials: false
-      - name: Install venv and dependencies
+      - name: Install ruff
         working-directory: ${{ inputs.working-directory }}
-        run: |
-          if [[ -s Makefile ]]; then
-            make install
-          else
-            python -m venv .venv
-            . ./.venv/bin/activate
-            pip install -r requirements.txt
-          fi
-      - name: Download and install ruff
-        working-directory: ${{ inputs.working-directory }}
-        run: pip install ruff
+        run: sudo apt-get install ruff
       - name: Check format
         working-directory: ${{ inputs.working-directory }}
         run: ruff format --check
