@@ -26,7 +26,7 @@ jobs:
           persist-credentials: false
       - name: Install ruff
         working-directory: ${{ inputs.working-directory }}
-        run: sudo apt-get install ruff
+        run: curl -LsSf https://astral.sh/ruff/install.sh | sh
       - name: Check format
         working-directory: ${{ inputs.working-directory }}
         run: ruff format --check
