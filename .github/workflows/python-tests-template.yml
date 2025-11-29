@@ -36,7 +36,7 @@ jobs:
           persist-credentials: false
       - name: Install uv
         working-directory: ${{ inputs.working-directory }}
-        run: sudo apt-get install uv
+        run: curl -LsSf https://astral.sh/uv/install.sh | sh
       - name: Install venv and dependencies
         working-directory: ${{ inputs.working-directory }}
         run: |
