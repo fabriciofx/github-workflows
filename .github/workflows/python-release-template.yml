@@ -29,12 +29,17 @@ jobs:
         uses: actions/setup-python@v6
         with:
           python-version: '3.14'
-      - name: Install build tool
+      - name: Install uv
         working-directory: ${{ inputs.working-directory }}
-        run: pip install build
+        run: sudo apt-get install uv
       - name: Build package
         working-directory: ${{ inputs.working-directory }}
-        run: python -m build
+        run: |
+          if [[ -s uv.lock ]]; then
+            uv build
+          else
+            python -m build
+          fi
       - name: Release to PyPI
         uses: pypa/gh-action-pypi-publish@3317ede93a4981d0fc490510c6fcf8bf0e92ed05
         with:
