@@ -31,7 +31,7 @@ jobs:
           python-version: '3.14'
       - name: Install uv
         working-directory: ${{ inputs.working-directory }}
-        run: sudo apt-get install uv
+        run: curl -LsSf https://astral.sh/uv/install.sh | sh
       - name: Build package
         working-directory: ${{ inputs.working-directory }}
         run: |
