@@ -20,7 +20,7 @@ jobs:
   java-build-with-docker-template:
     services:
       docker:
-        image: docker:29.1.1
+        image: docker:29.1.2
         options: --privileged
     runs-on: ${{ matrix.os }}
     strategy:
