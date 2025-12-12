@@ -35,7 +35,7 @@ jobs:
           }
           make
       - name: Upload documents
-        uses: actions/upload-artifact@v5
+        uses: actions/upload-artifact@v6
         env:
           WORKING_DIR: ${{ inputs.working-directory }}
         with:
