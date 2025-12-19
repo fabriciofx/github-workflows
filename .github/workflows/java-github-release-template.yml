@@ -48,8 +48,11 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
+          [[ "${{ github.ref_name }}" =~ ^[0-9]+\.[0-9]+\.[0-9]+$ ]] || exit -1
           [[ -x "mvnw" ]] && mvn="./mvnw" || mvn="mvn"
-          ${mvn} --errors --batch-mode deploy -Pgithub -Dmaven.test.skip=true
+          ${mvn} versions:set "-DnewVersion=${{ github.ref_name }}"
+          git commit -am "Release ${{ github.ref_name }}"
+          ${mvn} clean deploy -Pgithub -Dmaven.test.skip=true --errors --batch-mode
       - name: Deploy to GitHub Releases
         uses: softprops/action-gh-release@60cfd9a691d814dcf0d094598101c5cb61cd1646
         env:
