@@ -19,6 +19,7 @@ path = [
     "**.vm",
     "**/.DS_Store",
     "**/.gitignore",
+    "**/.gitattributes",
     "**/.pdd",
     "**/.gitmodules",
     "**/.latexmkrc",
