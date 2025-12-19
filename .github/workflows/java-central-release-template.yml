@@ -114,6 +114,11 @@ jobs:
             -s "/*[local-name()='settings']/*[local-name()='profiles']/profile[last()]/properties" \
               -t elem -n "gpg.keyname" -v "${KEYNAME}" \
             "${settings}"
+      - name: Configure Git
+        working-directory: ${{ inputs.working-directory }}
+        run: |
+          git config --global user.name "${{ github.actor }}"
+          git config --global user.email "${{ github.actor }}@users.noreply.github.com"
       - name: Release to Maven Central
         working-directory: ${{ inputs.working-directory }}
         run: |
