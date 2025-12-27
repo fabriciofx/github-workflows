@@ -57,7 +57,7 @@ jobs:
           [[ -x "mvnw" ]] && mvn="./mvnw" || mvn="mvn"
           ${mvn} versions:set "-DnewVersion=${{ github.ref_name }}"
           git commit -am "Release ${{ github.ref_name }}"
-          ${mvn} clean deploy -Pgithub -Dmaven.test.skip=true --errors --batch-mode
+          ${mvn} clean deploy -Pgithub-packages -Dmaven.test.skip=true --errors --batch-mode
       - name: Deploy to GitHub Releases
         uses: softprops/action-gh-release@5122b4edc95f85501a71628a57dc180a03ec7588
         env:
