@@ -48,6 +48,22 @@ jobs:
         run: |
           git config --global user.name "${{ github.actor }}"
           git config --global user.email "${{ github.actor }}@users.noreply.github.com"
+      - name: Setup Maven settings.xml
+        working-directory: ${{ inputs.working-directory }}
+        run: |
+          cat ~/.m2/settings.xml
+          mkdir -p ~/.m2
+          cat > ~/.m2/settings.xml <<EOF
+          <settings>
+            <servers>
+              <server>
+                <id>github-packages</id>
+                <username>${{ github.actor }}</username>
+                <password>${{ secrets.GITHUB_TOKEN }}</password>
+              </server>
+            </servers>
+          </settings>
+          EOF
       - name: Deploy to Github Packages
         working-directory: ${{ inputs.working-directory }}
         env:
@@ -58,7 +74,7 @@ jobs:
           ${mvn} versions:set "-DnewVersion=${{ github.ref_name }}"
           git commit -am "Release ${{ github.ref_name }}"
           ${mvn} clean deploy -Pgithub-packages -Dmaven.test.skip=true --errors --batch-mode
-      - name: Deploy to GitHub Releases
+      - name: Publish to GitHub Releases
         uses: softprops/action-gh-release@5122b4edc95f85501a71628a57dc180a03ec7588
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
