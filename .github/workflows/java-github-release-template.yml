@@ -66,9 +66,9 @@ jobs:
             -s "/*[local-name()='settings']/*[local-name()='servers']/server[last()]" \
               -t elem -n "id" -v "github-packages" \
             -s "/*[local-name()='settings']/*[local-name()='servers']/server[last()]" \
-              -t elem -n "username" -v '${env.GITHUB_ACTOR}' \
+              -t elem -n "username" -v "\${env.GITHUB_ACTOR}"" \
             -s "/*[local-name()='settings']/*[local-name()='servers']/server[last()]" \
-              -t elem -n "password" -v '${env.GITHUB_TOKEN}' \
+              -t elem -n "password" -v "\${env.GITHUB_TOKEN}"" \
             "${settings}"
       - name: Deploy to Github Packages
         working-directory: ${{ inputs.working-directory }}
