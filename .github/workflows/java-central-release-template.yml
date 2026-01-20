@@ -95,7 +95,7 @@ jobs:
             -s "/*[local-name()='settings']/*[local-name()='servers']" \
               -t elem -n "server" -v "" \
             -s "/*[local-name()='settings']/*[local-name()='servers']/server[last()]" \
-              -t elem -n "id" -v "oss.sonatype.org" \
+              -t elem -n "id" -v "central" \
             -s "/*[local-name()='settings']/*[local-name()='servers']/server[last()]" \
               -t elem -n "username" -v "${USERNAME}" \
             -s "/*[local-name()='settings']/*[local-name()='servers']/server[last()]" \
