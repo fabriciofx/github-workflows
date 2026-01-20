@@ -95,7 +95,7 @@ jobs:
             -s "/*[local-name()='settings']/*[local-name()='servers']" \
               -t elem -n "server" -v "" \
             -s "/*[local-name()='settings']/*[local-name()='servers']/server[last()]" \
-              -t elem -n "id" -v "central" \
+              -t elem -n "id" -v "oss.sonatype.org" \
             -s "/*[local-name()='settings']/*[local-name()='servers']/server[last()]" \
               -t elem -n "username" -v "${USERNAME}" \
             -s "/*[local-name()='settings']/*[local-name()='servers']/server[last()]" \
@@ -114,7 +114,6 @@ jobs:
             -s "/*[local-name()='settings']/*[local-name()='profiles']/profile[last()]/properties" \
               -t elem -n "gpg.keyname" -v "${KEYNAME}" \
             "${settings}"
-          cat "${settings}"
       - name: Configure Git
         working-directory: ${{ inputs.working-directory }}
         run: |
@@ -127,4 +126,4 @@ jobs:
           [[ -x "mvnw" ]] && mvn="./mvnw" || mvn="mvn"
           ${mvn} versions:set "-DnewVersion=${{ github.ref_name }}"
           git commit -am "Release ${{ github.ref_name }}"
-          ${mvn} clean deploy -Pcentral -Pgpg -Dmaven.test.skip=true --errors --batch-mode
+          ${mvn} clean deploy -Psonatype -Pgpg -Dmaven.test.skip=true --errors --batch-mode
