@@ -114,6 +114,7 @@ jobs:
             -s "/*[local-name()='settings']/*[local-name()='profiles']/profile[last()]/properties" \
               -t elem -n "gpg.keyname" -v "${KEYNAME}" \
             "${settings}"
+          cat "${settings}"
       - name: Configure Git
         working-directory: ${{ inputs.working-directory }}
         run: |
