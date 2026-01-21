@@ -13,8 +13,6 @@ permissions:
 jobs:
   java-sonar-test:
     uses: fabriciofx/github-workflows/.github/workflows/java-sonar-template.yml@main
-    with:
-      working-directory: "java/test"
     secrets:
       gh_token: ${{ secrets.GITHUB_TOKEN }}
       sr_token: ${{ secrets.SONAR_TOKEN }}
