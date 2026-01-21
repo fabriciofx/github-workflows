@@ -125,8 +125,14 @@ jobs:
           [[ "${{ github.ref_name }}" =~ ^[0-9]+\.[0-9]+\.[0-9]+$ ]] || exit 1
           [[ -x "mvnw" ]] && mvn="./mvnw" || mvn="mvn"
           OUT=$(${mvn} help:all-profiles)
-          echo "$OUT" | grep -q "qulice" && echo "$OUT" | grep -q "gpg" \
-            || { echo "Error: 'qulice' and 'gpg' profiles not found in pom.xml"; exit 1; }
+          if ! echo "$OUT" | grep -q "qulice"; then
+            echo "Error: 'qulice' profile not found in pom.xml or parent"
+            exit 1
+          fi
+          if ! echo "$OUT" | grep -q "gpg"; then
+            echo "Error: 'gpg' profile not found in pom.xml or parent"
+            exit 1
+          fi
           ${mvn} versions:set "-DnewVersion=${{ github.ref_name }}"
           git commit -am "Release ${{ github.ref_name }}"
           ${mvn} deploy -Psonatype -Pgpg --errors --batch-mode
