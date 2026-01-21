@@ -66,6 +66,8 @@ jobs:
           sonar.organization=${{ secrets.sr_organization }}
           sonar.projectKey=${{ secrets.sr_project_key }}
           sonar.sources=.
+          sonar.java.binaries=.
+          sonar.host.url=${{ inputs.sonar_host_url }}
           sonar.inclusions=**
           sonar.exclusions=node_modules/**,dist/**,build/**
           sonar.sourceEncoding=UTF-8
@@ -75,6 +77,10 @@ jobs:
           sonar.objc.file.suffixes=-
           EOF
       - name: Run Sonar
-        uses: SonarSource/sonarqube-scan-action@v7.0.0
+        working-directory: ${{ inputs.working-directory }}
         env:
           SONAR_TOKEN: ${{ secrets.sr_token }}
+        run: |
+          [[ -x "mvnw" ]] && mvn="./mvnw" || mvn="mvn"
+          ${mvn} --errors --batch-mode sonar:sonar \
+            -Dsonar.login="${SONAR_TOKEN}"
