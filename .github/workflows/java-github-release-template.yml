@@ -81,7 +81,7 @@ jobs:
             || { echo "Error: 'github-packages' profile not found in pom.xml"; exit 1; }
           ${mvn} versions:set "-DnewVersion=${{ github.ref_name }}"
           git commit -am "Release ${{ github.ref_name }}"
-          ${mvn} clean deploy -Pgithub-packages -Dmaven.test.skip=true --errors --batch-mode
+          ${mvn} deploy -Pgithub-packages --errors --batch-mode
       - name: Publish to GitHub Releases
         uses: softprops/action-gh-release@78237c54eb15310cb292a15480c4be010be47aeb
         env:
