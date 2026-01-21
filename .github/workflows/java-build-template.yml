@@ -43,10 +43,8 @@ jobs:
         working-directory: ${{ inputs.working-directory }}
         run: |
           [[ -x "mvnw" ]] && mvn="./mvnw" || mvn="mvn"
-          args=(--errors --batch-mode install)
-          profile=$(grep -q "<id>qulice</id>" pom.xml && echo "-Pqulice")
-          [[ -n "${profile}" ]] && args+=("${profile}")
-          ${mvn} "${args[@]}"
+          profile=$(${mvn} help:all-profiles | grep -q "qulice" && echo "-Pqulice")
+          ${mvn} --errors --batch-mode install "${profile}"
   java-macos-build-template:
     runs-on: ${{ matrix.os }}
     strategy:
@@ -73,10 +71,8 @@ jobs:
         working-directory: ${{ inputs.working-directory }}
         run: |
           [[ -x "mvnw" ]] && mvn="./mvnw" || mvn="mvn"
-          args=(--errors --batch-mode install)
-          profile=$(grep -q "<id>qulice</id>" pom.xml && echo "-Pqulice")
-          [[ -n "${profile}" ]] && args+=("${profile}")
-          ${mvn} "${args[@]}"
+          profile=$(${mvn} help:all-profiles | grep -q "qulice" && echo "-Pqulice")
+          ${mvn} --errors --batch-mode install "${profile}"
   java-windows-build-template:
     runs-on: ${{ matrix.os }}
     strategy:
@@ -104,6 +100,9 @@ jobs:
         working-directory: ${{ inputs.working-directory }}
         run: |
           @echo off
-          for /f "delims=" %%i in ('findstr "<id>qulice</id>" pom.xml') do set "Q=1"
+          setlocal enabledelayedexpansion
           if exist "mvnw.cmd" (set "M=mvnw.cmd") else (set "M=mvn")
-          %M% --errors --batch-mode install %Q:~-2,-1%-Pqulice
+          %M% help:all-profiles | findstr /C:"qulice" >nul
+          if %errorlevel% equ 0 (set "PROFILE=-Pqulice") else (set "PROFILE=")
+          %M% --errors --batch-mode install %PROFILE%
+          endlocal
