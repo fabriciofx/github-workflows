@@ -16,3 +16,5 @@ jobs:
     secrets:
       gh_token: ${{ secrets.GITHUB_TOKEN }}
       sr_token: ${{ secrets.SONAR_TOKEN }}
+      sr_organization: ${{ secrets.SONAR_ORGANIZATION }}
+      sr_project_key: ${{ secrets.SONAR_PROJECT_KEY }}

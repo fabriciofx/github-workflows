@@ -16,20 +16,18 @@ name: any-sonar-template
         required: false
         default: "https://sonarcloud.io"
         type: string
-      sonar_organization:
-        description: "Sonar organization (login)"
-        required: true
-        type: string
-      sonar_project_key:
-        description: "Sonar project key"
-        required: true
-        type: string
     secrets:
       gh_token:
         description: "GitHub Token"
         required: true
       sr_token:
         description: "Sonar Token"
+        required: true
+      sr_organization:
+        description: "Sonar organization (login)"
+        required: true
+      sr_project_key:
+        description: "Sonar project key"
         required: true
 defaults:
   run:
@@ -47,13 +45,10 @@ jobs:
           fetch-depth: 0
       - name: Create Sonar properties file
         working-directory: ${{ inputs.working-directory }}
-        env:
-          ORGANIZATION: ${{ inputs.sonar_organization }}
-          PROJECT_KEY: ${{ inputs.sonar_project_key}}
         run: |
           cat > sonar-project.properties <<EOF
-          sonar.organization=${ORGANIZATION}
-          sonar.projectKey=${PROJECT_KEY}
+          sonar.organization=${{ secrets.sr_organization }}
+          sonar.projectKey=${{ secrets.sr_project_key }}
           sonar.sources=.
           sonar.inclusions=**
           sonar.exclusions=node_modules/**,dist/**,build/**
