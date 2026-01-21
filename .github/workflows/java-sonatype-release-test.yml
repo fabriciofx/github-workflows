@@ -17,5 +17,6 @@ jobs:
     secrets:
       release_keyname: ${{ secrets.GPG_KEYNAME }}
       release_passphrase: ${{ secrets.GPG_PASSPHRASE }}
+      release_private_key: ${{ secrets.GPG_PRIVATE_KEY }}
       release_username: ${{ secrets.OSSRH_USERNAME }}
       release_password: ${{ secrets.OSSRH_PASSWORD }}

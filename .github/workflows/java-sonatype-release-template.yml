@@ -18,6 +18,9 @@ name: java-sonatype-release-template
       release_passphrase:
         description: "GPG passphrase"
         required: true
+      release_private_key:
+        description: "GPG private key"
+        required: true
       release_username:
         description: "Sonatype username"
         required: true
@@ -60,6 +63,22 @@ jobs:
         run: |
           sudo DPKG_PROGRESS_FD=0 apt-get -y -qq update
           sudo DPKG_PROGRESS_FD=0 apt-get install -y -qq xmlstarlet
+      - name: Configure GPG
+        working-directory: ${{ inputs.working-directory }}
+        env:
+          PRIVATE_KEY: ${{ secrets.release_private_key }}
+          PASSPHRASE: ${{ secrets.release_passphrase }}
+          KEYNAME: ${{ secrets.release_keyname }}
+          GPG_TTY: $(tty)
+        run: |
+          echo "${PRIVATE_KEY}" | gpg --batch --import
+          echo "pinentry-mode loopback" >> "${HOME}/.gnupg/gpg.conf"
+          gpgconf --launch gpg-agent
+          echo "allow-loopback-pinentry" >> "${HOME}/.gnupg/gpg-agent.conf"
+          gpgconf --reload gpg-agent
+          # Bootstrapping: forces the key to be initialized and unlocked
+          echo "test" | gpg --batch --yes --pinentry-mode loopback \
+            --passphrase "${PASSPHRASE}" -u "${KEYNAME}" -o /dev/null -a --sign
       - name: Setup Maven settings.xml
         working-directory: ${{ inputs.working-directory }}
         env:
@@ -97,8 +116,25 @@ jobs:
             -s "/*[local-name()='settings']/*[local-name()='profiles']/profile[last()]/properties" \
               -t elem -n "gpg.passphrase" -v "${PASSPHRASE}" \
             "${settings}"
-      - name: Release to Sonatype
+      - name: Configure Git
         working-directory: ${{ inputs.working-directory }}
         run: |
+          git config --global user.name "${{ github.actor }}"
+          git config --global user.email "${{ github.actor }}@users.noreply.github.com"
+      - name: Release to Maven Central
+        working-directory: ${{ inputs.working-directory }}
+        run: |
+          [[ "${{ github.ref_name }}" =~ ^[0-9]+\.[0-9]+\.[0-9]+$ ]] || exit 1
           [[ -x "mvnw" ]] && mvn="./mvnw" || mvn="mvn"
-          ${mvn} --errors --batch-mode deploy -Psonatype -Pgpg -Dmaven.test.skip=true
+          OUT=$(${mvn} help:all-profiles)
+          if ! echo "$OUT" | grep -q "qulice"; then
+            echo "Error: 'qulice' profile not found in pom.xml or parent"
+            exit 1
+          fi
+          if ! echo "$OUT" | grep -q "gpg"; then
+            echo "Error: 'gpg' profile not found in pom.xml or parent"
+            exit 1
+          fi
+          ${mvn} versions:set "-DnewVersion=${{ github.ref_name }}"
+          git commit -am "Release ${{ github.ref_name }}"
+          ${mvn} deploy -Psonatype -Pgpg --errors --batch-mode
