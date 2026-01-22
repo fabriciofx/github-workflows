@@ -83,6 +83,5 @@ jobs:
         run: |
           [[ -x "mvnw" ]] && mvn="./mvnw" || mvn="mvn"
           profile=$(${mvn} help:all-profiles | grep -q "sonar" && echo "-Psonar")
-          [[ -z "${profile}" ]] || \
-            { echo "Error: 'sonar' profile not found in pom.xml or parent"; exit 1; }
+          [[ -z "${profile}" ]] && { echo "Error: 'sonar' profile not found in pom.xml or parent"; exit 1; }
           ${mvn} --errors --batch-mode -Psonar
