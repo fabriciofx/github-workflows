@@ -22,5 +22,5 @@ jobs:
 <<<<<<< HEAD
         uses: raven-actions/actionlint@580b34edf3f0039a5691481c6081049971ecd530
 =======
-        uses: raven-actions/actionlint@591b1dfdbabb809cef4c22b7b93f37cd994d9368
+        uses: raven-actions/actionlint@580b34edf3f0039a5691481c6081049971ecd530
 >>>>>>> parent of a7757d1 (Update raven-actions/actionlint digest to d7e2094)
