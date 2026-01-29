@@ -25,4 +25,4 @@ jobs:
         with:
           persist-credentials: false
       - name: Check copyright header
-        uses: yegor256/copyrights-action@23ec571af9babd91f085cf57d1dc3a9aebfed637
+        uses: yegor256/copyrights-action@d063e6775d2e43aad3cdd351f0423aa7ed22c167
