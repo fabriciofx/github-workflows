@@ -1,5 +1,5 @@
 <!--
-SPDX-FileCopyrightText: Copyright (c) 2025 Fabrício Barros Cabral
+SPDX-FileCopyrightText: Copyright (C) 2025-2026 Fabrício Barros Cabral
 SPDX-License-Identifier: MIT
 -->
 # GitHub Workflows
@@ -58,7 +58,7 @@ information, see Codecov site.
 ### Copyrights
 
 `copyrights` checks for copyright header lines (e.g.,
-"Copyright (C) 2025 Fabrício Barros Cabral") in source files (`*.asm`, `*.bib`,
+"Copyright (C) 2025-2026 Fabrício Barros Cabral") in source files (`*.asm`, `*.bib`,
 `*.cls`, `*.cpp`, `*.dtx`, `*.g4`, `*.groovy`, `*.h`, `*.html`, `*.ini`,
 `*.ins`, `*.java`, `*.js`, `*.lua`, `*.pl`, `*.properties`, `*.py`, `*.rb`,
 `*.rs`, `*.sh`, `*.tex`, `*.ts`, `*.xml`, `*.xsd`, `*.xsl`, `*.yaml`, `*.yml`,
