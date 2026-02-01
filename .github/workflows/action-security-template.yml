@@ -31,7 +31,7 @@ jobs:
         with:
           persist-credentials: false
       - name: Run zizmor
-        uses: zizmorcore/zizmor-action@867562a69bb7adcc63dd1e8c003600a58b5f70e2
+        uses: zizmorcore/zizmor-action@fb9497493b591ad90176d3ecac5ca4aeff8c9faf
         with:
           token: ${{ secrets.gh_token }}
           inputs: ${{ inputs.working-directory }}
