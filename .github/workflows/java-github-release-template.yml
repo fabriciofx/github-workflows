@@ -23,6 +23,21 @@ jobs:
   java-github-release-template:
     runs-on: ubuntu-24.04
     steps:
+      - name: Check workflow status
+        uses: actions/github-script@v8
+        with:
+          script: |
+            const { gh } = await github.rest.checks.listForRef({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              ref: context.sha,
+            });
+            const failed = gh.check_runs.filter(c =>
+              c.conclusion !== 'success'
+            );
+            if (failed.length > 0) {
+              core.setFailed('Some checks did not pass');
+            }
       - name: Checkout repository
         uses: actions/checkout@v6
         with:
