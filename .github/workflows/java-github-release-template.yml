@@ -49,7 +49,7 @@ jobs:
             const failed = runs.some(run => run.conclusion !== 'success');
             if (failed) {
               core.setFailed(
-                'I can't release a new version because some workflows failed'
+                'I cant release a new version because some workflows failed'
               );
             }
       - name: Checkout repository
