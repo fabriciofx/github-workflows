@@ -38,15 +38,14 @@ jobs:
               repo: context.repo.repo,
               per_page: 100,
             });
-            const runs = data.workflow_runs.filter(run => run.head_sha === sha);
-            if (runs.length === 0) {
-              core.setFailed('No workflows found for last commit on main');
-            }
+            const runs = data.workflow_runs
+              .filter(run => run.head_sha === branch.commit.sha)
+              .filter(run => run.id !== context.runId);
             const pending = runs.some(run => run.conclusion === null);
             if (pending) {
               core.setFailed('Some workflows are still running');
             }
-            const failed = runs.some(run => run.conclusion !== 'success');
+            const failed = runs.some(run => run.conclusion === 'failure');
             if (failed) {
               core.setFailed(
                 'I cant release a new version because some workflows failed'
