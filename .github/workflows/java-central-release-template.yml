@@ -42,13 +42,28 @@ jobs:
         uses: actions/github-script@v8
         with:
           script: |
-            const { data } = await github.rest.repos.getCombinedStatusForRef({
+            const { data: branch } = await github.rest.repos.getBranch({
               owner: context.repo.owner,
               repo: context.repo.repo,
-              ref: 'main',
+              branch: 'main',
             });
-            if (data.state !== 'success') {
-              core.setFailed(`Commit status is ${data.state}`);
+            const sha = branch.commit.sha;
+            const { data } = await github.rest.actions.listWorkflowRunsForRepo({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              per_page: 100,
+            });
+            const runs = data.workflow_runs.filter(run => run.head_sha === sha);
+            if (runs.length === 0) {
+              core.setFailed('No workflows found for last commit on main');
+            }
+            const pending = runs.some(run => run.conclusion === null);
+            if (pending) {
+              core.setFailed('Some workflows are still running');
+            }
+            const failed = runs.some(run => run.conclusion !== 'success');
+            if (failed) {
+              core.setFailed('Some workflows failed');
             }
       - name: Checkout repository
         uses: actions/checkout@v6
