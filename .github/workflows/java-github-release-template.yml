@@ -48,7 +48,9 @@ jobs:
             }
             const failed = runs.some(run => run.conclusion !== 'success');
             if (failed) {
-              core.setFailed('Some workflows failed');
+              core.setFailed(
+                'I can't release a new version because some workflows failed'
+              );
             }
       - name: Checkout repository
         uses: actions/checkout@v6

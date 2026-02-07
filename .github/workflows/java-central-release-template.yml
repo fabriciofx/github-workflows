@@ -47,23 +47,22 @@ jobs:
               repo: context.repo.repo,
               branch: 'main',
             });
-            const sha = branch.commit.sha;
             const { data } = await github.rest.actions.listWorkflowRunsForRepo({
               owner: context.repo.owner,
               repo: context.repo.repo,
               per_page: 100,
             });
-            const runs = data.workflow_runs.filter(run => run.head_sha === sha);
-            if (runs.length === 0) {
-              core.setFailed('No workflows found for last commit on main');
-            }
+            const runs = data.workflow_runs
+              .filter(run => run.head_sha === branch.commit.sha);
             const pending = runs.some(run => run.conclusion === null);
             if (pending) {
               core.setFailed('Some workflows are still running');
             }
             const failed = runs.some(run => run.conclusion !== 'success');
             if (failed) {
-              core.setFailed('Some workflows failed');
+              core.setFailed(
+                'I can't release a new version because some workflows failed'
+              );
             }
       - name: Checkout repository
         uses: actions/checkout@v6
