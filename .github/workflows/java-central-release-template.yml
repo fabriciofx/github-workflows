@@ -42,16 +42,13 @@ jobs:
         uses: actions/github-script@v8
         with:
           script: |
-            const { data } = await github.rest.checks.listForRef({
+            const { data } = await github.rest.repos.getCombinedStatusForRef({
               owner: context.repo.owner,
               repo: context.repo.repo,
-              ref: context.sha,
+              ref: 'main',
             });
-            const failed = data.check_runs.filter(
-              run => run.conclusion && run.conclusion !== 'success'
-            );
-            if (failed.length > 0) {
-              core.setFailed('Some checks did not pass');
+            if (data.state !== 'success') {
+              core.setFailed(`Commit status is ${data.state}`);
             }
       - name: Checkout repository
         uses: actions/checkout@v6
