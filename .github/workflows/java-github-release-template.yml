@@ -40,7 +40,8 @@ jobs:
             });
             const runs = data.workflow_runs
               .filter(run => run.head_sha === branch.commit.sha)
-              .filter(run => run.id !== context.runId);
+              .filter(run => run.id !== context.runId)
+              .filter(run => !run.name.toLowerCase().includes('release'));
             const pending = runs.some(run => run.conclusion === null);
             if (pending) {
               core.setFailed('Some workflows are still running');
