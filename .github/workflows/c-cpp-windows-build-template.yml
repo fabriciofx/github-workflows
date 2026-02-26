@@ -74,7 +74,7 @@ jobs:
           mv "${NAME}-${VERSION}-bin.tar.gz" \
             "dist/${NAME}-${VERSION}-windows.tar.gz"
       - name: Upload Windows artifacts
-        uses: actions/upload-artifact@v6
+        uses: actions/upload-artifact@v7
         env:
           WORKING_DIR: ${{ inputs.working-directory }}
         with:
