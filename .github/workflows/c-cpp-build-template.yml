@@ -90,7 +90,7 @@ jobs:
           mv "${src}" dist/
           mv "${bin}" "dist/${safe_name}-${safe_version}-linux.tar.gz"
       - name: Upload Linux artifacts
-        uses: actions/upload-artifact@v6
+        uses: actions/upload-artifact@v7
         with:
           name: linux-dist
           path: "${{ inputs.working-directory }}/dist/*.tar.gz"
@@ -153,7 +153,7 @@ jobs:
           mkdir -p dist
           mv "${bin}" "dist/${safe_name}-${safe_version}-macos.tar.gz"
       - name: Upload macOS artifacts
-        uses: actions/upload-artifact@v6
+        uses: actions/upload-artifact@v7
         with:
           name: macos-dist
           path: "${{ inputs.working-directory }}/dist/*.tar.gz"
