@@ -25,4 +25,4 @@ jobs:
         with:
           persist-credentials: false
       - name: Check files for typos (spell checker)
-        uses: crate-ci/typos@631208b7aac2daa8b707f55e7331f9112b0e062d
+        uses: crate-ci/typos@d04c78a6a26122875dd35313ec45da3690d7ecf7
