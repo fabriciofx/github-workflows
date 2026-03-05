@@ -1,0 +1,34 @@
+# SPDX-FileCopyrightText: Copyright (C) 2025-2026 Fabrício Barros Cabral
+# SPDX-License-Identifier: MIT
+---
+# yamllint disable rule:line-length
+name: trivy-security-template
+'on':
+  workflow_call:
+    inputs:
+      working-directory:
+        description: "Set the working directory"
+        required: false
+        default: ".github/workflows/"
+        type: string
+defaults:
+  run:
+    shell: bash -xeuo pipefail {0}
+jobs:
+  trivy-security-template:
+    runs-on: ubuntu-24.04
+    permissions:
+      actions: read
+      contents: read
+      security-events: write
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v6
+      - name: Run trivy
+        uses: aquasecurity/trivy-action@master
+        with:
+          scan-type: "fs"
+          scan-ref: "."
+          exit-code: "1"
+          ignore-unfixed: true
+          timeout: "10m0s"

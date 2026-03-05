@@ -1,0 +1,23 @@
+# SPDX-FileCopyrightText: Copyright (C) 2025-2026 Fabrício Barros Cabral
+# SPDX-License-Identifier: MIT
+---
+# yamllint disable rule:line-length
+name: trivy-security-test
+'on':
+  push:
+    branches:
+      - main
+      - master
+  pull_request:
+    branches:
+      - main
+      - master
+permissions:
+  actions: read
+  contents: read
+  security-events: write
+jobs:
+  trivy-security-test:
+    uses: fabriciofx/github-workflows/.github/workflows/trivy-security-template.yml@main
+    with:
+      working-directory: "java/test"
