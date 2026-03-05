@@ -52,13 +52,6 @@ SPDX-License-Identifier: MIT
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <javadoc.opts>-Xdoclint:none</javadoc.opts>
   </properties>
-  <dependencies>
-    <dependency>
-      <groupId>com.github.fabriciofx</groupId>
-      <artifactId>dict</artifactId>
-      <version>0.0.4</version>
-    </dependency>
-  </dependencies>
   <build>
     <plugins>
       <plugin>
