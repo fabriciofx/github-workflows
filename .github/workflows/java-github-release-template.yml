@@ -112,7 +112,7 @@ jobs:
           git commit -am "Release ${{ github.ref_name }}"
           ${mvn} deploy -Pgithub-packages --errors --batch-mode
       - name: Publish to GitHub Releases
-        uses: softprops/action-gh-release@11f917660b31d6d56980ea3261f210556a812bd0
+        uses: softprops/action-gh-release@26e8ad27a09a225049a7075d7ec1caa2df6ff332
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
