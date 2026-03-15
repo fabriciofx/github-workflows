@@ -175,7 +175,7 @@ jobs:
           # Detects which tag triggered the build
           echo "tag=${GITHUB_REF##*/}" >> "${GITHUB_OUTPUT}"
       - name: Release artifacts
-        uses: softprops/action-gh-release@e798e6a1ede8d07b74ac4cdac6bdfa4cc1653907
+        uses: softprops/action-gh-release@11f917660b31d6d56980ea3261f210556a812bd0
         with:
           tag_name: ${{ steps.tag.outputs.tag }}
           files: dist/*.tar.gz
