@@ -25,7 +25,7 @@ jobs:
         with:
           persist-credentials: false
       - name: Setup Infer
-        uses: srz-zumix/setup-infer@b2d2e2300603ab6e0970fe7168eba7079f829e77
+        uses: srz-zumix/setup-infer@c004247e450cafd00dcb9b7cce6d04f7a1401462
       - name: Run Infer
         working-directory: ${{ inputs.working-directory }}
         run: |
