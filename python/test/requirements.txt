@@ -1,5 +1,5 @@
 iniconfig==2.3.0
-packaging==26.0
+packaging==26.1
 pluggy==1.6.0
 Pygments==2.20.0
-pytest==9.0.2
+pytest==9.0.3
