@@ -14,13 +14,13 @@ name: python-tests-template
     secrets:
       ssl_server_key:
         description: "SSL Server key"
-        required: true
+        required: false
       ssl_server_crt:
         description: "SSL Server certicate"
-        required: true
+        required: false
       ssl_ca_crt:
         description: "SSL certificate"
-        required: true
+        required: false
 defaults:
   run:
     shell: bash -xeuo pipefail {0}
@@ -61,8 +61,6 @@ jobs:
             echo "${SERVER_KEY}" | base64 --decode > certificates/server.key
             echo "${SERVER_CRT}" | base64 --decode > certificates/server.crt
             echo "${CA_CRT}" | base64 --decode > certificates/ca.crt
-          else
-            echo "Set your SSL_SERVER_KEY in GitHub settings repository page."
           fi
       - name: Run tests
         working-directory: ${{ inputs.working-directory }}
