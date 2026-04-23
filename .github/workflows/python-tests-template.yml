@@ -66,7 +66,7 @@ jobs:
         working-directory: ${{ inputs.working-directory }}
         run: |
           if [[ -s Makefile ]]; then
-            make tests
+            make test
           elif [[ -s uv.lock ]]; then
             uv run pytest
           else
