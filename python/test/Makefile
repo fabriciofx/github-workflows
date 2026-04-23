@@ -13,10 +13,10 @@ install:
 	$(PYTHON) -m venv .venv
 	$(ACTIVATE) && $(PIP) install -r requirements.txt
 
-tests:
+test:
 	$(ACTIVATE) && $(PYTEST)
 
-lint:
+check:
 	$(ACTIVATE) && $(RUFF) check .
 
 format:
