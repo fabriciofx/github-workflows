@@ -62,7 +62,7 @@ jobs:
         run: |
           git checkout -B "${GITHUB_HEAD_REF:-${GITHUB_REF_NAME}}"
       - name: Setup Java SDK
-        uses: actions/setup-java@v5
+        uses: actions/setup-java@v6
         with:
           distribution: 'temurin'
           java-version: 21
