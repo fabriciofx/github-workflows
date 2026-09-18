@@ -18,7 +18,7 @@ permissions:
   contents: read
 jobs:
   latex-build-template:
-    runs-on: ubuntu-24.04
+    runs-on: ubuntu-26.04
     container:
       image: ghcr.io/xu-cheng/texlive-debian:latest
     steps:
