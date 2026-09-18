@@ -24,7 +24,7 @@ jobs:
   latex-build-template:
     uses: fabriciofx/github-workflows/.github/workflows/latex-build-template.yml@main
   latex-release-template:
-    runs-on: ubuntu-24.04
+    runs-on: ubuntu-26.04
     needs: [latex-build-template]
     steps:
       - name: Download PDF

@@ -21,7 +21,7 @@ permissions:
   packages: write
 jobs:
   java-github-release-template:
-    runs-on: ubuntu-24.04
+    runs-on: ubuntu-26.04
     steps:
       - name: Check workflow status
         uses: actions/github-script@v9
