@@ -59,6 +59,6 @@ jobs:
           sonar.objc.file.suffixes=-
           EOF
       - name: Run Sonar
-        uses: SonarSource/sonarqube-scan-action@v8.2
+        uses: SonarSource/sonarqube-scan-action@v8.3
         env:
           SONAR_TOKEN: ${{ secrets.sr_token }}
