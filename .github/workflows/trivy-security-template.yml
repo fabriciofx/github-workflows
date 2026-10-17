@@ -16,7 +16,7 @@ defaults:
     shell: bash -xeuo pipefail {0}
 jobs:
   trivy-security-template:
-    runs-on: ubuntu-26.04
+    runs-on: ubuntu-latest
     permissions:
       contents: read
     steps:
