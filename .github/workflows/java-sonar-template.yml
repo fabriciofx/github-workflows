@@ -84,6 +84,10 @@ jobs:
           SONAR_TOKEN: ${{ secrets.sr_token }}
         run: |
           [[ -x "mvnw" ]] && mvn="./mvnw" || mvn="mvn"
-          profile=$(${mvn} help:all-profiles | grep -q "sonar" && echo "-Psonar")
-          [[ -z "${profile}" ]] && { echo "Error: 'sonar' profile not found in pom.xml or parent"; exit 1; }
+          if ${mvn} help:all-profiles | grep -q "sonar"; then
+            profile="-Psonar"
+          else
+            echo "Error: 'sonar' profile not found in pom.xml or parent"
+            exit 1
+          fi
           ${mvn} --errors --batch-mode verify "${profile}"
