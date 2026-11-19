@@ -48,4 +48,5 @@ jobs:
         run: |
           [[ -x "mvnw" ]] && mvn="./mvnw" || mvn="mvn"
           profile=$(${mvn} help:all-profiles | grep -q "qulice" && echo "-Pqulice")
+          [[ -z "${profile}" ]] && { echo "Error: 'qulice' profile not found in pom.xml or parent"; exit 1; }
           ${mvn} --errors --batch-mode install "${profile}"

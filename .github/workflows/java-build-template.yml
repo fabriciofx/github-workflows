@@ -44,6 +44,7 @@ jobs:
         run: |
           [[ -x "mvnw" ]] && mvn="./mvnw" || mvn="mvn"
           profile=$(${mvn} help:all-profiles | grep -q "qulice" && echo "-Pqulice")
+          [[ -z "${profile}" ]] && { echo "Error: 'qulice' profile not found in pom.xml or parent"; exit 1; }
           ${mvn} --errors --batch-mode install "${profile}"
   java-macos-build-template:
     runs-on: ${{ matrix.os }}
@@ -72,6 +73,7 @@ jobs:
         run: |
           [[ -x "mvnw" ]] && mvn="./mvnw" || mvn="mvn"
           profile=$(${mvn} help:all-profiles | grep -q "qulice" && echo "-Pqulice")
+          [[ -z "${profile}" ]] && { echo "Error: 'qulice' profile not found in pom.xml or parent"; exit 1; }
           ${mvn} --errors --batch-mode install "${profile}"
   java-windows-build-template:
     runs-on: ${{ matrix.os }}
@@ -104,5 +106,9 @@ jobs:
           if exist "mvnw.cmd" (set "M=mvnw.cmd") else (set "M=mvn")
           %M% help:all-profiles | findstr /C:"qulice" >nul
           if %errorlevel% equ 0 (set "PROFILE=-Pqulice") else (set "PROFILE=")
+          if "!PROFILE!"=="" (
+              echo Error: 'qulice' profile not found in pom.xml or parent
+              exit /b 1
+          )
           %M% --errors --batch-mode install %PROFILE%
           endlocal
