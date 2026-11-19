@@ -46,7 +46,7 @@ jobs:
           if ${mvn} help:all-profiles | grep -q "qulice"; then
             profile="-Pqulice"
           else
-            echo "Warning: 'qulice' profile not found in pom.xml or parent. Building without 'qulice' profile."
+            echo "Warning: 'qulice' profile not found. Building without it."
           fi
           ${mvn} --errors --batch-mode install "${profile}"
   java-macos-build-template:
@@ -78,7 +78,7 @@ jobs:
           if ${mvn} help:all-profiles | grep -q "qulice"; then
             profile="-Pqulice"
           else
-            echo "Warning: 'qulice' profile not found in pom.xml or parent. Building without 'qulice' profile."
+            echo "Warning: 'qulice' profile not found. Building without it."
           fi
           ${mvn} --errors --batch-mode install "${profile}"
   java-windows-build-template:
@@ -113,7 +113,7 @@ jobs:
           %M% help:all-profiles | findstr /C:"qulice" >nul
           if %errorlevel% equ 0 (set "PROFILE=-Pqulice") else (set "PROFILE=")
           if "!PROFILE!"=="" (
-              echo Warning: 'qulice' profile not found in pom.xml or parent. Building without 'qulice' profile.
+              echo Warning: 'qulice' profile not found. Building without it.
           )
           %M% --errors --batch-mode install %PROFILE%
           endlocal

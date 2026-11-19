@@ -50,6 +50,6 @@ jobs:
           if ${mvn} help:all-profiles | grep -q "qulice"; then
             profile="-Pqulice"
           else
-            echo "Warning: 'qulice' profile not found in pom.xml or parent. Building without 'qulice' profile."
+            echo "Warning: 'qulice' profile not found. Building without it."
           fi
           ${mvn} --errors --batch-mode install "${profile}"

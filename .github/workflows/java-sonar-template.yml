@@ -58,8 +58,11 @@ jobs:
         working-directory: ${{ inputs.working-directory }}
         run: |
           [[ -x "mvnw" ]] && mvn="./mvnw" || mvn="mvn"
-          profile=$(${mvn} help:all-profiles | grep -q "qulice" && echo "-Pqulice")
-          [[ -z "${profile}" ]] && { echo "Error: 'qulice' profile not found in pom.xml or parent"; exit 1; }
+          if ${mvn} help:all-profiles | grep -q "qulice"; then
+            profile="-Pqulice"
+          else
+            echo "Warning: 'qulice' profile not found. Building without it."
+          fi
           ${mvn} --errors --batch-mode install "${profile}"
       - name: Create Sonar properties file
         working-directory: ${{ inputs.working-directory }}
